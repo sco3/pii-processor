@@ -4,6 +4,8 @@ set -xueo pipefail
 
 env=~/.local/.env-ductaper
 
+docker rm -f litellm
+
 if [ ! -f $env ]; then
 	echo $env with AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION not found
 	echo Use ~/.aws/credentials
