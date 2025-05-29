@@ -1,0 +1,7 @@
+#!/usr/bin/env -S bash
+
+
+
+pre-commit run --all-files --verbose
+
+echo $?

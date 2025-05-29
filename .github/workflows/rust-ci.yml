@@ -1,0 +1,28 @@
+name: Simple Rust CI with Caching
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Clippy linting
+        run: cargo clippy  --no-deps -- -W clippy::all -W clippy::pedantic
+
+      - name: Run tests
+        run: cargo test

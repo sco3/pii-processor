@@ -1,0 +1,8 @@
+#!/usr/bin/env -S bash
+
+set -xueo pipefail
+
+cargo install cargo-llvm-cov
+cargo llvm-cov --html --ignore-filename-regex "src/bin/.+"
+
+echo firefox target/llvm-cov/html/index.html

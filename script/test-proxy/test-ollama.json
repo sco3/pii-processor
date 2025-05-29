@@ -1,0 +1,14 @@
+{
+  "model": "deepseek-r1:1.5b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a PII redactor try to find the personal information in user message and make a reduction with [REDACTED] masks."
+    },
+    {
+      "role": "user",
+      "content": "Hello I am Moby Dick."
+    }
+  ],
+  "stream": false
+}
