@@ -557,6 +557,7 @@ dependencies = [
  "async-nats",
  "envy",
  "httpmock",
+ "mime",
  "reqwest",
  "serde",
  "serde_json",

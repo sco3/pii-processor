@@ -1,10 +1,11 @@
+use crate::ai_tags::Ai;
+use mime::APPLICATION_JSON;
+use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
 use serde_json::json;
 use tracing::debug;
 use tracing::error;
-
-const BEARER: &str = "Bearer";
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -19,7 +20,8 @@ impl LLmCaller {
         model: impl Into<String>,
         token: Option<String>,
     ) -> Self {
-        let bearer = token.as_ref().map(|t| format!("{} {}", BEARER, t));
+        let bearer = Self::add_bearer(token);
+
         LLmCaller {
             endpoint: endpoint.into(),
             model: model.into(),
@@ -28,32 +30,41 @@ impl LLmCaller {
         }
     }
 
-    pub async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
-        let body = json!({
-            "model": self.model,
-            "messages": [
-                { "role": "system", "content": prompt },
-                { "role": "user", "content": message }
-            ],
-            "temperature": 0
-        });
+    fn add_bearer(token: Option<String>) -> Option<String> {
+        token
+            .as_ref() //
+            .map(|t| format!("{} {}", Ai::BEARER, t))
+    }
 
-        let req = self
+    fn build_body(&self, prompt: &str, message: &str) -> Value {
+        json!({
+            Ai::MODEL: self.model,
+            Ai::MESSAGES: [
+                { Ai::ROLE: Ai::SYSTEM, Ai::CONTENT: prompt },
+                { Ai::ROLE: Ai::USER, Ai::CONTENT: message }
+            ],
+            Ai::TEMPERATURE: 0
+        })
+    }
+
+    fn build_request(&self, body: Value) -> RequestBuilder {
+        let mut req = self
             .client
             .post(&self.endpoint)
-            .header(CONTENT_TYPE, "application/json")
+            .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
             .body(body.to_string());
 
-        let req = if let Some(ref bearer) = self.bearer {
-            req.header(AUTHORIZATION, bearer)
-        } else {
-            req
-        };
+        if let Some(ref bearer) = self.bearer {
+            req = req.header(AUTHORIZATION, bearer);
+        }
+        req
+    }
 
+    async fn send(req: RequestBuilder) -> Option<Value> {
         match req.send().await {
             Ok(res) => {
                 let body = res.json::<Value>().await.unwrap_or_else(|e| {
-                    debug!("Failed to parse JSON: {}", e);
+                    error!("Failed to parse JSON: {}", e);
                     json!({})
                 });
                 debug!("Response: {}", body);
@@ -64,5 +75,11 @@ impl LLmCaller {
                 None
             }
         }
+    }
+
+    pub async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
+        let body = self.build_body(prompt, message);
+        let req = self.build_request(body);
+        Self::send(req).await
     }
 }
