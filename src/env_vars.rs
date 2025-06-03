@@ -10,16 +10,10 @@ pub struct Cfg {
     #[serde(default = "default_log_level")]
     pub log_level: String,
 
-    #[serde(default = "default_log_fmt")]
-    pub log_fmt: String,
-
     #[serde(default = "default_llm_token")]
     pub llm_token: SecretString,
 }
 
-fn default_log_fmt() -> String {
-    "".to_string()
-}
 fn default_llm_token() -> SecretString {
     return SecretString::new("sk-1234".to_string());
 }
