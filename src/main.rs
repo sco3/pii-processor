@@ -1,20 +1,14 @@
-use crate::env_vars::Cfg;
+use crate::init::Init;
+use crate::starter::Starter;
 
-use tracing::{debug, error, info, warn};
-
-mod env_vars;
-mod logging;
-mod secret_string;
+pub mod env_vars;
+pub mod init;
+pub mod logging;
+pub mod secret_string;
+pub mod starter;
 
 fn main() {
-    let cfg = Cfg::from_env();
-
-    let log_level = "debug".to_string();
-
-    logging::init_log(&log_level);
-
-    info!("Config: {:?}", cfg.clone());
-    error!("Log level set to: {}", log_level);
-    debug!("Log level set to: {}", log_level);
-    warn!("Log level set to: {}", log_level);
+    let starter = Starter::new(None);
+    starter.init();
+    starter.start();
 }

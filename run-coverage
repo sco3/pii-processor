@@ -1,0 +1,14 @@
+#!/usr/bin/env -S bash
+
+set -xueo pipefail
+
+rm -rf *.profraw 
+rm -rf coverage
+
+cargo install grcov
+rustup component  add llvm-tools
+
+export RUSTFLAGS="-C instrument-coverage"
+cargo test
+
+grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing -o coverage/

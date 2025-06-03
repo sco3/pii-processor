@@ -5,17 +5,17 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, Clone)]
 pub struct Cfg {
     #[serde(default = "default_nats_url")]
-    pub _nats_url: String,
+    pub nats_url: String,
 
     #[serde(default = "default_log_level")]
-    pub _log_level: String,
+    pub log_level: String,
 
     #[serde(default = "default_llm_token")]
-    pub _llm_token: SecretString,
+    pub llm_token: SecretString,
 }
 
 fn default_llm_token() -> SecretString {
-    SecretString::new("sk-1234".to_string())
+    SecretString::new("sk-1234")
 }
 
 fn default_nats_url() -> String {
