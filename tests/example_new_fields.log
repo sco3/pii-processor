@@ -1,0 +1,526 @@
+[
+  {
+    "architecture_type": "Neocortex"
+  },
+  {
+    "tool_calls": [
+      {
+        "turn": 0,
+        "tool_calls": []
+      },
+      {
+        "turn": 1,
+        "tool_calls": ["faq_expert_1"]
+      },
+      {
+        "turn": 2,
+        "tool_calls": ["faq_expert_1"]
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "content": "Session Started.",
+    "turn": 0
+  },
+  {
+    "role": "assistant",
+    "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+    "turn": 0
+  },
+  {
+    "role": "user",
+    "content": "What could you do for me?",
+    "turn": 1
+  },
+  {
+    "role": "assistant",
+    "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+    "tool_calls": [
+      {
+        "index": 1,
+        "function": {
+          "name": "faq_expert_1",
+          "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+        },
+        "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+        "type": "function"
+      }
+    ],
+    "turn": 1
+  },
+  {
+    "role": "user",
+    "content": "The customer asked the following question:\n\nWhat services does Level Health offer?\n\nThe possible answers to this are as follows:\n\n- Document: WR1124_TOC-B500.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B500-D2D.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-C.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B300.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B150.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n",
+    "turn": 1
+  },
+  {
+    "role": "assistant",
+    "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+    "turn": 1
+  },
+  {
+    "role": "tool",
+    "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+    "turn": 1
+  },
+  {
+    "role": "assistant",
+    "content": "Based on the information provided by our knowledge base, I can offer you the following response:\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nWhen responding to the customer's question about what Level Health can do for them, you should focus on the QuickClinic service, which appears to be a core offering. Here's how you might structure your response:\n\n1. Introduce the QuickClinic service as Level Health's primary offering.\n2. Highlight the key benefits:\n   - Immediate medical advice from qualified professionals\n   - Available 24/7\n   - Accessible through the Level Health app and website\n   - Can be used for prescription refills, health concerns, or professional reassurance\n3. Emphasize the convenience of skipping waiting rooms and having access to medical professionals \"in your pocket.\"\n\nRemember, since this information isn't from the FAQs.pdf, you should use it as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services beyond QuickClinic, you may need to escalate the query to a specialist, as we only have detailed information about QuickClinic from these documents.",
+    "turn": 1
+  },
+  {
+    "role": "user",
+    "content": "I forgot my password.",
+    "turn": 2
+  },
+  {
+    "role": "assistant",
+    "content": "I understand you've forgotten your password. Let me check our FAQ database for the most appropriate answer to help you with this issue.",
+    "tool_calls": [
+      {
+        "index": 1,
+        "function": {
+          "name": "faq_expert_1",
+          "arguments": "{\"user_question\": \"How can I reset my forgotten password?\"}"
+        },
+        "id": "tooluse_mxJGYGm-TI-PF0cYWgbauw",
+        "type": "function"
+      }
+    ],
+    "turn": 2
+  },
+  {
+    "role": "user",
+    "content": "The customer asked the following question:\n\nHow can I reset my forgotten password?\n\nThe possible answers to this are as follows:\n\n- Document: FAQs.pdf\n- Page: 15\n- Content:\nYou can request a new password [here](https://levelhealth.ie/web-portals/my-profile-settings)\n\n- Document: FAQs.pdf\n- Page: 14\n- Content:\nJust log in to you Customer Portal to update your postal address, contact number or email address.\n\n- Document: FAQs.pdf\n- Page: 33\n- Content:\nYou will receive your renewal invite via email approximetaly 30 days before your Renewal Date\nIf your policy is set up on Direct Debit and you don't need to do anything as your policy will automatically renew unless you contact us to make changes.\nPlease note that we can only discuss the policy and cover details with the policy holder and can make changes at their request or a third party who has the relevant permissions granted by the Policy holder and noted on the policy. \n\nIf you pay by card annually you will need to log into the Customer Portal and make a payment or call us on 01 261 2000.\n\n- Document: FAQs.pdf\n- Page: 5\n- Content:\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\n\n\n- Document: FAQs.pdf\n- Page: 9\n- Content:\nTo update your card details, please log into your Customer Portal and select 'Payments' to action. \n\n",
+    "turn": 2
+  },
+  {
+    "role": "assistant",
+    "content": "<question>How can I reset my forgotten password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nThe customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.\n\nThe answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.\n\nHowever, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.\n\nIf the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.\n\n<tag>APPROVED_FAQ</tag>",
+    "turn": 2
+  },
+  {
+    "role": "tool",
+    "content": "<question>How can I reset my forgotten password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nThe customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.\n\nThe answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.\n\nHowever, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.\n\nIf the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.\n\n<tag>APPROVED_FAQ</tag>",
+    "turn": 2
+  },
+  {
+    "role": "assistant",
+    "content": "Thank you for your question about forgetting your password. I have an approved answer from our FAQ that can help you with this issue.\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nWhen responding to the customer about their forgotten password, you should focus on the relevant part of the FAQ answer. Here's how you might approach it:\n\n1. Direct the customer to the Customer Portal login page at https://levelhealth.ie/web-portals.\n2. Instruct them to click on the 'Forgot Password' option on the login page.\n3. Explain that this will allow them to reset their password or register if they haven't done so already.\n\nWhile the FAQ doesn't provide step-by-step instructions for the password reset process, it does point the customer in the right direction. If the customer asks for more detailed instructions about the password reset process after following these steps, you may need to escalate the query to get more specific information.\n\nAlso, note that the FAQ mentions accessing policy documents. While this isn't directly related to the password reset, you could mention this as an additional piece of information once they regain access to their account, as it might be useful for them to know.\n\nRemember to use the information from the APPROVED Q&A section when directly quoting to the customer, as it's the officially approved response.",
+    "turn": 2
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "<system>\nYou are an internal Level Health customer service support tool designed to assist Level Health customer service representatives. Your primary responsibility is to accurately relay answers from the FAQ system and other documentation, enabling representatives to provide accurate information to customers during phone calls. \n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses should be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n</system>\n\n<instruction>\nFor each customer question pasted by a representative:\n1. Extract the core question from the customer's message while preserving relevant context\n2. Use the faq_expert_1 tool to check for an approved answer\n3. Format the response in three clearly marked sections:\n\n\n===APPROVED Q&A===\n\n[Include only answers found in FAQs.pdf. These can be directly relayed to customers]\n\n\n===PDF KNOWLEDGEBASE===\n\n[Include relevant information found in other documents. Representatives should review this information before responding]\n\n\n===THINKING===\n\n[Include your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n4. If no answers exist in either section, inform the representative that they will need to escalate the call to a specialist or supervisor\n</instruction>\n\n<rules>\nCRITICAL COMPLIANCE REQUIREMENTS:\n- You MUST relay answers from FAQs.pdf exactly word-for-word in the APPROVED Q&A SECTION\n- You MUST relay answers from other documents exactly word-for-word in the PDF KNOWLEDGEBASE SECTION\n- No modifications, paraphrasing, or additions to any answers are permitted\n- You MUST relay the names of the documents cited in each section\n- This is a legal requirement with severe financial penalties for non-compliance\n- Regular compliance audits will verify exact message reproduction\n- All responses must be clearly separated into the three sections described above\n- The THINKING SECTION should provide clear guidance to help representatives understand and use the information provided\n</rules>\n\n<example_interactions>\nExample 1 - Simple Question:\n\"How do I cancel my policy?\"\nAction: Check faq_expert_1 and other documents\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nI found a direct answer in FAQs.pdf that you can use. The answer covers the basic cancellation process. There is additional context in the knowledge base about cancellation fees and implications that you should review before responding to ensure you can address any follow-up questions.\n\nExample 2 - Detailed Question with Context:\n\"Hi,\n  \n  This policy is due to be activated on 31st December 2024. I'm just wondering if there is a waiting period after this date before cover starts or am I covered immediately?\n  \n  Thank you.\n  \n  John Spelman\"\nAction: Extract core question about waiting period and policy activation\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nThe customer has provided a specific activation date (31st December 2024). I found information about standard coverage commencement in both the FAQ and policy documents. The FAQ answer directly addresses the waiting period question and can be used verbatim. The additional information provides context about specific types of coverage that might have different waiting periods - review this before responding in case the customer asks follow-up questions.\n</example_interactions>",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "Session Started.",
+            "turn": 0
+          },
+          {
+            "role": "assistant",
+            "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "What could you do for me?",
+            "turn": 1
+          }
+        ],
+        "functions": [
+          {
+            "name": "faq_expert_1",
+            "description": "MANDATORY tool for ALL customer questions. You MUST use this tool for EVERY response, regardless of conversation length or similarity to previous questions. You have NO authority to respond without checking this tool first.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "user_question": {
+                  "type": "string",
+                  "description": "Rewrite each individual question being asked in THIS turn of the conversation to make it direct, concise, and suitable for search. If multiple questions are asked, separate them into individual search-optimized questions. Remove conversational filler or irrelevant context. Focus on extracting the core informational need. For example: 'Can you tell me about plan C, what hospitals does it cover?' should become 'What hospitals does plan C cover?"
+                }
+              }
+            }
+          }
+        ],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "context",
+        "message": {
+          "role": "assistant",
+          "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+          "tool_calls": [
+            {
+              "index": 1,
+              "function": {
+                "name": "faq_expert_1",
+                "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+              },
+              "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+              "type": "function"
+            }
+          ]
+        }
+      },
+      "time": 7.575735893000001
+    }
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "# AI Support Tool Guidelines for Customer Service Representatives\n\nYou are an internal AI support tool that assists Level Health customer service representatives by providing accurate answers based on content from various markdown files, including the approved Q&A document and other documents. Your responses must be precise, factual, and directly sourced from these documents, enabling representatives to provide accurate information to customers during phone calls.\n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses must be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n\n## Source Hierarchy & Information Processing\n\n1. Check FAQs.pdf first for pre-approved answers\n2. Check all other available documents for additional relevant information\n3. Interpret all content accurately, including tables and structured data\n4. Do not modify or reword the information from any documents\n\n## Response Classification\n\nTag your answers according to the sources:\n- **APPROVED_FAQ**: If the answer is found in FAQs.pdf\n- **ADDITIONAL_INFO**: If relevant information is found in other documents\n- **NO_ANSWER**: If no information is found in any documents\n\n## Response Principles\n\n- **Separate Sections**: Always format responses with clear section headers\n- **Provide Verbatim Answers**: Quote directly from all documents\n- **Handle Uncertainty**: If unable to find an answer, clearly indicate that the representative should escalate to a specialist\n- **Avoid Speculation**: Do not use uncertain terms like \"might have\" or \"maybe\"\n- **Source Citation**: Include the filename and page number for all information\n- **Question Extraction**: Extract the core question while preserving relevant context\n- **Representative-Focused Responses**: All responses must be clearly marked for either direct use or review\n- **Clear Analysis**: Provide clear guidance in the THINKING SECTION to help representatives understand and use the information\n\n# Process Steps\n\n1. **Question Analysis**:\n   - Extract the core question from the customer's message\n   - Preserve relevant context (dates, policy numbers, specific details)\n   - Remove greetings, signatures, and non-essential formatting\n2. **Research FAQs.pdf**: Search for pre-approved answers\n3. **Research Other Documents**: Search for additional relevant information\n4. **Format Response**: Clearly separate into three sections (APPROVED Q&A, PDF KNOWLEDGEBASE, and THINKING)\n5. **Classify and Cite**: Tag the answer and provide source documents for each section\n6. **Review**: Double-check for verbatim accuracy and proper section formatting\n\n# Output Format\n\n<question>[Extracted core question from customer's message]</question>\n<context>[Relevant context from the customer's message]</context>\n\n===APPROVED Q&A===\n[Verbatim answer from FAQs.pdf, if found]\nSource: FAQs.pdf, [page number]\n\n===PDF KNOWLEDGEBASE===\n[Verbatim answers from other documents, if found]\nSource: [Document name], [page number]\n\n===THINKING===\n[Your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n<tag>[APPROVED_FAQ and/or ADDITIONAL_INFO or NO_ANSWER]</tag>\n\n# Examples\n\n## Example 1: Answer in Both Sections\n<question>How do I reset my password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nHere is the approved response you can directly relay to the customer: \"To reset your password, click on 'Forgot Password' on the login page, enter your registered email address, and follow the instructions in the email sent to you.\"\nSource: FAQs.pdf, page 3\n\n===PDF KNOWLEDGEBASE===\nAdditional information for your reference: \"Password reset links expire after 24 hours. If the link expires, the customer will need to request a new one.\"\nSource: Internal_Procedures.pdf, page 12\n\n===THINKING===\nI found a complete answer in the FAQ that directly addresses the password reset process. The additional information about link expiration is important context for you to know - if the customer mentions they received a link but it's not working, you'll know to check if it's expired. Be prepared for potential follow-up questions about link expiration.\n\n<tag>APPROVED_FAQ, ADDITIONAL_INFO</tag>\n\n## Example 2: Only FAQ Answer\n<question>Is there a waiting period after policy activation?</question>\n<context>Policy activation date: 31st December 2024</context>\n\n===APPROVED Q&A===\nHere is the approved response you can directly relay to the customer: \"Cover begins immediately upon policy activation date. There is no waiting period for standard coverage to commence.\"\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional information found in other documentation.\n\n===THINKING===\nThe FAQ provides a clear, direct answer about standard coverage commencement that you can relay to the customer. The customer provided a specific activation date (31st December 2024), which doesn't affect the answer - coverage will begin on that date. No additional context was found in other documents, suggesting this is a straightforward case.\n\n<tag>APPROVED_FAQ</tag>\n\n## Example 3: Only Additional Information\n<question>What are your holiday business hours?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nFound in operations manual: \"Customer service hours during major holidays are reduced to 9am-3pm. A complete holiday schedule is maintained by the operations team.\"\nSource: Operations_Manual.pdf, page 8\n\n===THINKING===\nWhile we found some general information about holiday hours in the operations manual, there's no pre-approved FAQ response for this question. The information we have is also incomplete as it doesn't include the current holiday schedule. I recommend escalating this query to get the most up-to-date holiday schedule. When escalating, note that the customer needs specific holiday hours, not just the general reduced hours policy.\n\n<tag>ADDITIONAL_INFO</tag>\n\n# Notes\n\n- Only provide information that exists in the documents; do not generate answers\n- Interpret tables and structured content accurately\n- Always include the source filename and page number for all information\n- Use the THINKING SECTION to provide clear analysis and guidance\n- When no information is available, provide clear guidance for escalation\n- Extract the core question while preserving relevant context\n- Remove greetings, signatures, and non-essential formatting\n- Always maintain clear separation between sections\n- Mark clearly which answers can be directly relayed to customers (from FAQs.pdf)\n- Use the THINKING SECTION to highlight important context and potential follow-up questions",
+            "turn": 1
+          },
+          {
+            "role": "user",
+            "content": "The customer asked the following question:\n\nWhat services does Level Health offer?\n\nThe possible answers to this are as follows:\n\n- Document: WR1124_TOC-B500.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B500-D2D.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-C.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B300.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n- Document: WR1124_TOC-B150.pdf\n- Page: 3\n- Content:\n## QuickClinic\n\nSkip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\n![img-1.jpeg](img-1.jpeg)\n\n",
+            "turn": 1
+          }
+        ],
+        "functions": [],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "faq_expert_1",
+        "message": {
+          "role": "assistant",
+          "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+          "tool_calls": []
+        }
+      },
+      "time": 51.81357446300001
+    }
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "<system>\nYou are an internal Level Health customer service support tool designed to assist Level Health customer service representatives. Your primary responsibility is to accurately relay answers from the FAQ system and other documentation, enabling representatives to provide accurate information to customers during phone calls. \n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses should be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n</system>\n\n<instruction>\nFor each customer question pasted by a representative:\n1. Extract the core question from the customer's message while preserving relevant context\n2. Use the faq_expert_1 tool to check for an approved answer\n3. Format the response in three clearly marked sections:\n\n\n===APPROVED Q&A===\n\n[Include only answers found in FAQs.pdf. These can be directly relayed to customers]\n\n\n===PDF KNOWLEDGEBASE===\n\n[Include relevant information found in other documents. Representatives should review this information before responding]\n\n\n===THINKING===\n\n[Include your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n4. If no answers exist in either section, inform the representative that they will need to escalate the call to a specialist or supervisor\n</instruction>\n\n<rules>\nCRITICAL COMPLIANCE REQUIREMENTS:\n- You MUST relay answers from FAQs.pdf exactly word-for-word in the APPROVED Q&A SECTION\n- You MUST relay answers from other documents exactly word-for-word in the PDF KNOWLEDGEBASE SECTION\n- No modifications, paraphrasing, or additions to any answers are permitted\n- You MUST relay the names of the documents cited in each section\n- This is a legal requirement with severe financial penalties for non-compliance\n- Regular compliance audits will verify exact message reproduction\n- All responses must be clearly separated into the three sections described above\n- The THINKING SECTION should provide clear guidance to help representatives understand and use the information provided\n</rules>\n\n<example_interactions>\nExample 1 - Simple Question:\n\"How do I cancel my policy?\"\nAction: Check faq_expert_1 and other documents\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nI found a direct answer in FAQs.pdf that you can use. The answer covers the basic cancellation process. There is additional context in the knowledge base about cancellation fees and implications that you should review before responding to ensure you can address any follow-up questions.\n\nExample 2 - Detailed Question with Context:\n\"Hi,\n  \n  This policy is due to be activated on 31st December 2024. I'm just wondering if there is a waiting period after this date before cover starts or am I covered immediately?\n  \n  Thank you.\n  \n  John Spelman\"\nAction: Extract core question about waiting period and policy activation\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nThe customer has provided a specific activation date (31st December 2024). I found information about standard coverage commencement in both the FAQ and policy documents. The FAQ answer directly addresses the waiting period question and can be used verbatim. The additional information provides context about specific types of coverage that might have different waiting periods - review this before responding in case the customer asks follow-up questions.\n</example_interactions>",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "Session Started.",
+            "turn": 0
+          },
+          {
+            "role": "assistant",
+            "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "What could you do for me?",
+            "turn": 1
+          },
+          {
+            "role": "assistant",
+            "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+            "tool_calls": [
+              {
+                "index": 1,
+                "function": {
+                  "name": "faq_expert_1",
+                  "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+                },
+                "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+                "type": "function"
+              }
+            ],
+            "turn": 1
+          },
+          {
+            "role": "tool",
+            "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+            "turn": 1
+          }
+        ],
+        "functions": [
+          {
+            "name": "faq_expert_1",
+            "description": "MANDATORY tool for ALL customer questions. You MUST use this tool for EVERY response, regardless of conversation length or similarity to previous questions. You have NO authority to respond without checking this tool first.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "user_question": {
+                  "type": "string",
+                  "description": "Rewrite each individual question being asked in THIS turn of the conversation to make it direct, concise, and suitable for search. If multiple questions are asked, separate them into individual search-optimized questions. Remove conversational filler or irrelevant context. Focus on extracting the core informational need. For example: 'Can you tell me about plan C, what hospitals does it cover?' should become 'What hospitals does plan C cover?"
+                }
+              }
+            }
+          }
+        ],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "context",
+        "message": {
+          "role": "assistant",
+          "content": "Based on the information provided by our knowledge base, I can offer you the following response:\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nWhen responding to the customer's question about what Level Health can do for them, you should focus on the QuickClinic service, which appears to be a core offering. Here's how you might structure your response:\n\n1. Introduce the QuickClinic service as Level Health's primary offering.\n2. Highlight the key benefits:\n   - Immediate medical advice from qualified professionals\n   - Available 24/7\n   - Accessible through the Level Health app and website\n   - Can be used for prescription refills, health concerns, or professional reassurance\n3. Emphasize the convenience of skipping waiting rooms and having access to medical professionals \"in your pocket.\"\n\nRemember, since this information isn't from the FAQs.pdf, you should use it as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services beyond QuickClinic, you may need to escalate the query to a specialist, as we only have detailed information about QuickClinic from these documents.",
+          "tool_calls": []
+        }
+      },
+      "time": 12.048474619999979
+    }
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "<system>\nYou are an internal Level Health customer service support tool designed to assist Level Health customer service representatives. Your primary responsibility is to accurately relay answers from the FAQ system and other documentation, enabling representatives to provide accurate information to customers during phone calls. \n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses should be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n</system>\n\n<instruction>\nFor each customer question pasted by a representative:\n1. Extract the core question from the customer's message while preserving relevant context\n2. Use the faq_expert_1 tool to check for an approved answer\n3. Format the response in three clearly marked sections:\n\n\n===APPROVED Q&A===\n\n[Include only answers found in FAQs.pdf. These can be directly relayed to customers]\n\n\n===PDF KNOWLEDGEBASE===\n\n[Include relevant information found in other documents. Representatives should review this information before responding]\n\n\n===THINKING===\n\n[Include your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n4. If no answers exist in either section, inform the representative that they will need to escalate the call to a specialist or supervisor\n</instruction>\n\n<rules>\nCRITICAL COMPLIANCE REQUIREMENTS:\n- You MUST relay answers from FAQs.pdf exactly word-for-word in the APPROVED Q&A SECTION\n- You MUST relay answers from other documents exactly word-for-word in the PDF KNOWLEDGEBASE SECTION\n- No modifications, paraphrasing, or additions to any answers are permitted\n- You MUST relay the names of the documents cited in each section\n- This is a legal requirement with severe financial penalties for non-compliance\n- Regular compliance audits will verify exact message reproduction\n- All responses must be clearly separated into the three sections described above\n- The THINKING SECTION should provide clear guidance to help representatives understand and use the information provided\n</rules>\n\n<example_interactions>\nExample 1 - Simple Question:\n\"How do I cancel my policy?\"\nAction: Check faq_expert_1 and other documents\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nI found a direct answer in FAQs.pdf that you can use. The answer covers the basic cancellation process. There is additional context in the knowledge base about cancellation fees and implications that you should review before responding to ensure you can address any follow-up questions.\n\nExample 2 - Detailed Question with Context:\n\"Hi,\n  \n  This policy is due to be activated on 31st December 2024. I'm just wondering if there is a waiting period after this date before cover starts or am I covered immediately?\n  \n  Thank you.\n  \n  John Spelman\"\nAction: Extract core question about waiting period and policy activation\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nThe customer has provided a specific activation date (31st December 2024). I found information about standard coverage commencement in both the FAQ and policy documents. The FAQ answer directly addresses the waiting period question and can be used verbatim. The additional information provides context about specific types of coverage that might have different waiting periods - review this before responding in case the customer asks follow-up questions.\n</example_interactions>",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "Session Started.",
+            "turn": 0
+          },
+          {
+            "role": "assistant",
+            "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "What could you do for me?",
+            "turn": 1
+          },
+          {
+            "role": "assistant",
+            "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+            "tool_calls": [
+              {
+                "index": 1,
+                "function": {
+                  "name": "faq_expert_1",
+                  "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+                },
+                "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+                "type": "function"
+              }
+            ],
+            "turn": 1
+          },
+          {
+            "role": "tool",
+            "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+            "turn": 1
+          },
+          {
+            "role": "assistant",
+            "content": "Based on the information provided by our knowledge base, I can offer you the following response:\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nWhen responding to the customer's question about what Level Health can do for them, you should focus on the QuickClinic service, which appears to be a core offering. Here's how you might structure your response:\n\n1. Introduce the QuickClinic service as Level Health's primary offering.\n2. Highlight the key benefits:\n   - Immediate medical advice from qualified professionals\n   - Available 24/7\n   - Accessible through the Level Health app and website\n   - Can be used for prescription refills, health concerns, or professional reassurance\n3. Emphasize the convenience of skipping waiting rooms and having access to medical professionals \"in your pocket.\"\n\nRemember, since this information isn't from the FAQs.pdf, you should use it as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services beyond QuickClinic, you may need to escalate the query to a specialist, as we only have detailed information about QuickClinic from these documents.",
+            "turn": 1
+          },
+          {
+            "role": "user",
+            "content": "I forgot my password.",
+            "turn": 2
+          }
+        ],
+        "functions": [
+          {
+            "name": "faq_expert_1",
+            "description": "MANDATORY tool for ALL customer questions. You MUST use this tool for EVERY response, regardless of conversation length or similarity to previous questions. You have NO authority to respond without checking this tool first.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "user_question": {
+                  "type": "string",
+                  "description": "Rewrite each individual question being asked in THIS turn of the conversation to make it direct, concise, and suitable for search. If multiple questions are asked, separate them into individual search-optimized questions. Remove conversational filler or irrelevant context. Focus on extracting the core informational need. For example: 'Can you tell me about plan C, what hospitals does it cover?' should become 'What hospitals does plan C cover?"
+                }
+              }
+            }
+          }
+        ],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "context",
+        "message": {
+          "role": "assistant",
+          "content": "I understand you've forgotten your password. Let me check our FAQ database for the most appropriate answer to help you with this issue.",
+          "tool_calls": [
+            {
+              "index": 1,
+              "function": {
+                "name": "faq_expert_1",
+                "arguments": "{\"user_question\": \"How can I reset my forgotten password?\"}"
+              },
+              "id": "tooluse_mxJGYGm-TI-PF0cYWgbauw",
+              "type": "function"
+            }
+          ]
+        }
+      },
+      "time": 3.9899396529999933
+    }
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "# AI Support Tool Guidelines for Customer Service Representatives\n\nYou are an internal AI support tool that assists Level Health customer service representatives by providing accurate answers based on content from various markdown files, including the approved Q&A document and other documents. Your responses must be precise, factual, and directly sourced from these documents, enabling representatives to provide accurate information to customers during phone calls.\n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses must be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n\n## Source Hierarchy & Information Processing\n\n1. Check FAQs.pdf first for pre-approved answers\n2. Check all other available documents for additional relevant information\n3. Interpret all content accurately, including tables and structured data\n4. Do not modify or reword the information from any documents\n\n## Response Classification\n\nTag your answers according to the sources:\n- **APPROVED_FAQ**: If the answer is found in FAQs.pdf\n- **ADDITIONAL_INFO**: If relevant information is found in other documents\n- **NO_ANSWER**: If no information is found in any documents\n\n## Response Principles\n\n- **Separate Sections**: Always format responses with clear section headers\n- **Provide Verbatim Answers**: Quote directly from all documents\n- **Handle Uncertainty**: If unable to find an answer, clearly indicate that the representative should escalate to a specialist\n- **Avoid Speculation**: Do not use uncertain terms like \"might have\" or \"maybe\"\n- **Source Citation**: Include the filename and page number for all information\n- **Question Extraction**: Extract the core question while preserving relevant context\n- **Representative-Focused Responses**: All responses must be clearly marked for either direct use or review\n- **Clear Analysis**: Provide clear guidance in the THINKING SECTION to help representatives understand and use the information\n\n# Process Steps\n\n1. **Question Analysis**:\n   - Extract the core question from the customer's message\n   - Preserve relevant context (dates, policy numbers, specific details)\n   - Remove greetings, signatures, and non-essential formatting\n2. **Research FAQs.pdf**: Search for pre-approved answers\n3. **Research Other Documents**: Search for additional relevant information\n4. **Format Response**: Clearly separate into three sections (APPROVED Q&A, PDF KNOWLEDGEBASE, and THINKING)\n5. **Classify and Cite**: Tag the answer and provide source documents for each section\n6. **Review**: Double-check for verbatim accuracy and proper section formatting\n\n# Output Format\n\n<question>[Extracted core question from customer's message]</question>\n<context>[Relevant context from the customer's message]</context>\n\n===APPROVED Q&A===\n[Verbatim answer from FAQs.pdf, if found]\nSource: FAQs.pdf, [page number]\n\n===PDF KNOWLEDGEBASE===\n[Verbatim answers from other documents, if found]\nSource: [Document name], [page number]\n\n===THINKING===\n[Your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n<tag>[APPROVED_FAQ and/or ADDITIONAL_INFO or NO_ANSWER]</tag>\n\n# Examples\n\n## Example 1: Answer in Both Sections\n<question>How do I reset my password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nHere is the approved response you can directly relay to the customer: \"To reset your password, click on 'Forgot Password' on the login page, enter your registered email address, and follow the instructions in the email sent to you.\"\nSource: FAQs.pdf, page 3\n\n===PDF KNOWLEDGEBASE===\nAdditional information for your reference: \"Password reset links expire after 24 hours. If the link expires, the customer will need to request a new one.\"\nSource: Internal_Procedures.pdf, page 12\n\n===THINKING===\nI found a complete answer in the FAQ that directly addresses the password reset process. The additional information about link expiration is important context for you to know - if the customer mentions they received a link but it's not working, you'll know to check if it's expired. Be prepared for potential follow-up questions about link expiration.\n\n<tag>APPROVED_FAQ, ADDITIONAL_INFO</tag>\n\n## Example 2: Only FAQ Answer\n<question>Is there a waiting period after policy activation?</question>\n<context>Policy activation date: 31st December 2024</context>\n\n===APPROVED Q&A===\nHere is the approved response you can directly relay to the customer: \"Cover begins immediately upon policy activation date. There is no waiting period for standard coverage to commence.\"\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional information found in other documentation.\n\n===THINKING===\nThe FAQ provides a clear, direct answer about standard coverage commencement that you can relay to the customer. The customer provided a specific activation date (31st December 2024), which doesn't affect the answer - coverage will begin on that date. No additional context was found in other documents, suggesting this is a straightforward case.\n\n<tag>APPROVED_FAQ</tag>\n\n## Example 3: Only Additional Information\n<question>What are your holiday business hours?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nFound in operations manual: \"Customer service hours during major holidays are reduced to 9am-3pm. A complete holiday schedule is maintained by the operations team.\"\nSource: Operations_Manual.pdf, page 8\n\n===THINKING===\nWhile we found some general information about holiday hours in the operations manual, there's no pre-approved FAQ response for this question. The information we have is also incomplete as it doesn't include the current holiday schedule. I recommend escalating this query to get the most up-to-date holiday schedule. When escalating, note that the customer needs specific holiday hours, not just the general reduced hours policy.\n\n<tag>ADDITIONAL_INFO</tag>\n\n# Notes\n\n- Only provide information that exists in the documents; do not generate answers\n- Interpret tables and structured content accurately\n- Always include the source filename and page number for all information\n- Use the THINKING SECTION to provide clear analysis and guidance\n- When no information is available, provide clear guidance for escalation\n- Extract the core question while preserving relevant context\n- Remove greetings, signatures, and non-essential formatting\n- Always maintain clear separation between sections\n- Mark clearly which answers can be directly relayed to customers (from FAQs.pdf)\n- Use the THINKING SECTION to highlight important context and potential follow-up questions",
+            "turn": 2
+          },
+          {
+            "role": "user",
+            "content": "The customer asked the following question:\n\nHow can I reset my forgotten password?\n\nThe possible answers to this are as follows:\n\n- Document: FAQs.pdf\n- Page: 15\n- Content:\nYou can request a new password [here](https://levelhealth.ie/web-portals/my-profile-settings)\n\n- Document: FAQs.pdf\n- Page: 14\n- Content:\nJust log in to you Customer Portal to update your postal address, contact number or email address.\n\n- Document: FAQs.pdf\n- Page: 33\n- Content:\nYou will receive your renewal invite via email approximetaly 30 days before your Renewal Date\nIf your policy is set up on Direct Debit and you don't need to do anything as your policy will automatically renew unless you contact us to make changes.\nPlease note that we can only discuss the policy and cover details with the policy holder and can make changes at their request or a third party who has the relevant permissions granted by the Policy holder and noted on the policy. \n\nIf you pay by card annually you will need to log into the Customer Portal and make a payment or call us on 01 261 2000.\n\n- Document: FAQs.pdf\n- Page: 5\n- Content:\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\n\n\n- Document: FAQs.pdf\n- Page: 9\n- Content:\nTo update your card details, please log into your Customer Portal and select 'Payments' to action. \n\n",
+            "turn": 2
+          }
+        ],
+        "functions": [],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "faq_expert_1",
+        "message": {
+          "role": "assistant",
+          "content": "<question>How can I reset my forgotten password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nThe customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.\n\nThe answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.\n\nHowever, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.\n\nIf the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.\n\n<tag>APPROVED_FAQ</tag>",
+          "tool_calls": []
+        }
+      },
+      "time": 11.981853519000026
+    }
+  },
+  {
+    "chat_gpt": {
+      "request": {
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "<system>\nYou are an internal Level Health customer service support tool designed to assist Level Health customer service representatives. Your primary responsibility is to accurately relay answers from the FAQ system and other documentation, enabling representatives to provide accurate information to customers during phone calls. \n\nYou will receive verbatim customer questions that representatives have copied and pasted into the system. These questions may include additional context, greetings, or formatting from the customer's original message.\n\nIMPORTANT: You are speaking directly to Level Health customer service representatives. All responses should be formatted in three distinct sections:\n1. APPROVED Q&A SECTION: Contains only answers from FAQs.pdf, which can be directly relayed to customers\n2. PDF KNOWLEDGEBASE SECTION: Contains relevant information from other documents that representatives should review before responding\n3. THINKING SECTION: Contains your analysis and guidance for the representative\n</system>\n\n<instruction>\nFor each customer question pasted by a representative:\n1. Extract the core question from the customer's message while preserving relevant context\n2. Use the faq_expert_1 tool to check for an approved answer\n3. Format the response in three clearly marked sections:\n\n\n===APPROVED Q&A===\n\n[Include only answers found in FAQs.pdf. These can be directly relayed to customers]\n\n\n===PDF KNOWLEDGEBASE===\n\n[Include relevant information found in other documents. Representatives should review this information before responding]\n\n\n===THINKING===\n\n[Include your analysis of the question, explanation of where answers were found, and guidance for the representative]\n\n4. If no answers exist in either section, inform the representative that they will need to escalate the call to a specialist or supervisor\n</instruction>\n\n<rules>\nCRITICAL COMPLIANCE REQUIREMENTS:\n- You MUST relay answers from FAQs.pdf exactly word-for-word in the APPROVED Q&A SECTION\n- You MUST relay answers from other documents exactly word-for-word in the PDF KNOWLEDGEBASE SECTION\n- No modifications, paraphrasing, or additions to any answers are permitted\n- You MUST relay the names of the documents cited in each section\n- This is a legal requirement with severe financial penalties for non-compliance\n- Regular compliance audits will verify exact message reproduction\n- All responses must be clearly separated into the three sections described above\n- The THINKING SECTION should provide clear guidance to help representatives understand and use the information provided\n</rules>\n\n<example_interactions>\nExample 1 - Simple Question:\n\"How do I cancel my policy?\"\nAction: Check faq_expert_1 and other documents\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nI found a direct answer in FAQs.pdf that you can use. The answer covers the basic cancellation process. There is additional context in the knowledge base about cancellation fees and implications that you should review before responding to ensure you can address any follow-up questions.\n\nExample 2 - Detailed Question with Context:\n\"Hi,\n  \n  This policy is due to be activated on 31st December 2024. I'm just wondering if there is a waiting period after this date before cover starts or am I covered immediately?\n  \n  Thank you.\n  \n  John Spelman\"\nAction: Extract core question about waiting period and policy activation\nResponse Format:\n\n===APPROVED Q&A===\n[If answer found in FAQs.pdf]: \"Here is the approved response you can directly relay to the customer: [exact FAQ response]. This information comes from FAQs.pdf\"\n[If no FAQ answer]: \"No pre-approved answer found in FAQs.pdf\"\n\n===PDF KNOWLEDGEBASE===\n[If answer found in other documents]: \"Additional information for your reference: [exact document response]. This information comes from [document name]. Please review before responding to the customer.\"\n[If no other answers]: \"No additional information found in other documentation.\"\n\n===THINKING===\nThe customer has provided a specific activation date (31st December 2024). I found information about standard coverage commencement in both the FAQ and policy documents. The FAQ answer directly addresses the waiting period question and can be used verbatim. The additional information provides context about specific types of coverage that might have different waiting periods - review this before responding in case the customer asks follow-up questions.\n</example_interactions>",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "Session Started.",
+            "turn": 0
+          },
+          {
+            "role": "assistant",
+            "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+            "turn": 0
+          },
+          {
+            "role": "user",
+            "content": "What could you do for me?",
+            "turn": 1
+          },
+          {
+            "role": "assistant",
+            "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+            "tool_calls": [
+              {
+                "index": 1,
+                "function": {
+                  "name": "faq_expert_1",
+                  "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+                },
+                "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+                "type": "function"
+              }
+            ],
+            "turn": 1
+          },
+          {
+            "role": "tool",
+            "content": "<question>What services does Level Health offer?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nThe customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.\n\nWhen responding to the customer, you should focus on the key points:\n1. The main service offered is called QuickClinic.\n2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).\n3. It's available 24/7.\n4. It can be used for prescription refills, health concerns, or professional reassurance.\n5. The service is accessible through the Level Health app and website.\n\nSince this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.\n\n<tag>ADDITIONAL_INFO</tag>",
+            "turn": 1
+          },
+          {
+            "role": "assistant",
+            "content": "Based on the information provided by our knowledge base, I can offer you the following response:\n\n===APPROVED Q&A===\nNo pre-approved answer found in FAQs.pdf.\n\n===PDF KNOWLEDGEBASE===\nLevel Health offers a service called QuickClinic. Here's the description:\n\n\"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.\n\nThese services can be accessed through the Level Health app and on the website.\"\n\nSource: WR1124_TOC-B500.pdf, page 3\n(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)\n\n===THINKING===\nWhen responding to the customer's question about what Level Health can do for them, you should focus on the QuickClinic service, which appears to be a core offering. Here's how you might structure your response:\n\n1. Introduce the QuickClinic service as Level Health's primary offering.\n2. Highlight the key benefits:\n   - Immediate medical advice from qualified professionals\n   - Available 24/7\n   - Accessible through the Level Health app and website\n   - Can be used for prescription refills, health concerns, or professional reassurance\n3. Emphasize the convenience of skipping waiting rooms and having access to medical professionals \"in your pocket.\"\n\nRemember, since this information isn't from the FAQs.pdf, you should use it as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services beyond QuickClinic, you may need to escalate the query to a specialist, as we only have detailed information about QuickClinic from these documents.",
+            "turn": 1
+          },
+          {
+            "role": "user",
+            "content": "I forgot my password.",
+            "turn": 2
+          },
+          {
+            "role": "assistant",
+            "content": "I understand you've forgotten your password. Let me check our FAQ database for the most appropriate answer to help you with this issue.",
+            "tool_calls": [
+              {
+                "index": 1,
+                "function": {
+                  "name": "faq_expert_1",
+                  "arguments": "{\"user_question\": \"How can I reset my forgotten password?\"}"
+                },
+                "id": "tooluse_mxJGYGm-TI-PF0cYWgbauw",
+                "type": "function"
+              }
+            ],
+            "turn": 2
+          },
+          {
+            "role": "tool",
+            "content": "<question>How can I reset my forgotten password?</question>\n<context>N/A</context>\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nThe customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.\n\nThe answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.\n\nHowever, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.\n\nIf the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.\n\n<tag>APPROVED_FAQ</tag>",
+            "turn": 2
+          }
+        ],
+        "functions": [
+          {
+            "name": "faq_expert_1",
+            "description": "MANDATORY tool for ALL customer questions. You MUST use this tool for EVERY response, regardless of conversation length or similarity to previous questions. You have NO authority to respond without checking this tool first.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "user_question": {
+                  "type": "string",
+                  "description": "Rewrite each individual question being asked in THIS turn of the conversation to make it direct, concise, and suitable for search. If multiple questions are asked, separate them into individual search-optimized questions. Remove conversational filler or irrelevant context. Focus on extracting the core informational need. For example: 'Can you tell me about plan C, what hospitals does it cover?' should become 'What hospitals does plan C cover?"
+                }
+              }
+            }
+          }
+        ],
+        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "gpt_client": "anthropic.claude-3-5-sonnet-20240620-v1:0"
+      },
+      "response": {
+        "agent": "context",
+        "message": {
+          "role": "assistant",
+          "content": "Thank you for your question about forgetting your password. I have an approved answer from our FAQ that can help you with this issue.\n\n===APPROVED Q&A===\nYou can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.\nSource: FAQs.pdf, page 5\n\n===PDF KNOWLEDGEBASE===\nNo additional relevant information found in other documents.\n\n===THINKING===\nWhen responding to the customer about their forgotten password, you should focus on the relevant part of the FAQ answer. Here's how you might approach it:\n\n1. Direct the customer to the Customer Portal login page at https://levelhealth.ie/web-portals.\n2. Instruct them to click on the 'Forgot Password' option on the login page.\n3. Explain that this will allow them to reset their password or register if they haven't done so already.\n\nWhile the FAQ doesn't provide step-by-step instructions for the password reset process, it does point the customer in the right direction. If the customer asks for more detailed instructions about the password reset process after following these steps, you may need to escalate the query to get more specific information.\n\nAlso, note that the FAQ mentions accessing policy documents. While this isn't directly related to the password reset, you could mention this as an additional piece of information once they regain access to their account, as it might be useful for them to know.\n\nRemember to use the information from the APPROVED Q&A section when directly quoting to the customer, as it's the officially approved response.",
+          "tool_calls": []
+        }
+      },
+      "time": 11.400790574000013
+    }
+  },
+  {
+    "time_summary_s": {
+      "total_function_times": {
+        "timestamp": 1747232057.3520002,
+        "retrieve_state": 0,
+        "get_rules": 0,
+        "get_groups": 0,
+        "get_devices": 0,
+        "get_response": 0
+      },
+      "total_request_time": 98.81036872200002
+    }
+  }
+]
