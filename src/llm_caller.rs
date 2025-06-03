@@ -28,7 +28,7 @@ impl LLmCaller {
     }
 
     pub fn _call(&self, _prompt: &str, _message: &str) {
-        let _body = serde_json::json!({
+        let _body = json!({
             "model": json!(self.model),
             "messages": [
                 { "role": "system", "content": ""},
