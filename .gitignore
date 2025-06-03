@@ -181,3 +181,4 @@ htmlcov
 .00-build-image*.sh
 .idea
 *.profraw
+coverage

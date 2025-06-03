@@ -18,14 +18,12 @@ impl Init for Starter {
     fn init(&self) {
         let cfg = Cfg::from_env();
 
-        let log_level = "debug".to_string();
-
-        logging::init_log(&log_level);
+        logging::init_log(&cfg.log_level);
 
         info!("Config: {:?}", cfg.clone());
-        error!("Log level set to: {}", log_level);
-        debug!("Log level set to: {}", log_level);
-        warn!("Log level set to: {}", log_level);
+        error!("Log level set to: {}", cfg.log_level);
+        debug!("Log level set to: {}", cfg.log_level);
+        warn!("Log level set to: {}", cfg.log_level);
     }
     fn start(&self) {}
 }
