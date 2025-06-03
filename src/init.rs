@@ -1,4 +1,4 @@
 pub trait Init {
-    fn init(&self);
-    fn start(&self);
+    fn init(&self) -> &Self;
+    fn start(&self) -> &Self;
 }

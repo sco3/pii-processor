@@ -60,23 +60,24 @@ impl LLmCaller {
         req
     }
 
-    async fn send(req: RequestBuilder) -> Option<Value> {
+    pub async fn send(req: RequestBuilder) -> Option<Value> {
         match req.send().await {
-            Ok(res) => {
-                let body = res.json::<Value>().await.unwrap_or_else(|e| {
-                    error!("Failed to parse JSON: {}", e);
-                    json!({})
-                });
-                debug!("Response: {}", body);
-                Some(body)
-            }
+            Ok(res) => match res.json::<Value>().await {
+                Ok(body) => {
+                    debug!("Response: {}", body);
+                    Some(body)
+                }
+                Err(e) => {
+                    error!("Failed to parse JSON response: {}", e);
+                    None
+                }
+            },
             Err(e) => {
                 error!("Request failed: {}", e);
                 None
             }
         }
     }
-
     pub async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
         let body = self.build_body(prompt, message);
         let req = self.build_request(body);

@@ -2,14 +2,9 @@
 
 set -xueo pipefail
 
-rm -rf *.profraw 
-rm -rf coverage
+cargo install cargo-llvm-cov
+cargo clean 
+cargo llvm-cov clean 
+cargo llvm-cov --html
 
-# exit 
-cargo install grcov
-rustup component  add llvm-tools
-
-export RUSTFLAGS="-C instrument-coverage"
-cargo test
-
-grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing -o coverage/
+echo firefox target/llvm-cov/html/index.html

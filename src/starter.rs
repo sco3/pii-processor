@@ -15,7 +15,7 @@ impl Starter {
 }
 
 impl Init for Starter {
-    fn init(&self) {
+    fn init(&self) -> &Self {
         let cfg = Cfg::from_env();
 
         logging::init_log(&cfg.log_level);
@@ -24,6 +24,9 @@ impl Init for Starter {
         error!("Log level set to: {}", cfg.log_level);
         debug!("Log level set to: {}", cfg.log_level);
         warn!("Log level set to: {}", cfg.log_level);
+        &self
     }
-    fn start(&self) {}
+    fn start(&self) -> &Self {
+        &self
+    }
 }
