@@ -1,3 +1,4 @@
+#!/usr/bin/env -S bash -c "tsc test.ts; node test.js"
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -40,19 +41,21 @@ var fs = require("fs/promises");
 var node_fetch_1 = require("node-fetch");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var msg, inputRaw, data, start, response, json;
+        var prompt, message, inputRaw, data, start, response, took, llm_took, json;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fs.readFile('system_prompt.txt', 'utf-8')];
                 case 1:
-                    msg = _a.sent();
-                    return [4 /*yield*/, fs.readFile('input.json', 'utf-8')];
+                    prompt = _a.sent();
+                    return [4 /*yield*/, fs.readFile('example_new_fields.log', 'utf-8')];
                 case 2:
+                    message = _a.sent();
+                    return [4 /*yield*/, fs.readFile('input.json', 'utf-8')];
+                case 3:
                     inputRaw = _a.sent();
                     data = JSON.parse(inputRaw);
-                    if (Array.isArray(data.messages) && data.messages.length > 0) {
-                        data.messages[0].content = msg;
-                    }
+                    data.messages[0].content = prompt;
+                    data.messages[1].content = message;
                     start = Date.now();
                     return [4 /*yield*/, (0, node_fetch_1.default)('http://0.0.0.0:4000/chat/completions', {
                             method: 'POST',
@@ -62,14 +65,16 @@ function main() {
                             },
                             body: JSON.stringify(data),
                         })];
-                case 3:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
                 case 4:
+                    response = _a.sent();
+                    took = Date.now() - start;
+                    llm_took = parseFloat(response.headers.get("x-litellm-response-duration-ms"));
+                    return [4 /*yield*/, response.json()];
+                case 5:
                     json = _a.sent();
                     console.log(JSON.stringify(json, null, 2));
                     console.log(json.choices[0].message.content);
-                    console.log("Time: ".concat(Date.now() - start, " ms"));
+                    console.log("Time: ".concat(took, " ms Extra: ").concat(took - llm_took));
                     return [2 /*return*/];
             }
         });

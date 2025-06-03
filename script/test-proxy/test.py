@@ -24,8 +24,13 @@ r = requests.post(
     headers={"Authorization": "Bearer sk-1234", "Content-Type": "application/json"},
     data=json.dumps(data)
 )
+took=(time()-start)*1000
+
 print(r.text)
 print(json.loads(r.text)["choices"][0]["message"]["content"])
-print(f"Time: {int((time()-start)*1000)} ms")
+llm_took = float(r.headers.get("x-litellm-response-duration-ms"))
+print("LLM Time:",llm_took)
+
+print("Time:",took,"ms", "extra", took-llm_took, "ms")
 
 

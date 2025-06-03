@@ -1,37 +1,55 @@
+use fs::read_to_string;
+use fs::write;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
+
 use std::{fs, time::Instant};
-use tokio;
+//use tokio;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() {
     let client = reqwest::Client::new();
 
-    let system_prompt = fs::read_to_string("system_prompt.txt")?;
+    let system_prompt = read_to_string("system_prompt.txt").unwrap_or_default();
+    let message = read_to_string("example_new_fields.log").unwrap_or_default();
+    let template = read_to_string("input.json").unwrap_or_default();
 
-    let mut data: serde_json::Value = serde_json::from_str(&fs::read_to_string("input.json")?)?;
-    data["messages"][0]["content"] = json!(system_prompt);
+    let mut json_body: serde_json::Value = serde_json::from_str(&template).unwrap_or(json!({}));
+    json_body["messages"][0]["content"] = json!(system_prompt);
+    json_body["messages"][1]["content"] = json!(message);
 
-    let json_body = serde_json::to_string(&data)?;
+    let str_body = serde_json::to_string(&json_body).unwrap_or("{}".to_string());
+    let _ = write("body.json", &str_body);
 
     let start = Instant::now();
-    let resp = client
+    if let Ok(resp) = client
         .post("http://0.0.0.0:4000/chat/completions")
         .header(AUTHORIZATION, "Bearer sk-1234")
         .header(CONTENT_TYPE, "application/json")
-        .body(json_body)
+        .body(str_body)
         .send()
-        .await?
-        .json::<serde_json::Value>()
-        .await?;
-    println!("{}", resp);
-    println!("Took: {} ms", start.elapsed().as_millis());
+        .await
+    {
+        let llm_took = resp
+            .headers()
+            .get("x-litellm-response-duration-ms")
+            .and_then(|v| v.to_str().ok())
+            .and_then(|s| s.parse::<f32>().ok())
+            .unwrap_or(0.0);
 
-    if let Some(content) = resp["choices"][0]["message"]["content"].as_str() {
-        println!("{}", content);
-    } else {
-        println!("Not found.");
+        let body = resp.json::<serde_json::Value>().await.unwrap_or(json!({}));
+        let took = start.elapsed().as_millis() as f32;
+        let extra = took - llm_took;
+
+        println!("{}", body);
+
+        if let Some(content) = body["choices"][0]["message"]["content"].as_str() {
+            println!("{}", content);
+        }
+
+        println!(
+            "Took: {} ms LLM took: {} ms Extra: {} ms",
+            took, llm_took, extra
+        );
     }
-
-    Ok(())
 }
