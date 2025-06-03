@@ -5,6 +5,7 @@ set -xueo pipefail
 rm -rf *.profraw 
 rm -rf coverage
 
+# exit 
 cargo install grcov
 rustup component  add llvm-tools
 

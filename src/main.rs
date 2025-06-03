@@ -11,6 +11,6 @@ pub mod starter;
 fn main() {
     let starter = Starter::new(None);
     starter.init();
-    
+
     starter.start();
 }

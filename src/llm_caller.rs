@@ -1,67 +1,68 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
+use serde_json::Value;
 use serde_json::json;
 use tracing::debug;
+use tracing::error;
 
 const BEARER: &str = "Bearer";
 
 pub struct LLmCaller {
     pub endpoint: String,
     pub model: String,
-    pub token: Option<String>,
-    pub client: reqwest::Client,
     pub bearer: Option<String>,
+    pub client: reqwest::Client,
 }
 
 impl LLmCaller {
-    pub fn new(endpoint: String, model: String, token: Option<String>) -> Self {
-        let client = reqwest::Client::new();
-        let bearer = token
-            .as_ref() //
-            .map(|t| format!("{} {}", BEARER, t));
-
+    pub fn new(
+        endpoint: impl Into<String>,
+        model: impl Into<String>,
+        token: Option<String>,
+    ) -> Self {
+        let bearer = token.as_ref().map(|t| format!("{} {}", BEARER, t));
         LLmCaller {
-            endpoint,
-            model,
-            token,
-            client,
+            endpoint: endpoint.into(),
+            model: model.into(),
             bearer,
+            client: reqwest::Client::new(),
         }
     }
 
-    pub async fn call(&self, prompt: &str, message: &str) {
-        let mut body = json!({
-            "model": json!(self.model),
+    pub async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
+        let body = json!({
+            "model": self.model,
             "messages": [
-                { "role": "system", "content": ""},
-                { "role": "user", "content": "" }
+                { "role": "system", "content": prompt },
+                { "role": "user", "content": message }
             ],
-            "temperature":0
+            "temperature": 0
         });
 
-        body["messages"][0]["content"] = json!(prompt);
-        body["messages"][1]["content"] = json!(message);
-
-        let str_body = serde_json::to_string(&body) //
-            .unwrap_or("{}".to_string());
-
-        let mut req = self //
+        let req = self
             .client
             .post(&self.endpoint)
-            .header(CONTENT_TYPE, "application/json");
+            .header(CONTENT_TYPE, "application/json")
+            .body(body.to_string());
 
-        if let Some(ref bearer) = self.bearer {
-            req = req.header(AUTHORIZATION, bearer);
-        }
-        if let Ok(res) = req.body(str_body).send().await {
-            let body = res //
-                .json::<serde_json::Value>()
-                .await
-                .unwrap_or(json!({}));
+        let req = if let Some(ref bearer) = self.bearer {
+            req.header(AUTHORIZATION, bearer)
+        } else {
+            req
+        };
 
-            let resp_body = serde_json::to_string(&body) //
-                .unwrap_or_default();
-
-            debug!("Response: {}", resp_body);
+        match req.send().await {
+            Ok(res) => {
+                let body = res.json::<Value>().await.unwrap_or_else(|e| {
+                    debug!("Failed to parse JSON: {}", e);
+                    json!({})
+                });
+                debug!("Response: {}", body);
+                Some(body)
+            }
+            Err(e) => {
+                error!("Request failed: {}", e);
+                None
+            }
         }
     }
 }
