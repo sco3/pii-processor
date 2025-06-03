@@ -1,4 +1,4 @@
-use tracing_subscriber::{EnvFilter, fmt};
+use tracing_subscriber::EnvFilter;
 pub fn init_log(log_level: &String) {
     let filter = EnvFilter::new(log_level);
     tracing_subscriber::fmt()

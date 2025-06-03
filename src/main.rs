@@ -9,8 +9,7 @@ mod secret_string;
 fn main() {
     let cfg = Cfg::from_env();
 
-    let mut log_level = cfg.log_level.clone();
-    log_level = "debug".to_string();
+    let log_level = "debug".to_string();
 
     logging::init_log(&log_level);
 
