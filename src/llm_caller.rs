@@ -1,7 +1,8 @@
-//use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
+use tracing::debug;
 
-const _BEARER: &str = "Bearer";
+const BEARER: &str = "Bearer";
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -12,11 +13,11 @@ pub struct LLmCaller {
 }
 
 impl LLmCaller {
-    pub fn _new(endpoint: String, model: String, token: Option<String>) -> Self {
+    pub fn new(endpoint: String, model: String, token: Option<String>) -> Self {
         let client = reqwest::Client::new();
         let bearer = token
             .as_ref() //
-            .map(|t| format!("{} {}", _BEARER, t));
+            .map(|t| format!("{} {}", BEARER, t));
 
         LLmCaller {
             endpoint,
@@ -27,8 +28,8 @@ impl LLmCaller {
         }
     }
 
-    pub fn _call(&self, _prompt: &str, _message: &str) {
-        let _body = json!({
+    pub async fn call(&self, prompt: &str, message: &str) {
+        let mut body = json!({
             "model": json!(self.model),
             "messages": [
                 { "role": "system", "content": ""},
@@ -36,5 +37,31 @@ impl LLmCaller {
             ],
             "temperature":0
         });
+
+        body["messages"][0]["content"] = json!(prompt);
+        body["messages"][1]["content"] = json!(message);
+
+        let str_body = serde_json::to_string(&body) //
+            .unwrap_or("{}".to_string());
+
+        let mut req = self //
+            .client
+            .post(&self.endpoint)
+            .header(CONTENT_TYPE, "application/json");
+
+        if let Some(ref bearer) = self.bearer {
+            req = req.header(AUTHORIZATION, bearer);
+        }
+        if let Ok(res) = req.body(str_body).send().await {
+            let body = res //
+                .json::<serde_json::Value>()
+                .await
+                .unwrap_or(json!({}));
+
+            let resp_body = serde_json::to_string(&body) //
+                .unwrap_or_default();
+
+            debug!("Response: {}", resp_body);
+        }
     }
 }

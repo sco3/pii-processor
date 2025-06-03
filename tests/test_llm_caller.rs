@@ -1,14 +1,55 @@
 use ductaper::llm_caller::LLmCaller;
-#[test]
-fn test_llm_caller() {
-    let caller = LLmCaller::_new(
-        "https://api.openai.com/v1/chat/completions".to_string(),
-        "gpt-3.5-turbo".to_string(),
+use ductaper::logging::init_log;
+use httpmock::Method::POST;
+use httpmock::MockServer;
+use serde_json::json;
+
+#[tokio::test]
+async fn test_llm_caller() {
+    init_log(&"debug".to_string());
+    let server = MockServer::start();
+
+    let expected_body = json!(
+    {"choices":[
+        {"finish_reason":"stop","index":0,
+         "message":{"content":"MOCK: Hello!",
+         "function_call":null,
+         "role":"assistant","tool_calls":null}}
+        ],
+        "created":1748970411,
+        "id":"chatcmpl-7c71612e-32dd-42",
+        "model":"amazon.nova-lite-v1:0",
+        "object":"chat.completion",
+        "system_fingerprint":null,
+        "usage":{
+            "cache_creation_input_tokens":0,
+            "cache_read_input_tokens":0,
+            "completion_tokens":42,
+            "completion_tokens_details":null,
+            "prompt_tokens":42,
+            "prompt_tokens_details":{
+                "audio_tokens":null,"cached_tokens":0
+            },
+            "total_tokens":42
+        }
+    });
+
+    let expected_str = serde_json::to_string(&expected_body) //
+        .unwrap_or_default();
+
+    let mock = server.mock(|when, then| {
+        when.method(POST).path("/chat/completions");
+        then.status(200).body(expected_str);
+    });
+
+    // proxy url sample
+    // "http://0.0.0.0:4000/chat/completions".to_string(),
+
+    let caller = LLmCaller::new(
+        server.url("/chat/completions").to_string(),
+        "nova".to_string(),
         Some("sk-1234".to_string()),
     );
-
-    assert_eq!(
-        caller.endpoint,
-        "https://api.openai.com/v1/chat/completions"
-    );
+    caller.call("Hello", "Hi").await;
+    mock.assert();
 }
