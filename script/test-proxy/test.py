@@ -7,9 +7,13 @@ import requests, json
 from pathlib import Path
 from time import time
 
-msg = Path("system_prompt.txt").read_text()
 data = json.load(open("input.json"))
-data["messages"][0]["content"] = msg
+
+prompt = Path("system_prompt.txt").read_text()
+msg= Path("example_new_fields.log").read_text()
+
+data["messages"][0]["content"] = prompt
+data["messages"][1]["content"] = msg
 
 with open("/tmp/data.json", "w") as f:
     json.dump(data, f)
