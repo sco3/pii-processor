@@ -24,6 +24,13 @@ pub struct Cfg {
 
     #[serde(default = "default_queue_stream_max_age")]
     pub queue_stream_max_age: u64,
+
+    #[serde(default = "default_aws_region_s3")]
+    pub aws_region_s3: String,
+}
+
+fn default_aws_region_s3() -> String {
+    "us-east-1".to_string()
 }
 fn default_queue_stream_max_age() -> u64 {
     60 * 60 * 24 // 1 day in seconds

@@ -4,10 +4,18 @@ pub use common::init_logging::init_tracing;
 use ductaper::env_vars::Cfg;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::secret_string::SecretString;
+use reqwest::StatusCode;
 use std::sync::atomic::Ordering;
+use testcontainers::core::wait::HttpWaitStrategy;
+use testcontainers::{
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
+    GenericImage,
+    ImageExt,
+};
 use tokio;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
+use tracing::info;
 
 #[tokio::test]
 async fn test_consumer() {
@@ -16,40 +24,42 @@ async fn test_consumer() {
         std::env::remove_var("DOCKER_HOST");
     }
 
-    // let container = GenericImage::new("nats", "2.11.4")
-    //     .with_exposed_port(4222.tcp())
-    //     .with_wait_for(WaitFor::http(
-    //         HttpWaitStrategy::new("/healthz")
-    //             .with_port(8222.tcp()) //
-    //             .with_expected_status_code(StatusCode::OK),
-    //     ))
-    //     .with_network("bridge")
-    //     .start()
-    //     .await
-    //     .expect("Failed to start Nats");
+    let container = GenericImage::new("nats", "2.11.4")
+        .with_exposed_port(4222.tcp())
+        .with_wait_for(WaitFor::http(
+            HttpWaitStrategy::new("/healthz")
+                .with_port(8222.tcp()) //
+                .with_expected_status_code(StatusCode::OK),
+        ))
+        .with_network("bridge")
+        .start()
+        .await
+        .expect("Failed to start Nats");
 
-    //    if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
-    //info!("Container port: {port}");
-    let port = 4222;
-    let cfg = Cfg {
-        llm_token: SecretString::new("sk-1234"),
-        log_level: "debug".to_string(),
-        redact_subject: "redact".to_string(),
-        queue_stream: "queue".to_string(),
-        queue_stream_max_age: 3600 * 24,
-        nats_url: format!("nats://localhost:{port}"),
-        tenant: "tenant".to_string(),
-        application: "application".to_string(),
-    };
-    let mut consumer = RedactConsumer::new(&cfg).await;
-    consumer.update_stream(&cfg).await;
-    consumer.subscribe(&cfg).await;
-    let run = consumer.get_run_flag_clone();
-    let _ = tokio::join!(
-        async {
-            sleep(TokioDuration::from_secs(2)).await;
-            run.store(false, Ordering::Relaxed);
-        },
-        consumer.serve(),
-    );
+    if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
+        info!("Container port: {port}");
+
+        let cfg = Cfg {
+            llm_token: SecretString::new("sk-1234"),
+            log_level: "debug".to_string(),
+            redact_subject: "redact".to_string(),
+            queue_stream: "queue".to_string(),
+            queue_stream_max_age: 3600 * 24,
+            nats_url: format!("nats://localhost:{port}"),
+            tenant: "tenant".to_string(),
+            application: "application".to_string(),
+            aws_region_s3: "eu-west-1".to_string(),
+        };
+        let mut consumer = RedactConsumer::new(&cfg).await;
+        consumer.update_stream(&cfg).await;
+        consumer.subscribe(&cfg).await;
+        let run = consumer.get_run_flag_clone();
+        let _ = tokio::join!(
+            async {
+                sleep(TokioDuration::from_secs(2)).await;
+                run.store(false, Ordering::Relaxed);
+            },
+            consumer.serve(),
+        );
+    }
 }
