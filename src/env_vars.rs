@@ -21,8 +21,13 @@ pub struct Cfg {
 
     #[serde(default = "default_redact_subject")]
     pub redact_subject: String,
-}
 
+    #[serde(default = "default_queue_stream_max_age")]
+    pub queue_stream_max_age: u64,
+}
+fn default_queue_stream_max_age() -> u64 {
+    60 * 60 * 24 // 1 day in seconds
+}
 fn default_llm_token() -> SecretString {
     SecretString::new("sk-1234")
 }

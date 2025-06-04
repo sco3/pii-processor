@@ -182,3 +182,4 @@ htmlcov
 .idea
 *.profraw
 coverage
+.tree
