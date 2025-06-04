@@ -1,8 +1,9 @@
 use crate::env_vars::Cfg;
-use async_nats::ConnectOptions;
-use async_nats::jetstream::Context;
 use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
+use async_nats::jetstream::Context;
+use async_nats::ConnectOptions;
+use futures::StreamExt;
 use std::time::Duration;
 use tracing::{debug, error, info};
 
@@ -13,6 +14,31 @@ pub struct RedactConsumer {
 }
 
 impl RedactConsumer {
+    pub async fn serve(&self) {
+        if let Some(consumer) = &self.consumer {
+            loop {
+                if let Ok(mut messages) = consumer //
+                    .fetch()
+                    .max_messages(1)
+                    .messages()
+                    .await
+                {
+                    while let Some(Ok(message)) = messages.next().await {
+                        if let Err(e) = message.ack().await {
+                            error!("Ack failed: {}", e);
+                        }
+                        debug!("Got message: {:?}", message.payload);
+                        if message.payload == "\0" {
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            error!("Consumer not found");
+        }
+    }
+
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
             Ok(stream) => stream,

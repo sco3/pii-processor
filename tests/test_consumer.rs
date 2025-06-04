@@ -1,12 +1,11 @@
 mod common;
+
 pub use common::init_logging::init_tracing;
 use ductaper::env_vars::Cfg;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::secret_string::SecretString;
 use futures::StreamExt;
 // Add this at the top if not present
-
-use tracing::{debug, info};
 
 #[tokio::test]
 async fn test_consumer() {
@@ -29,39 +28,19 @@ async fn test_consumer() {
 
     //    if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
     //info!("Container port: {port}");
+    let port = 4222;
     let cfg = Cfg {
         llm_token: SecretString::new("sk-1234"),
         log_level: "debug".to_string(),
         redact_subject: "redact".to_string(),
         queue_stream: "queue".to_string(),
         queue_stream_max_age: 3600,
-        nats_url: format!("nats://localhost:4222"),
+        nats_url: format!("nats://localhost:{port}"),
         tenant: "tenant".to_string(),
         application: "application".to_string(),
     };
     let mut consumer = RedactConsumer::new(&cfg).await;
     consumer.update_stream(&cfg).await;
     consumer.subscribe(&cfg).await;
-
-    if let Some(cons) = consumer.consumer {
-        loop {
-            match cons.messages().await {
-                Ok(fetcher) => {
-                    let mut taken = fetcher.take(1);
-                    while let Some(Ok(message)) = taken.next().await {
-                        debug!("Received message: {:?}", message);
-                        if let Err(err) = message.ack().await {
-                            debug!("Failed to acknowledge message: {}", err);
-                        }
-                    }
-                }
-                Err(err) => {
-                    debug!("No messages: {}", err);
-                }
-            }
-            info!("loop");
-        }
-    };
-    info!("exit");
-    //  }
+    consumer.serve().await;
 }
