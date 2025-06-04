@@ -1,7 +1,7 @@
 use crate::env_vars::Cfg;
 use async_nats::ConnectOptions;
 use async_nats::jetstream::Context;
-use async_nats::jetstream::stream::RetentionPolicy;
+use async_nats::jetstream::stream::{DiscardPolicy, RetentionPolicy};
 use std::time::Duration;
 use tracing::{debug, error};
 
@@ -18,6 +18,7 @@ impl RedactConsumer {
             subjects: subjects.clone(),
             max_age: Duration::from_secs(cfg.queue_stream_max_age),
             retention: RetentionPolicy::Limits,
+            discard: DiscardPolicy::Old,
             ..Default::default()
         };
         let _stream = match self
