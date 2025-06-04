@@ -12,6 +12,7 @@ use std::collections::HashMap;
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub enum Architecture {
+    #[serde(rename = "Neocortex")]
     Neocortex,
 }
 
