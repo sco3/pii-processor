@@ -1,16 +1,22 @@
 use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::logging;
+//use crate::redact_consumer::RedactConsumer;
 use tracing::{debug, error, info, warn};
 
 pub struct Starter {
     pub cfg: Cfg,
+    //pub redact_consumer: RedactConsumer,
 }
 
 impl Starter {
     pub fn new(cfg: Option<Cfg>) -> Self {
         let cfg = cfg.unwrap_or_else(Cfg::from_env);
-        Starter { cfg }
+        //let redact_consumer = RedactConsumer::new(cfg.nats_url.as_str());
+        Starter {
+            cfg,
+            //redact_consumer,
+        }
     }
 }
 
@@ -24,6 +30,7 @@ impl Init for Starter {
         error!("Log level set to: {}", cfg.log_level);
         debug!("Log level set to: {}", cfg.log_level);
         warn!("Log level set to: {}", cfg.log_level);
+
         self
     }
     fn start(&self) -> &Self {

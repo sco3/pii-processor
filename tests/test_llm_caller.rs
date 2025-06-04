@@ -1,26 +1,14 @@
+use crate::common::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
-use ductaper::logging;
-use ductaper::logging::init_log;
 use httpmock::Method::POST;
 use httpmock::MockServer;
 use serde_json::json;
-use tracing_subscriber::FmtSubscriber;
 
-pub fn init_tracing() {
-    logging::LOG_INIT.call_once(|| {
-        let subscriber = FmtSubscriber::builder()
-            .with_max_level(tracing::Level::DEBUG)
-            .with_test_writer()
-            .finish();
+mod common;
 
-        if let Err(e) = tracing::subscriber::set_global_default(subscriber) {
-            println!("Sorry. Tracing already initialized: {}", e);
-        }
-    });
-}
 #[tokio::test]
 async fn test_llm_caller() {
-    init_log(&"debug".to_string());
+    init_tracing();
     let server = MockServer::start();
 
     let expected_body = json!(
