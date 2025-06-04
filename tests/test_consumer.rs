@@ -4,7 +4,6 @@ pub use common::init_logging::init_tracing;
 use ductaper::env_vars::Cfg;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::secret_string::SecretString;
-use futures::StreamExt;
 // Add this at the top if not present
 
 #[tokio::test]

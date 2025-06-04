@@ -79,13 +79,13 @@ impl RedactConsumer {
     pub async fn update_stream(&self, cfg: &Cfg) {
         let mut subjects = vec![cfg.redact_subject.clone(), "test".to_string()];
         let mut stream_config = Self::get_stream_cfg(cfg, &mut subjects);
-        let _stream = match self
+        match self
             .jetstream
             .get_or_create_stream(stream_config.clone())
             .await
         {
             Ok(stream) => {
-                let _info = match stream.get_info().await {
+                match stream.get_info().await {
                     Ok(info) => {
                         for existing_subject in info.config.subjects {
                             if !subjects.contains(&existing_subject) {
@@ -94,27 +94,24 @@ impl RedactConsumer {
                         }
                         stream_config.subjects = subjects;
 
-                        let _upd = match self.jetstream.update_stream(stream_config).await {
+                        match self.jetstream.update_stream(stream_config).await {
                             Ok(updated) => {
                                 debug!("Stream updated: {:?}", updated);
                             }
                             Err(err) => {
                                 error!("Failed to update stream: {}", err);
-                                return;
                             }
-                        };
+                        }
                     }
                     Err(err) => {
                         error!("Failed to get stream info: {}", err);
-                        return;
                     }
-                };
+                }
             }
             Err(err) => {
                 error!("Failed to get or create stream: {}", err);
-                return;
             }
-        };
+        }
     }
 
     fn get_stream_cfg(cfg: &Cfg, subjects: &mut Vec<String>) -> Config {
