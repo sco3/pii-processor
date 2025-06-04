@@ -4,7 +4,10 @@ pub use common::init_logging::init_tracing;
 use ductaper::env_vars::Cfg;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::secret_string::SecretString;
-// Add this at the top if not present
+use std::sync::atomic::Ordering;
+use tokio;
+use tokio::time::sleep;
+use tokio::time::Duration as TokioDuration;
 
 #[tokio::test]
 async fn test_consumer() {
@@ -33,7 +36,7 @@ async fn test_consumer() {
         log_level: "debug".to_string(),
         redact_subject: "redact".to_string(),
         queue_stream: "queue".to_string(),
-        queue_stream_max_age: 3600,
+        queue_stream_max_age: 3600 * 24,
         nats_url: format!("nats://localhost:{port}"),
         tenant: "tenant".to_string(),
         application: "application".to_string(),
@@ -41,5 +44,12 @@ async fn test_consumer() {
     let mut consumer = RedactConsumer::new(&cfg).await;
     consumer.update_stream(&cfg).await;
     consumer.subscribe(&cfg).await;
-    consumer.serve().await;
+    let run = consumer.get_run_flag_clone();
+    let _ = tokio::join!(
+        async {
+            sleep(TokioDuration::from_secs(2)).await;
+            run.store(false, Ordering::Relaxed);
+        },
+        consumer.serve(),
+    );
 }

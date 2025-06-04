@@ -5,6 +5,8 @@ use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use async_nats::jetstream::Context;
 use async_nats::ConnectOptions;
 use futures::StreamExt;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 use tracing::{debug, error, info};
 
@@ -12,6 +14,7 @@ pub struct RedactConsumer {
     pub client: async_nats::Client,
     pub jetstream: Context,
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
+    pub run: Arc<AtomicBool>,
 }
 
 impl RedactConsumer {
@@ -33,10 +36,13 @@ impl RedactConsumer {
             }
         }
     }
+    pub fn get_run_flag_clone(&self) -> Arc<AtomicBool> {
+        Arc::clone(&self.run)
+    }
 
     pub async fn serve(&self) {
         if let Some(consumer) = &self.consumer {
-            loop {
+            while self.run.load(Ordering::Relaxed) {
                 self.serve_loop(consumer).await;
             }
         } else {
@@ -84,40 +90,38 @@ impl RedactConsumer {
             .get_or_create_stream(stream_config.clone())
             .await
         {
-            Ok(stream) => {
-                match stream.get_info().await {
-                    Ok(info) => {
-                        for existing_subject in info.config.subjects {
-                            if !subjects.contains(&existing_subject) {
-                                subjects.push(existing_subject);
-                            }
-                        }
-                        stream_config.subjects = subjects;
-
-                        match self.jetstream.update_stream(stream_config).await {
-                            Ok(updated) => {
-                                debug!("Stream updated: {:?}", updated);
-                            }
-                            Err(err) => {
-                                error!("Failed to update stream: {}", err);
-                            }
+            Ok(stream) => match stream.get_info().await {
+                Ok(info) => {
+                    for existing_subject in info.config.subjects {
+                        if !subjects.contains(&existing_subject) {
+                            subjects.push(existing_subject);
                         }
                     }
-                    Err(err) => {
-                        error!("Failed to get stream info: {}", err);
+                    stream_config.subjects = subjects;
+
+                    match self.jetstream.update_stream(stream_config).await {
+                        Ok(updated) => {
+                            debug!("Stream updated: {:?}", updated);
+                        }
+                        Err(err) => {
+                            error!("Failed to update stream: {}", err);
+                        }
                     }
                 }
-            }
+                Err(err) => {
+                    error!("Failed to get stream info: {}", err);
+                }
+            },
             Err(err) => {
                 error!("Failed to get or create stream: {}", err);
             }
         }
     }
 
-    fn get_stream_cfg(cfg: &Cfg, subjects: &mut Vec<String>) -> Config {
+    fn get_stream_cfg(cfg: &Cfg, subjects: &mut [String]) -> Config {
         async_nats::jetstream::stream::Config {
             name: cfg.queue_stream.to_string(),
-            subjects: subjects.clone(),
+            subjects: subjects.to_vec(),
             max_age: Duration::from_secs(cfg.queue_stream_max_age),
             retention: RetentionPolicy::Limits,
             discard: DiscardPolicy::Old,
@@ -143,6 +147,7 @@ impl RedactConsumer {
             client,
             jetstream,
             consumer: None,
+            run: Arc::new(AtomicBool::new(true)),
         }
     }
 }
