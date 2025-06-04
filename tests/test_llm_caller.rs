@@ -1,9 +1,23 @@
 use ductaper::llm_caller::LLmCaller;
+use ductaper::logging;
 use ductaper::logging::init_log;
 use httpmock::Method::POST;
 use httpmock::MockServer;
 use serde_json::json;
+use tracing_subscriber::FmtSubscriber;
 
+pub fn init_tracing() {
+    logging::LOG_INIT.call_once(|| {
+        let subscriber = FmtSubscriber::builder()
+            .with_max_level(tracing::Level::DEBUG)
+            .with_test_writer()
+            .finish();
+
+        if let Err(e) = tracing::subscriber::set_global_default(subscriber) {
+            println!("Sorry. Tracing already initialized: {}", e);
+        }
+    });
+}
 #[tokio::test]
 async fn test_llm_caller() {
     init_log(&"debug".to_string());
@@ -56,6 +70,7 @@ async fn test_llm_caller() {
 
 #[tokio::test]
 async fn test_send_request_failure() {
+    init_tracing();
     let server = MockServer::start();
 
     // Simulate 500 Internal Server Error
@@ -88,4 +103,13 @@ async fn test_send_json_parse_failure() {
 
     let result = LLmCaller::send(req).await;
     assert!(result.is_none(), "Expected None on JSON parse failure");
+}
+
+#[tokio::test]
+async fn test_no_server_failure() {
+    let caller = LLmCaller::new("http://127.0.0.1:1", "gpt-test", None);
+    let req = caller.build_request(json!({"key": "value"}));
+
+    let result = LLmCaller::send(req).await;
+    assert!(result.is_none(), "Expected None - no server");
 }

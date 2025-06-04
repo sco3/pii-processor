@@ -4,7 +4,6 @@ use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
 use serde_json::json;
-use tracing::debug;
 use tracing::error;
 
 pub struct LLmCaller {
@@ -61,19 +60,27 @@ impl LLmCaller {
     }
 
     pub async fn send(req: RequestBuilder) -> Option<Value> {
-        match req.send().await {
-            Ok(res) => match res.json::<Value>().await {
-                Ok(body) => {
-                    debug!("Response: {}", body);
-                    Some(body)
-                }
-                Err(e) => {
-                    error!("Failed to parse JSON response: {}", e);
-                    None
-                }
-            },
+        let res = match req.send().await {
+            Ok(res) => res,
             Err(e) => {
                 error!("Request failed: {}", e);
+                return None;
+            }
+        };
+
+        if !res.status().is_success() {
+            let status = res.status();
+            let text = res.text().await.ok();
+            error!("Request failed with status {}: {:?}", status, text);
+            return None;
+        }
+
+        match res.json::<Value>().await {
+            Ok(body) => {
+                Some(body)
+            }
+            Err(e) => {
+                error!("Failed to parse JSON response: {}", e);
                 None
             }
         }

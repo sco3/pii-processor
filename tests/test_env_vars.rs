@@ -10,7 +10,11 @@ fn test_values() {
     }
     let cfg = Cfg::from_env();
     assert_eq!(cfg.nats_url, "NU");
-    assert_eq!(cfg.llm_token.get_string(), "LLM_TOKEN");
+    assert_eq!(
+        cfg.llm_token.get_string(),
+        "LLM_TOKEN",
+        "LLM token should match"
+    );
     assert_eq!(cfg.log_level, "DEBUG");
     let redacted = format!("{:?}", cfg.llm_token);
     assert_eq!("LLM_****", redacted);
