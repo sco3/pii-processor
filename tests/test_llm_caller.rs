@@ -53,3 +53,39 @@ async fn test_llm_caller() {
     caller.call("Hello", "Hi").await;
     mock.assert();
 }
+
+#[tokio::test]
+async fn test_send_request_failure() {
+    let server = MockServer::start();
+
+    // Simulate 500 Internal Server Error
+    let _mock = server.mock(|when, then| {
+        when.method(POST);
+        then.status(500).body("Internal Server Error");
+    });
+
+    let caller = LLmCaller::new(server.url("/fail"), "gpt-test", None);
+    let req = caller.build_request(json!({"key": "value"}));
+
+    let result = LLmCaller::send(req).await;
+    assert!(result.is_none(), "Expected None on HTTP failure");
+}
+
+#[tokio::test]
+async fn test_send_json_parse_failure() {
+    let server = MockServer::start();
+
+    // Simulate valid HTTP 200 with invalid JSON body
+    let _mock = server.mock(|when, then| {
+        when.method(POST);
+        then.status(200)
+            .header("Content-Type", "application/json")
+            .body("not-json");
+    });
+
+    let caller = LLmCaller::new(server.url("/bad-json"), "gpt-test", None);
+    let req = caller.build_request(json!({"key": "value"}));
+
+    let result = LLmCaller::send(req).await;
+    assert!(result.is_none(), "Expected None on JSON parse failure");
+}

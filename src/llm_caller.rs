@@ -47,7 +47,7 @@ impl LLmCaller {
         })
     }
 
-    fn build_request(&self, body: Value) -> RequestBuilder {
+    pub fn build_request(&self, body: Value) -> RequestBuilder {
         let mut req = self
             .client
             .post(&self.endpoint)

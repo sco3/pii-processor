@@ -13,6 +13,7 @@ tokio = { version = "1.45.1", features = ["full", "macros", "rt-multi-thread"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "std"] }
 mime = "0.3.17"
+home = "0.5.11"
 
 [dev-dependencies]
 httpmock = "0.7.0"

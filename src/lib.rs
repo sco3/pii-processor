@@ -6,3 +6,4 @@ pub mod logging;
 pub mod secret_string;
 pub mod session_log_models;
 pub mod starter;
+pub mod expanduser;
