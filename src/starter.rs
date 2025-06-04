@@ -24,9 +24,9 @@ impl Init for Starter {
         error!("Log level set to: {}", cfg.log_level);
         debug!("Log level set to: {}", cfg.log_level);
         warn!("Log level set to: {}", cfg.log_level);
-        &self
+        self
     }
     fn start(&self) -> &Self {
-        &self
+        self
     }
 }
