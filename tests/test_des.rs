@@ -5,7 +5,7 @@ use std::fs;
 #[test]
 fn test_deserialize_example_new_fields() {
     // Load test file from relative path
-    let path = "tests/data/example_new_fields.log";
+    let path = "tests/data/example_new_fields.json";
     let file_content = fs::read_to_string(path).expect("Failed to read example_new_fields.log");
 
     // Attempt to deserialize JSON into SessionLogType (Vec<SessionLogEntry>)
