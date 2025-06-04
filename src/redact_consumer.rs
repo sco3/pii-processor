@@ -1,4 +1,5 @@
 use crate::env_vars::Cfg;
+use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use async_nats::jetstream::Context;
@@ -14,31 +15,34 @@ pub struct RedactConsumer {
 }
 
 impl RedactConsumer {
+    async fn serve_loop(&self, consumer: &Consumer<PullConfig>) {
+        match consumer.fetch().max_messages(1).messages().await {
+            Ok(mut messages) => {
+                while let Some(Ok(message)) = messages.next().await {
+                    if let Err(e) = message.ack().await {
+                        error!("Ack failed: {}", e);
+                    }
+                    debug!("Got message: {:?}", message.payload);
+                    if *message.payload == *b"\0" {
+                        break;
+                    }
+                }
+            }
+            Err(e) => {
+                error!("Failed to fetch messages: {}", e);
+            }
+        }
+    }
+
     pub async fn serve(&self) {
         if let Some(consumer) = &self.consumer {
             loop {
-                if let Ok(mut messages) = consumer //
-                    .fetch()
-                    .max_messages(1)
-                    .messages()
-                    .await
-                {
-                    while let Some(Ok(message)) = messages.next().await {
-                        if let Err(e) = message.ack().await {
-                            error!("Ack failed: {}", e);
-                        }
-                        debug!("Got message: {:?}", message.payload);
-                        if message.payload == "\0" {
-                            break;
-                        }
-                    }
-                }
+                self.serve_loop(consumer).await;
             }
         } else {
             error!("Consumer not found");
         }
     }
-
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
             Ok(stream) => stream,
@@ -55,7 +59,7 @@ impl RedactConsumer {
             match stream
                 .get_or_create_consumer(
                     durable_name.as_str(),
-                    async_nats::jetstream::consumer::pull::Config {
+                    PullConfig {
                         durable_name: Some(durable_name.clone()),
                         filter_subject: cfg.redact_subject.clone(),
                         ..Default::default()
