@@ -15,7 +15,7 @@ impl RedactConsumer {
             .await
             .map_err(|e| {
                 error!("Failed to connect to NATS: {}", e);
-                std::io::Error::new(std::io::ErrorKind::Other, e)
+                std::io::Error::other(e)
             })
             .unwrap();
 
