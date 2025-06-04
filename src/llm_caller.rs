@@ -76,9 +76,7 @@ impl LLmCaller {
         }
 
         match res.json::<Value>().await {
-            Ok(body) => {
-                Some(body)
-            }
+            Ok(body) => Some(body),
             Err(e) => {
                 error!("Failed to parse JSON response: {}", e);
                 None
