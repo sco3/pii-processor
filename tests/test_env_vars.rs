@@ -32,6 +32,7 @@ fn test_values() {
         env::set_var("NATS_URL", "NU");
         env::set_var("LLM_TOKEN", "LLM_TOKEN");
         env::set_var("LOG_LEVEL", "DEBUG");
+        env::set_var("LLM_MODEL", "LM");
     }
     let cfg = Cfg::from_env();
     assert_eq!(cfg.nats_url, "NU");

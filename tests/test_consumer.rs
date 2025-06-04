@@ -1,9 +1,8 @@
 mod common;
 
+use crate::common::init_cfg::get_test_cfg;
 pub use common::init_logging::init_tracing;
-use ductaper::env_vars::Cfg;
 use ductaper::redact_consumer::RedactConsumer;
-use ductaper::secret_string::SecretString;
 use reqwest::StatusCode;
 use std::sync::atomic::Ordering;
 use testcontainers::core::wait::HttpWaitStrategy;
@@ -39,17 +38,7 @@ async fn test_consumer() {
     if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
         info!("Container port: {port}");
 
-        let cfg = Cfg {
-            llm_token: SecretString::new("sk-1234"),
-            log_level: "debug".to_string(),
-            redact_subject: "redact".to_string(),
-            queue_stream: "queue".to_string(),
-            queue_stream_max_age: 3600 * 24,
-            nats_url: format!("nats://localhost:{port}"),
-            tenant: "tenant".to_string(),
-            application: "application".to_string(),
-            aws_region_s3: "eu-west-1".to_string(),
-        };
+        let cfg = get_test_cfg(port);
         let mut consumer = RedactConsumer::new(&cfg).await;
         consumer.update_stream(&cfg).await;
         consumer.subscribe(&cfg).await;

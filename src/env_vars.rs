@@ -27,6 +27,10 @@ pub struct Cfg {
 
     #[serde(default = "default_aws_region_s3")]
     pub aws_region_s3: String,
+    pub aws_access_key_id: Option<String>,
+    pub aws_secret_access_key: Option<String>,
+    pub aws_access_token: Option<String>,
+    pub llm_model: String,
 }
 
 fn default_aws_region_s3() -> String {
