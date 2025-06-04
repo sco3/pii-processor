@@ -1,8 +1,33 @@
+use ductaper::env_vars::Cfg;
+use serial_test::serial;
 use std::env;
 
-use ductaper::env_vars::Cfg;
+fn set_non_defaults() {
+    unsafe {
+        env::set_var("TENANT", "TENANT");
+        env::set_var("APPLICATION", "APPLICATION");
+    }
+}
+
 #[test]
+#[serial]
+fn test_missing_vars() {
+    set_non_defaults();
+    // Ensure no environment variables are set
+    unsafe {
+        env::remove_var("NATS_URL");
+        env::remove_var("LOG_LEVEL");
+        env::remove_var("LOG_FMT");
+        env::remove_var("LLM_TOKEN");
+    }
+    // Call the method, expecting a panic
+    Cfg::from_env();
+}
+
+#[test]
+#[serial]
 fn test_values() {
+    set_non_defaults();
     unsafe {
         env::set_var("NATS_URL", "NU");
         env::set_var("LLM_TOKEN", "LLM_TOKEN");
@@ -18,18 +43,4 @@ fn test_values() {
     assert_eq!(cfg.log_level, "DEBUG");
     let redacted = format!("{:?}", cfg.llm_token);
     assert_eq!("LLM_****", redacted);
-}
-
-#[test]
-
-fn test_from_env_missing_vars() {
-    // Ensure no environment variables are set
-    unsafe {
-        env::remove_var("NATS_URL");
-        env::remove_var("LOG_LEVEL");
-        env::remove_var("LOG_FMT");
-        env::remove_var("LLM_TOKEN");
-    }
-    // Call the method, expecting a panic
-    Cfg::from_env();
 }

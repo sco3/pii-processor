@@ -12,6 +12,15 @@ pub struct Cfg {
 
     #[serde(default = "default_llm_token")]
     pub llm_token: SecretString,
+
+    pub tenant: String,
+    pub application: String,
+
+    #[serde(default = "default_queue_stream")]
+    pub queue_stream: String,
+
+    #[serde(default = "default_redact_subject")]
+    pub redact_subject: String,
 }
 
 fn default_llm_token() -> SecretString {
@@ -23,6 +32,13 @@ fn default_nats_url() -> String {
 }
 fn default_log_level() -> String {
     "info".to_string()
+}
+fn default_redact_subject() -> String {
+    "redact-log".to_string()
+}
+
+fn default_queue_stream() -> String {
+    "queue-stream".to_string()
 }
 
 impl Cfg {
