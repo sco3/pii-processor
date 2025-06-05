@@ -14,7 +14,7 @@ model_list:
 
 
 litellm_settings:
-  set_verbose: True 
+  set_verbose: True
 
 general_settings:
   port: 4000

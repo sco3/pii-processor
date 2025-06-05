@@ -10,11 +10,15 @@
       },
       {
         "turn": 1,
-        "tool_calls": ["faq_expert_1"]
+        "tool_calls": [
+          "faq_expert_1"
+        ]
       },
       {
         "turn": 2,
-        "tool_calls": ["faq_expert_1"]
+        "tool_calls": [
+          "faq_expert_1"
+        ]
       }
     ]
   },

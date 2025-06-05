@@ -10,5 +10,5 @@ tokio = { version = "1.45.1", features = ["full"] }
 
 
 [[bin]]
-name="testrs"
-path="test.rs"
+name = "testrs"
+path = "test.rs"

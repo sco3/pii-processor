@@ -1,7 +1,9 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
+use async_nats::jetstream::Message;
 pub use common::init_logging::init_tracing;
+use ductaper::log_handler::LogHandler;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
 use std::sync::atomic::Ordering;
@@ -14,7 +16,16 @@ use testcontainers::{
 use tokio;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
-use tracing::info;
+use tracing::{debug, info};
+
+struct DummyHandler;
+
+impl LogHandler for DummyHandler {
+    fn handle(&mut self, msg: Message) -> bool {
+        debug!("Message: {:?}", msg);
+        true
+    }
+}
 
 #[tokio::test]
 async fn test_consumer() {
@@ -39,7 +50,8 @@ async fn test_consumer() {
         info!("Container port: {port}");
 
         let cfg = get_test_cfg(port);
-        let mut consumer = RedactConsumer::new(&cfg).await;
+        let dummy = DummyHandler;
+        let mut consumer = RedactConsumer::new(&cfg, Box::new(dummy)).await;
         consumer.update_stream(&cfg).await;
         consumer.subscribe(&cfg).await;
         let run = consumer.get_run_flag_clone();

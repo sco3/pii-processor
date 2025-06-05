@@ -1,5 +1,6 @@
 use crate::env_vars::Cfg;
 use crate::init::Init;
+use crate::llm_handler::LlmHandler;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
 use dotenv::dotenv;
@@ -14,7 +15,12 @@ impl Starter {
     pub async fn new(cfg: Option<Cfg>) -> Self {
         dotenv().ok();
         let cfg = cfg.unwrap_or_else(Cfg::from_env);
-        let redact_consumer = RedactConsumer::new(&cfg).await;
+        let llm_handler = LlmHandler {};
+        let redact_consumer = RedactConsumer::new(
+            &cfg, //
+            Box::new(llm_handler),
+        )
+        .await;
         Starter {
             cfg,
             redact_consumer,

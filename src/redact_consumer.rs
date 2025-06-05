@@ -1,4 +1,6 @@
 use crate::env_vars::Cfg;
+
+use crate::log_handler::LogHandler;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
@@ -15,10 +17,11 @@ pub struct RedactConsumer {
     pub jetstream: Context,
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
     pub run: Arc<AtomicBool>,
+    pub handler: Box<dyn LogHandler>,
 }
 
 impl RedactConsumer {
-    async fn serve_loop(&self, consumer: &Consumer<PullConfig>) {
+    async fn serve_loop(&mut self, consumer: &Consumer<PullConfig>) {
         match consumer.fetch().max_messages(1).messages().await {
             Ok(mut messages) => {
                 while let Some(Ok(message)) = messages.next().await {
@@ -26,9 +29,7 @@ impl RedactConsumer {
                         error!("Ack failed: {}", e);
                     }
                     debug!("Got message: {:?}", message.payload);
-                    if *message.payload == *b"\0" {
-                        break;
-                    }
+                    self.handler.handle(message);
                 }
             }
             Err(e) => {
@@ -40,14 +41,19 @@ impl RedactConsumer {
         Arc::clone(&self.run)
     }
 
-    pub async fn serve(&self) {
-        if let Some(consumer) = &self.consumer {
-            while self.run.load(Ordering::Relaxed) {
-                self.serve_loop(consumer).await;
-            }
-        } else {
+    pub async fn serve(&mut self) {
+        let consumer_option = self.consumer.take();
+        if consumer_option.is_none() {
             error!("Consumer not found");
+            return;
         }
+        let consumer = consumer_option.unwrap();
+
+        while self.run.load(Ordering::Relaxed) {
+            self.serve_loop(&consumer).await;
+        }
+
+        self.consumer = Some(consumer);
     }
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
@@ -129,7 +135,7 @@ impl RedactConsumer {
         }
     }
 
-    pub async fn new(cfg: &Cfg) -> Self {
+    pub async fn new(cfg: &Cfg, handler: Box<dyn LogHandler>) -> Self {
         let client = ConnectOptions::new()
             .retry_on_initial_connect() // keep retrying
             .reconnect_delay_callback(|_try| Duration::from_secs(4))
@@ -148,6 +154,7 @@ impl RedactConsumer {
             jetstream,
             consumer: None,
             run: Arc::new(AtomicBool::new(true)),
+            handler,
         }
     }
 }

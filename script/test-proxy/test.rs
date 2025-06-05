@@ -1,9 +1,7 @@
-use fs::read_to_string;
-use fs::write;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
 
-use std::{fs, time::Instant};
+use std::fs;
 //use tokio;
 
 #[tokio::main]

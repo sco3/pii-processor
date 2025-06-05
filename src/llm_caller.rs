@@ -1,9 +1,9 @@
 use crate::ai_tags::Ai;
 use mime::APPLICATION_JSON;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
+use serde_json::Value;
 use tracing::error;
 
 pub struct LLmCaller {

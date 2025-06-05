@@ -25,13 +25,7 @@ impl S3Ctx {
 
         // If static credentials are provided, apply them
         if let (Some(ak), Some(sk)) = (access_key.clone(), secret_key.clone()) {
-            let credentials = Credentials::new(
-                ak,
-                sk,
-                session_token,
-                None,
-                "Static",
-            );
+            let credentials = Credentials::new(ak, sk, session_token, None, "Static");
             loader = loader.credentials_provider(credentials);
         }
 
