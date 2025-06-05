@@ -3,7 +3,6 @@ use aws_config::{BehaviorVersion, ConfigLoader, Region};
 
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
-use aws_sdk_s3::Config;
 use std::error::Error;
 
 pub struct S3Helper {
@@ -20,13 +19,9 @@ impl S3Helper {
         session_token: Option<String>,
         endpoint_url: Option<String>,
     ) -> Result<Self, Box<dyn Error>> {
-        let mut s3_config_builder = Config::builder()
-            .behavior_version_latest()
-            .region(Region::new(region));
-
-        if let Some(url) = endpoint_url {
-            s3_config_builder = s3_config_builder.endpoint_url(url);
-        }
+        let mut loader = ConfigLoader::default()
+            .behavior_version(BehaviorVersion::latest())
+            .region(Region::new(region.clone()));
 
         if let (Some(ak), Some(sk)) = (access_key.clone(), secret_key.clone()) {
             let credentials = Credentials::new(
@@ -36,12 +31,16 @@ impl S3Helper {
                 None,
                 "Static",
             );
-            s3_config_builder = s3_config_builder.credentials_provider(credentials);
+            loader = loader.credentials_provider(credentials);
         }
-        let s3_conf = s3_config_builder.build();
+        if let Some(url) = endpoint_url {
+            loader = loader.endpoint_url(url);
+        }
+
+        let s3 = Some(Client::new(&loader.load().await));
 
         // let s3 = match catch_unwind(
-        //     AssertUnwindSafe(|| Client::from_conf(s3_conf)), //
+        //     AssertUnwindSafe(|| Client::new(&loader.load().await), //
         // ) {
         //     Ok(cli) => Some(cli),
         //     Err(e) => {
@@ -49,11 +48,7 @@ impl S3Helper {
         //         None
         //     }
         // };
-        //let s3 = Some(Client::from_conf(s3_conf));
 
-        let loader = ConfigLoader::default().behavior_version(BehaviorVersion::latest());
-
-        let s3 = Some(Client::new(&loader.load().await));
         Ok(S3Helper { bucket, s3 })
     }
 
