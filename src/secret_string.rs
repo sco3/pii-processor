@@ -14,8 +14,8 @@ impl SecretString {
         }
     }
 
-    pub fn get_string(&self) -> &String {
-        &self.value
+    pub fn get_string(&self) -> String {
+        self.value.clone()
     }
 }
 

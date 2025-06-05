@@ -1,14 +1,19 @@
 use ductaper::env_vars::Cfg;
 use ductaper::secret_string::SecretString;
 
-
-
+#[allow(dead_code)]
 pub const AGGREGATOR_SESSIONS_LOG_URL: &str = "AGGREGATOR_SESSIONS_LOG_URL";
+#[allow(dead_code)]
 pub const NATS_URL: &str = "NATS_URL";
+#[allow(dead_code)]
 pub const LLM_TOKEN: &str = "LLM_TOKEN";
+#[allow(dead_code)]
 pub const LOG_LEVEL: &str = "LOG_LEVEL";
+#[allow(dead_code)]
 pub const LLM_MODEL: &str = "LLM_MODEL";
+#[allow(dead_code)]
 pub const TENANT: &str = "TENANT";
+#[allow(dead_code)]
 pub const APPLICATION: &str = "APPLICATION";
 
 #[allow(dead_code)]

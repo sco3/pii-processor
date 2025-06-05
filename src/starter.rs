@@ -3,7 +3,7 @@ use crate::init::Init;
 use crate::logging;
 //use crate::redact_consumer::RedactConsumer;
 use dotenv::dotenv;
-use tracing::{debug, error, info, warn};
+use tracing::{ info};
 pub struct Starter {
     pub cfg: Cfg,
     //pub redact_consumer: RedactConsumer,
@@ -28,9 +28,6 @@ impl Init for Starter {
         logging::init_log(&cfg.log_level);
 
         info!("Config: {:?}", cfg.clone());
-        error!("Log level set to: {}", cfg.log_level);
-        debug!("Log level set to: {}", cfg.log_level);
-        warn!("Log level set to: {}", cfg.log_level);
 
         self
     }

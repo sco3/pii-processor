@@ -2,7 +2,6 @@ use crate::secret_string::SecretString;
 use envy;
 use serde::Deserialize;
 
-
 #[derive(Deserialize, Debug, Clone)]
 pub struct Cfg {
     #[serde(default = "default_nats_url")]
@@ -28,9 +27,9 @@ pub struct Cfg {
 
     #[serde(default = "default_aws_region_s3")]
     pub aws_region_s3: String,
-    pub aws_access_key_id: Option<String>,
-    pub aws_secret_access_key: Option<String>,
-    pub aws_access_token: Option<String>,
+    pub aws_access_key_id: Option<SecretString>,
+    pub aws_secret_access_key: Option<SecretString>,
+    pub aws_access_token: Option<SecretString>,
 
     pub aggregator_sessions_log_url: String,
     pub llm_model: String,
