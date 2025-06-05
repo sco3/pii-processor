@@ -112,5 +112,7 @@ async fn test_s3() {
         assert_eq!(out_data, in_data);
 
         assert!(s3.del_object(test_bucket, key.clone()).await);
+        // nonexisting bucket test
+        assert!(!s3.del_object("no-bucket".to_string(), key.clone()).await);
     }
 }

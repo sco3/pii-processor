@@ -4,6 +4,12 @@ version = "0.1.0"
 edition = "2024"
 default-run = "ductaper"
 
+[profile.dev]
+incremental = true
+
+[build]
+jobs = 8
+
 [dependencies]
 async-nats = "0.41.0"
 envy = "0.4.2"
