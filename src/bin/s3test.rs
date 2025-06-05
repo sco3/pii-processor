@@ -1,13 +1,18 @@
 use dotenv::dotenv;
 use ductaper::env_vars::Cfg;
+use ductaper::logging::init_log;
 use ductaper::s3ctx::S3Ctx;
 use ductaper::s3helper::S3Helper;
+use tracing::info;
 
 #[tokio::main]
 async fn main() {
+    init_log("info".to_string());
     dotenv().ok();
     let cfg = Cfg::from_env();
-    let test_bucket = "Dz-bucket-1234".to_string();
+    let test_bucket = "dz-bucket-1234".to_string();
+
+    info!("Configuration: {:?}", cfg);
 
     if let Ok(s3) = S3Ctx::new(
         test_bucket.clone(),
@@ -21,18 +26,17 @@ async fn main() {
     {
         let s3 = S3Helper::new(s3);
         let ls = s3.list_buckets().await;
-        assert_eq!(ls.len(), 1);
-        if let Some(name) = ls.get(0) {
-            assert_eq!(*name, test_bucket)
-        } else {
-            panic!("Wrong bucket was found!");
+
+        assert!(ls.len() > 0);
+        if !ls.contains(&test_bucket) {
+            panic!("Bucket {} was not found!", test_bucket);
         }
 
         let key = "test-key".to_string();
-        let data = b"test data".to_vec();
-        s3.put_object(test_bucket.clone(), key.clone(), data.clone())
+        let expected = b"test data".to_vec();
+        s3.put_object(test_bucket.clone(), key.clone(), expected.clone())
             .await;
-        let out_data = s3.get_object(test_bucket.clone(), key.clone()).await;
-        assert_eq!(out_data, data);
+        let read = s3.get_object(test_bucket.clone(), key.clone()).await;
+        assert_eq!(read, expected);
     }
 }

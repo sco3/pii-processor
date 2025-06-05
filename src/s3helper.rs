@@ -1,4 +1,5 @@
 use crate::s3ctx::S3Ctx;
+use crate::s3error::aws_err;
 use tracing::{debug, error};
 
 pub struct S3Helper {
@@ -28,7 +29,7 @@ impl S3Helper {
                         }
                     }
                     Err(e) => {
-                        error!("Sdk error: {}", e);
+                        error!("Failed list buckets: {}", aws_err(&e));
                         break;
                     }
                 }
@@ -46,7 +47,7 @@ impl S3Helper {
                     }
                 }
                 Err(e) => {
-                    error!("Failed to get object: {}", e);
+                    error!("Failed to get object: {}", aws_err(&e));
                 }
             }
         }
@@ -68,7 +69,9 @@ impl S3Helper {
                 Err(e) => {
                     error!(
                         "Failed to put object: {} in bucket: {}. Error: {}",
-                        key, bucket, e
+                        key,
+                        bucket,
+                        aws_err(&e)
                     );
                 }
             }
