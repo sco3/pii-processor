@@ -39,16 +39,6 @@ impl S3Helper {
 
         let s3 = Some(Client::new(&loader.load().await));
 
-        // let s3 = match catch_unwind(
-        //     AssertUnwindSafe(|| Client::new(&loader.load().await), //
-        // ) {
-        //     Ok(cli) => Some(cli),
-        //     Err(e) => {
-        //         error!("Error get s3 client {:?}", e);
-        //         None
-        //     }
-        // };
-
         Ok(S3Helper { bucket, s3 })
     }
 
