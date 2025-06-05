@@ -1,3 +1,4 @@
+use crate::connector::Connector;
 use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_handler::LlmHandler;
@@ -7,7 +8,7 @@ use dotenv::dotenv;
 use tracing::info;
 
 pub struct Starter {
-    pub cfg: Cfg,
+    //pub cfg: Cfg,
     pub redact_consumer: RedactConsumer,
 }
 
@@ -15,16 +16,11 @@ impl Starter {
     pub async fn new(cfg: Option<Cfg>) -> Self {
         dotenv().ok();
         let cfg = cfg.unwrap_or_else(Cfg::from_env);
+        let connector = Connector::new(cfg.clone()).await;
+
         let llm_handler = LlmHandler {};
-        let redact_consumer = RedactConsumer::new(
-            &cfg, //
-            Box::new(llm_handler),
-        )
-        .await;
-        Starter {
-            cfg,
-            redact_consumer,
-        }
+        let redact_consumer = RedactConsumer::new(connector, Box::new(llm_handler)).await;
+        Starter { redact_consumer }
     }
 }
 

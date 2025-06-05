@@ -1,11 +1,11 @@
 use crate::env_vars::Cfg;
 
+use crate::connector::Connector;
 use crate::log_handler::LogHandler;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use async_nats::jetstream::Context;
-use async_nats::ConnectOptions;
 use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -135,17 +135,8 @@ impl RedactConsumer {
         }
     }
 
-    pub async fn new(cfg: &Cfg, handler: Box<dyn LogHandler>) -> Self {
-        let client = ConnectOptions::new()
-            .retry_on_initial_connect() // keep retrying
-            .reconnect_delay_callback(|_try| Duration::from_secs(4))
-            .connect(&cfg.nats_url)
-            .await
-            .map_err(|e| {
-                error!("Failed to connect to NATS: {}", e);
-                std::io::Error::other(e)
-            })
-            .unwrap();
+    pub async fn new(connector: Connector, handler: Box<dyn LogHandler>) -> Self {
+        let client = *connector.get();
 
         let jetstream = async_nats::jetstream::new(client.clone());
 

@@ -1296,6 +1296,7 @@ dependencies = [
  "aws-config",
  "aws-credential-types",
  "aws-sdk-s3",
+ "bytes",
  "dotenv",
  "envy",
  "futures",

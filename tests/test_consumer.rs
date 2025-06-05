@@ -3,6 +3,7 @@ mod common;
 use crate::common::init_cfg::get_test_cfg;
 use async_nats::jetstream::Message;
 pub use common::init_logging::init_tracing;
+use ductaper::connector::Connector;
 use ductaper::log_handler::LogHandler;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
@@ -50,8 +51,13 @@ async fn test_consumer() {
         info!("Container port: {port}");
 
         let cfg = get_test_cfg(port);
+        let conn = Connector::new(cfg.clone()).await;
         let dummy = DummyHandler;
-        let mut consumer = RedactConsumer::new(&cfg, Box::new(dummy)).await;
+        let mut consumer = RedactConsumer::new(
+            conn, //
+            Box::new(dummy),
+        )
+        .await;
         consumer.update_stream(&cfg).await;
         consumer.subscribe(&cfg).await;
         let run = consumer.get_run_flag_clone();
