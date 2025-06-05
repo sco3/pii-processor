@@ -1,6 +1,6 @@
 use ductaper::env_vars::Cfg;
 use ductaper::secret_string::SecretString;
-
+#[allow(dead_code)]
 pub fn get_test_cfg(nats_port: u16) -> Cfg {
     Cfg {
         llm_token: SecretString::new("sk-1234"),
