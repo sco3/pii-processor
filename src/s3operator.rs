@@ -1,8 +1,8 @@
-use aws_config::meta::region::RegionProviderChain;
+//use aws_config::meta::region::RegionProviderChain;
 use aws_config::{defaults, BehaviorVersion, Region};
 
 use aws_credential_types::Credentials;
-use aws_sdk_s3::{Client, Config};
+use aws_sdk_s3::Client;
 use std::error::Error;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use tracing::error;
