@@ -183,3 +183,4 @@ htmlcov
 *.profraw
 coverage
 .tree
+.env

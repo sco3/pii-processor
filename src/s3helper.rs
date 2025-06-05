@@ -36,4 +36,42 @@ impl S3Helper {
         }
         found_buckets
     }
+    pub async fn get_object(&self, bucket: String, key: String) -> Vec<u8> {
+        let mut out = Vec::new();
+        if let Some(s3) = &self.s3ctx.s3 {
+            match s3.get_object().bucket(bucket).key(key).send().await {
+                Ok(mut object) => {
+                    while let Some(bytes) = object.body.try_next().await.unwrap_or(None) {
+                        out.extend_from_slice(&bytes);
+                    }
+                }
+                Err(e) => {
+                    error!("Failed to get object: {}", e);
+                }
+            }
+        }
+        out
+    }
+    pub async fn put_object(&self, bucket: String, key: String, data: Vec<u8>) {
+        if let Some(s3) = &self.s3ctx.s3 {
+            match s3
+                .put_object()
+                .bucket(bucket.clone())
+                .key(key.clone())
+                .body(data.into())
+                .send()
+                .await
+            {
+                Ok(_) => {
+                    debug!("Successfully put object: {} in bucket: {}", key, bucket);
+                }
+                Err(e) => {
+                    error!(
+                        "Failed to put object: {} in bucket: {}. Error: {}",
+                        key, bucket, e
+                    );
+                }
+            }
+        }
+    }
 }
