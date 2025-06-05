@@ -5,7 +5,7 @@ pub mod init;
 pub mod llm_caller;
 pub mod logging;
 pub mod redact_consumer;
-pub mod s3helper;
+pub mod s3ctx;
 pub mod secret_string;
 pub mod session_log_models;
 pub mod starter;

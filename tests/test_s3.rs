@@ -1,7 +1,7 @@
 mod common;
 
 pub use common::init_logging::init_tracing;
-use ductaper::s3helper::S3Helper;
+use ductaper::s3ctx::S3Ctx;
 use reqwest::StatusCode;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
@@ -39,7 +39,7 @@ async fn test_s3() {
     if let Ok(port) = container.get_host_port_ipv4(9090.tcp()).await {
         info!("aws s3api list-buckets --endpoint-url=http://localhost:{port}");
         let test_bucket = "test-bucket".to_string();
-        if let Ok(s3) = S3Helper::new(
+        if let Ok(s3) = S3Ctx::new(
             test_bucket.clone(),
             "eu-west-1".to_string(), //
             None,

@@ -6,12 +6,12 @@ use aws_sdk_s3::Client;
 use std::error::Error;
 use tracing::{debug, error};
 
-pub struct S3Helper {
+pub struct S3Ctx {
     pub s3: Option<Client>,
     pub bucket: String,
 }
 
-impl S3Helper {
+impl S3Ctx {
     pub async fn new(
         bucket: String,
         region: String,
@@ -40,7 +40,7 @@ impl S3Helper {
 
         let s3 = Some(Client::new(&loader.load().await));
 
-        Ok(S3Helper { bucket, s3 })
+        Ok(S3Ctx { bucket, s3 })
     }
 
     pub async fn list_buckets(&self) -> Vec<String> {
