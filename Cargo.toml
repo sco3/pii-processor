@@ -17,6 +17,7 @@ home = "0.5.11"
 futures = "0.3.31"
 aws-config = "1.6.3"
 aws-sdk-s3 = "1.90.0"
+aws-credential-types = "1.2.3"
 
 [dev-dependencies]
 httpmock = "0.7.0"

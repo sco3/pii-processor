@@ -1288,6 +1288,7 @@ version = "0.1.0"
 dependencies = [
  "async-nats",
  "aws-config",
+ "aws-credential-types",
  "aws-sdk-s3",
  "envy",
  "futures",
