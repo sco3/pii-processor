@@ -44,9 +44,7 @@ impl S3Helper {
 
     pub async fn list_buckets(&self) {
         if let Some(s3) = &self.s3 {
-            //println!("s3: {:?}", s3);
             let mut buckets = s3.list_buckets().into_paginator().send();
-            println!("b: {:?}", buckets);
             while let Some(Ok(output)) = buckets.next().await {
                 for bucket in output.buckets() {
                     let name = bucket.name().unwrap_or_default();

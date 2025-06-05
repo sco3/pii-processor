@@ -31,6 +31,7 @@ async fn test_s3() {
     ))
     .with_network("bridge")
     .with_env_var("initialBuckets", "test-bucket")
+    .with_env_var("debug", "false")
     .start()
     .await
     .expect("Failed to start s3");
@@ -43,7 +44,7 @@ async fn test_s3() {
             None,
             None,
             None,
-            Some(format!("http://localhost{port}")),
+            Some(format!("http://localhost:{port}")),
         )
         .await
         {
