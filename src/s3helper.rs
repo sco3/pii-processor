@@ -1,12 +1,10 @@
 //use aws_config::meta::region::RegionProviderChain;
-use aws_config::{BehaviorVersion, Region};
+use aws_config::{BehaviorVersion, ConfigLoader, Region};
 
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 use aws_sdk_s3::Config;
 use std::error::Error;
-use std::panic::{catch_unwind, AssertUnwindSafe};
-use tracing::{error, info};
 
 pub struct S3Helper {
     pub s3: Option<Client>,
@@ -42,28 +40,73 @@ impl S3Helper {
         }
         let s3_conf = s3_config_builder.build();
 
-        let s3 = match catch_unwind(
-            AssertUnwindSafe(|| Client::from_conf(s3_conf)), //
-        ) {
-            Ok(cli) => Some(cli),
-            Err(e) => {
-                error!("Error get s3 client {:?}", e);
-                None
-            }
-        };
-
+        // let s3 = match catch_unwind(
+        //     AssertUnwindSafe(|| Client::from_conf(s3_conf)), //
+        // ) {
+        //     Ok(cli) => Some(cli),
+        //     Err(e) => {
+        //         error!("Error get s3 client {:?}", e);
+        //         None
+        //     }
+        // };
+        //let s3 = Some(Client::from_conf(s3_conf));
+        let s3 = Some(Client::new(
+            &ConfigLoader::default()
+                .behavior_version(BehaviorVersion::latest())
+                .load()
+                .await,
+        ));
         Ok(S3Helper { bucket, s3 })
     }
 
     pub async fn list_buckets(&self) {
         if let Some(s3) = &self.s3 {
+            //println!("s3: {:?}", s3);
             let mut buckets = s3.list_buckets().into_paginator().send();
+            println!("b: {:?}", buckets);
             while let Some(Ok(output)) = buckets.next().await {
                 for bucket in output.buckets() {
                     let name = bucket.name().unwrap_or_default();
-                    info!("Bucket: {}", name);
+                    println!("Bucket: {:?}", name);
                 }
             }
+        }
+    }
+    pub async fn list_buckets2(&self) {
+        if let Some(s3) = &self.s3 {
+            // Access the underlying client's config to get the region
+            if let Some(region) = s3.config().region() {
+                println!("S3 Client configured for region: {}", region.as_ref());
+            } else {
+                println!("S3 Client region is not explicitly set in its configuration.");
+            }
+
+            println!("Attempting to list S3 buckets...");
+            let mut paginator = s3.list_buckets().into_paginator().send();
+
+            let mut found_buckets = false;
+            while let Some(result) = paginator.next().await {
+                match result {
+                    Ok(output) => {
+                        for bucket in output.buckets() {
+                            let name = bucket.name().unwrap_or_default();
+                            println!("Found Bucket: {}", name);
+                            found_buckets = true;
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Error fetching a page of buckets: {:?}", e);
+                        break;
+                    }
+                }
+            }
+            if !found_buckets {
+                println!("No buckets found or an error occurred during listing.");
+            } else {
+                println!("Finished listing S3 buckets.");
+            }
+        } else {
+            eprintln!("S3 client is not initialized in S3Helper.");
         }
     }
 }

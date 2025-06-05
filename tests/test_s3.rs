@@ -36,9 +36,9 @@ async fn test_s3() {
     .expect("Failed to start s3");
 
     if let Ok(port) = container.get_host_port_ipv4(9090.tcp()).await {
-        info!("Port {port}");
+        info!("aws s3api list-buckets --endpoint-url=http://localhost:{port}");
         if let Ok(s3) = S3Helper::new(
-            "test".to_string(),
+            "test-bucket".to_string(),
             "eu-west-1".to_string(), //
             None,
             None,
