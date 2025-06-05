@@ -10,9 +10,9 @@ impl S3Helper {
         S3Helper { s3ctx }
     }
 
-    pub fn get_s3ctx(&self) -> &S3Ctx {
-        &self.s3ctx
-    }
+    // pub fn get_s3ctx(&self) -> &S3Ctx {
+    //     &self.s3ctx
+    // }
 
     pub async fn list_buckets(&self) -> Vec<String> {
         let mut found_buckets = Vec::new();
@@ -36,7 +36,7 @@ impl S3Helper {
         }
         found_buckets
     }
-    pub async fn get_object(&self, bucket: String, key: String) -> Vec<u8> {
+    pub async fn get_object(&self, bucket: String, key: String) -> Option<Vec<u8>> {
         let mut out = Vec::new();
         if let Some(s3) = &self.s3ctx.s3 {
             match s3.get_object().bucket(bucket).key(key).send().await {
@@ -47,10 +47,11 @@ impl S3Helper {
                 }
                 Err(e) => {
                     error!("Failed to get object: {}", aws_err(&e));
+                    return None;
                 }
             }
         }
-        out
+        Some(out)
     }
     pub async fn put_object(&self, bucket: String, key: String, data: Vec<u8>) {
         if let Some(s3) = &self.s3ctx.s3 {

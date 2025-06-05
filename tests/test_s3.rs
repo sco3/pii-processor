@@ -107,12 +107,25 @@ async fn test_s3() {
         let in_data = b"test data bytes".to_vec();
         s3.put_object(test_bucket.clone(), key.clone(), in_data.clone())
             .await;
-        let out_data = s3.get_object(test_bucket.clone(), key.clone()).await;
-        info!("Read data: {:?}", String::from_utf8_lossy(&out_data));
+        let out_data = s3
+            .get_object(
+                test_bucket.clone(),
+                key.clone(), //
+            )
+            .await
+            .unwrap_or_default();
+        let s = String::from_utf8_lossy(&out_data);
+        info!("Read data: {:?}", s);
         assert_eq!(out_data, in_data);
 
         assert!(s3.del_object(test_bucket, key.clone()).await);
         // nonexisting bucket test
         assert!(!s3.del_object("no-bucket".to_string(), key.clone()).await);
+
+        assert!(
+            s3.get_object("no-bucket".to_string(), key.clone())
+                .await
+                .is_none()
+        )
     }
 }
