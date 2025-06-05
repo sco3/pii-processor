@@ -2,6 +2,7 @@ mod common;
 
 pub use common::init_logging::init_tracing;
 use ductaper::s3ctx::S3Ctx;
+use ductaper::s3helper::S3Helper;
 use reqwest::StatusCode;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
@@ -49,6 +50,7 @@ async fn test_s3() {
         )
         .await
         {
+            let s3 = S3Helper::new(s3); 
             let ls = s3.list_buckets().await;
             assert_eq!(ls.len(), 1);
             if let Some(name) = ls.get(0) {
