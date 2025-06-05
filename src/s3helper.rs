@@ -50,12 +50,10 @@ impl S3Helper {
         //     }
         // };
         //let s3 = Some(Client::from_conf(s3_conf));
-        let s3 = Some(Client::new(
-            &ConfigLoader::default()
-                .behavior_version(BehaviorVersion::latest())
-                .load()
-                .await,
-        ));
+
+        let loader = ConfigLoader::default().behavior_version(BehaviorVersion::latest());
+
+        let s3 = Some(Client::new(&loader.load().await));
         Ok(S3Helper { bucket, s3 })
     }
 
