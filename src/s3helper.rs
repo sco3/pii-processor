@@ -1,6 +1,6 @@
 use crate::s3ctx::S3Ctx;
 use crate::s3error::aws_err;
-use tracing::{debug, error};
+use tracing::{debug, error, info};
 
 pub struct S3Helper {
     s3ctx: S3Ctx,
@@ -64,7 +64,7 @@ impl S3Helper {
                 .await
             {
                 Ok(_) => {
-                    debug!("Successfully put object: {} in bucket: {}", key, bucket);
+                    info!("Successfully put object: {} in bucket: {}", key, bucket);
                 }
                 Err(e) => {
                     error!(
@@ -77,4 +77,28 @@ impl S3Helper {
             }
         }
     }
+    // pub async fn del_object(&self, bucket: String, key: String, ) {
+    //     if let Some(s3) = &self.s3ctx.s3 {
+    //         match s3
+    //             .put_object()
+    //             .bucket(bucket.clone())
+    //             .key(key.clone())
+    //             .body(ByteStream::from("test data".as_bytes().to_vec()))
+    //             .send()
+    //             .await
+    //         {
+    //             Ok(_) => {
+    //                 info!("Successfully put object: {} in bucket: {}", key, bucket);
+    //             }
+    //             Err(e) => {
+    //                 error!(
+    //                     "Failed to put object: {} in bucket: {}. Error: {}",
+    //                     key,
+    //                     bucket,
+    //                     aws_err(&e)
+    //                 );
+    //             }
+    //         }
+    //     }
+    // }
 }

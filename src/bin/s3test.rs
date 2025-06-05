@@ -27,7 +27,7 @@ async fn main() {
         let s3 = S3Helper::new(s3);
         let ls = s3.list_buckets().await;
 
-        assert!(ls.len() > 0);
+        assert!(!ls.is_empty());
         if !ls.contains(&test_bucket) {
             panic!("Bucket {} was not found!", test_bucket);
         }

@@ -1296,8 +1296,6 @@ dependencies = [
  "aws-config",
  "aws-credential-types",
  "aws-sdk-s3",
- "aws-smithy-runtime-api",
- "aws-smithy-types",
  "dotenv",
  "envy",
  "futures",
@@ -1309,6 +1307,7 @@ dependencies = [
  "serde_json",
  "serial_test",
  "testcontainers",
+ "testcontainers-modules",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -3962,6 +3961,15 @@ dependencies = [
  "tokio-tar",
  "tokio-util",
  "url",
+]
+
+[[package]]
+name = "testcontainers-modules"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eac95cde96549fc19c6bf19ef34cc42bd56e264c1cb97e700e21555be0ecf9e2"
+dependencies = [
+ "testcontainers",
 ]
 
 [[package]]
