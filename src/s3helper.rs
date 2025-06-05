@@ -4,6 +4,7 @@ use aws_config::{BehaviorVersion, ConfigLoader, Region};
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 use std::error::Error;
+use tracing::{debug, error};
 
 pub struct S3Helper {
     pub s3: Option<Client>,
@@ -42,52 +43,26 @@ impl S3Helper {
         Ok(S3Helper { bucket, s3 })
     }
 
-    pub async fn list_buckets(&self) {
+    pub async fn list_buckets(&self) -> Vec<String> {
+        let mut found_buckets = Vec::new();
         if let Some(s3) = &self.s3 {
             let mut buckets = s3.list_buckets().into_paginator().send();
-            while let Some(Ok(output)) = buckets.next().await {
-                for bucket in output.buckets() {
-                    let name = bucket.name().unwrap_or_default();
-                    println!("Bucket: {:?}", name);
-                }
-            }
-        }
-    }
-    pub async fn list_buckets2(&self) {
-        if let Some(s3) = &self.s3 {
-            // Access the underlying client's config to get the region
-            if let Some(region) = s3.config().region() {
-                println!("S3 Client configured for region: {}", region.as_ref());
-            } else {
-                println!("S3 Client region is not explicitly set in its configuration.");
-            }
-
-            println!("Attempting to list S3 buckets...");
-            let mut paginator = s3.list_buckets().into_paginator().send();
-
-            let mut found_buckets = false;
-            while let Some(result) = paginator.next().await {
+            while let Some(result) = buckets.next().await {
                 match result {
                     Ok(output) => {
                         for bucket in output.buckets() {
                             let name = bucket.name().unwrap_or_default();
-                            println!("Found Bucket: {}", name);
-                            found_buckets = true;
+                            debug!("Bucket: {}", name);
+                            found_buckets.push(name.to_string());
                         }
                     }
                     Err(e) => {
-                        eprintln!("Error fetching a page of buckets: {:?}", e);
+                        error!("Sdk error: {}", e);
                         break;
                     }
                 }
             }
-            if !found_buckets {
-                println!("No buckets found or an error occurred during listing.");
-            } else {
-                println!("Finished listing S3 buckets.");
-            }
-        } else {
-            eprintln!("S3 client is not initialized in S3Helper.");
         }
+        found_buckets
     }
 }

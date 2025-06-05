@@ -9,7 +9,7 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
-use tokio;
+
 use tracing::info;
 
 #[tokio::test]
@@ -38,8 +38,9 @@ async fn test_s3() {
 
     if let Ok(port) = container.get_host_port_ipv4(9090.tcp()).await {
         info!("aws s3api list-buckets --endpoint-url=http://localhost:{port}");
+        let test_bucket = "test-bucket".to_string();
         if let Ok(s3) = S3Helper::new(
-            "test-bucket".to_string(),
+            test_bucket.clone(),
             "eu-west-1".to_string(), //
             None,
             None,
@@ -48,7 +49,13 @@ async fn test_s3() {
         )
         .await
         {
-            s3.list_buckets().await;
+            let ls = s3.list_buckets().await;
+            assert_eq!(ls.len(), 1);
+            if let Some(name) = ls.get(0) {
+                assert_eq!(*name, test_bucket)
+            } else {
+                panic!("Wrong bucket was found!");
+            }
         }
     }
 }
