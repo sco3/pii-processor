@@ -1,17 +1,15 @@
+use crate::common::init_cfg::{
+    AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, LLM_TOKEN, LOG_LEVEL, NATS_URL, TENANT,
+};
 use ductaper::env_vars::Cfg;
 use serial_test::serial;
 use std::env;
-
-const AGGREGATOR_SESSIONS_LOG_URL: &'static str = "AGGREGATOR_SESSIONS_LOG_URL";
-const NATS_URL: &'static str = "NATS_URL";
-const LLM_TOKEN: &'static str = "LLM_TOKEN";
-const LOG_LEVEL: &'static str = "LOG_LEVEL";
-const LLM_MODEL: &'static str = "LLM_MODEL";
+mod common;
 
 fn set_non_defaults() {
     unsafe {
-        env::set_var("TENANT", "TENANT");
-        env::set_var("APPLICATION", "APPLICATION");
+        env::set_var(TENANT, "TENANT");
+        env::set_var(APPLICATION, "APPLICATION");
     }
 }
 

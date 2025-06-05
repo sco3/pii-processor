@@ -2,13 +2,6 @@ use crate::secret_string::SecretString;
 use envy;
 use serde::Deserialize;
 
-pub const AGGREGATOR_SESSIONS_LOG_URL: &str = "AGGREGATOR_SESSIONS_LOG_URL";
-pub const NATS_URL: &str = "NATS_URL";
-pub const LLM_TOKEN: &str = "LLM_TOKEN";
-pub const LOG_LEVEL: &str = "LOG_LEVEL";
-pub const LLM_MODEL: &str = "LLM_MODEL";
-pub const TENANT: &str = "TENANT";
-pub const APPLICATION: &str = "APPLICATION";
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Cfg {

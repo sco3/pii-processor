@@ -1,5 +1,16 @@
 use ductaper::env_vars::Cfg;
 use ductaper::secret_string::SecretString;
+
+
+
+pub const AGGREGATOR_SESSIONS_LOG_URL: &str = "AGGREGATOR_SESSIONS_LOG_URL";
+pub const NATS_URL: &str = "NATS_URL";
+pub const LLM_TOKEN: &str = "LLM_TOKEN";
+pub const LOG_LEVEL: &str = "LOG_LEVEL";
+pub const LLM_MODEL: &str = "LLM_MODEL";
+pub const TENANT: &str = "TENANT";
+pub const APPLICATION: &str = "APPLICATION";
+
 #[allow(dead_code)]
 pub fn get_test_cfg(nats_port: u16) -> Cfg {
     Cfg {

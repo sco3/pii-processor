@@ -1,7 +1,9 @@
-use ductaper::env_vars::{AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, TENANT};
+use crate::common::init_cfg::{AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, TENANT};
 use ductaper::init::Init;
 use ductaper::starter::Starter;
 use std::env;
+
+mod common;
 
 #[test]
 fn test_init() {
