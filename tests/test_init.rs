@@ -5,8 +5,8 @@ use std::env;
 
 mod common;
 
-#[test]
-fn test_init() {
+#[tokio::test]
+async fn test_init() {
     unsafe {
         env::set_var(TENANT, "TENANT");
         env::set_var(APPLICATION, "APPLICATION");
@@ -15,7 +15,7 @@ fn test_init() {
         env::set_var(AGGREGATOR_SESSIONS_LOG_URL, "s3://test");
     }
 
-    let starter = Starter::new(None);
+    let starter = Starter::new(None).await;
     starter.init();
     starter.start();
 }

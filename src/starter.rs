@@ -1,22 +1,23 @@
 use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::logging;
-//use crate::redact_consumer::RedactConsumer;
+use crate::redact_consumer::RedactConsumer;
 use dotenv::dotenv;
 use tracing::info;
+
 pub struct Starter {
     pub cfg: Cfg,
-    //pub redact_consumer: RedactConsumer,
+    pub redact_consumer: RedactConsumer,
 }
 
 impl Starter {
-    pub fn new(cfg: Option<Cfg>) -> Self {
+    pub async fn new(cfg: Option<Cfg>) -> Self {
         dotenv().ok();
         let cfg = cfg.unwrap_or_else(Cfg::from_env);
-        //let redact_consumer = RedactConsumer::new(cfg.nats_url.as_str());
+        let redact_consumer = RedactConsumer::new(&cfg).await;
         Starter {
             cfg,
-            //redact_consumer,
+            redact_consumer,
         }
     }
 }

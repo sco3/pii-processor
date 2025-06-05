@@ -11,5 +11,5 @@ pub mod secret_string;
 pub mod starter;
 #[tokio::main]
 async fn main() {
-    Starter::new(None).init().start();
+    Starter::new(None).await.init().start();
 }
