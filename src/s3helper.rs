@@ -7,11 +7,11 @@ use std::error::Error;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use tracing::error;
 
-pub struct S3operator {
+pub struct S3Helper {
     pub s3: Option<Client>,
 }
 
-impl S3operator {
+impl S3Helper {
     pub async fn new(
         region: String,
         access_key: Option<String>,
@@ -46,6 +46,6 @@ impl S3operator {
             }
         };
 
-        Ok(S3operator { s3 })
+        Ok(S3Helper { s3 })
     }
 }
