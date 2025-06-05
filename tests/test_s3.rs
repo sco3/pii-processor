@@ -110,5 +110,7 @@ async fn test_s3() {
         let out_data = s3.get_object(test_bucket.clone(), key.clone()).await;
         info!("Read data: {:?}", String::from_utf8_lossy(&out_data));
         assert_eq!(out_data, in_data);
+
+        assert!(s3.del_object(test_bucket, key.clone()).await);
     }
 }

@@ -38,5 +38,6 @@ async fn main() {
             .await;
         let read = s3.get_object(test_bucket.clone(), key.clone()).await;
         assert_eq!(read, expected);
+        s3.del_object(test_bucket, key).await;
     }
 }
