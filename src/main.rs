@@ -12,6 +12,7 @@ pub mod logging;
 pub mod publisher;
 pub mod redact_consumer;
 pub mod secret_string;
+pub mod session_log_models;
 pub mod starter;
 #[tokio::main]
 async fn main() {
