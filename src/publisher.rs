@@ -8,7 +8,7 @@ pub struct Publisher {
 }
 
 impl Publisher {
-    pub fn new(connector: Connector) -> Self {
+    pub fn new(connector: &Connector) -> Self {
         let nats = connector.get();
         Publisher { nats }
     }

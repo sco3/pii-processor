@@ -18,6 +18,7 @@ pub struct RedactConsumer {
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
     pub run: Arc<AtomicBool>,
     pub handler: Box<dyn LogHandler>,
+    pub subject: Option<String>,
 }
 
 impl RedactConsumer {
@@ -67,13 +68,15 @@ impl RedactConsumer {
         let durable_name = format!("consumer_{}", cfg.redact_subject);
         info!("Creating consumer with durable name: {}", durable_name);
 
+        let subj = cfg.redact_subject.clone();
+        self.subject = Some(subj.clone());
         self.consumer = Some(
             match stream
                 .get_or_create_consumer(
                     durable_name.as_str(),
                     PullConfig {
                         durable_name: Some(durable_name.clone()),
-                        filter_subject: cfg.redact_subject.clone(),
+                        filter_subject: subj,
                         ..Default::default()
                     },
                 )
@@ -146,6 +149,7 @@ impl RedactConsumer {
             consumer: None,
             run: Arc::new(AtomicBool::new(true)),
             handler,
+            subject: None,
         }
     }
 }
