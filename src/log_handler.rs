@@ -1,6 +1,8 @@
 use async_nats::jetstream::Message;
+use async_trait::async_trait;
 
+#[async_trait]
 pub trait LogHandler {
-    fn handle(&mut self, arg: Message) -> bool;
-    fn cnt(&self)->i32;
+    async fn handle(&mut self, arg: Message) -> bool;
+    fn cnt(&self) -> i32;
 }

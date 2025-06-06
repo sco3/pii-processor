@@ -1,9 +1,11 @@
 use crate::ai_tags::Ai;
+use crate::llm_caller_trait::ReDucter;
+use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
-use serde_json::json;
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
+use serde_json::json;
 use tracing::error;
 
 pub struct LLmCaller {
@@ -83,7 +85,10 @@ impl LLmCaller {
             }
         }
     }
-    pub async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
+}
+#[async_trait]
+impl ReDucter for LLmCaller {
+    async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
         let body = self.build_body(prompt, message);
         let req = self.build_request(body);
         Self::send(req).await

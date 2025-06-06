@@ -1,5 +1,6 @@
 use crate::common::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
+use ductaper::llm_caller_trait::ReDucter;
 use httpmock::Method::POST;
 use httpmock::MockServer;
 use serde_json::json;

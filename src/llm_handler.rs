@@ -1,32 +1,24 @@
+use crate::llm_work::LlmLogProcessor;
 use crate::log_handler::LogHandler;
-use crate::session_log_models::SessionLogType;
 use async_nats::jetstream::Message;
-use serde_json;
-use std::cmp::min;
-use tracing::{debug, error};
+use async_trait::async_trait;
 
-pub struct LlmHandler;
+pub struct LlmHandler {
+    processor: LlmLogProcessor,
+}
 
-impl LogHandler for LlmHandler {
-    fn handle(&mut self, msg: Message) -> bool {
-        let payload: &[u8] = msg.payload.as_ref();
-
-        match serde_json::from_slice::<SessionLogType>(payload) {
-            Ok(log) => {
-                debug!("Log: {:?}", log);
-                true
-            }
-            Err(e) => {
-                let head = &payload[..min(payload.len(), 80)];
-                error!(
-                    "Cannot parse payload {} {}",
-                    String::from_utf8_lossy(head),
-                    e
-                );
-                false
-            }
-        }
+impl LlmHandler {
+    pub fn new(processor: LlmLogProcessor) -> Self {
+        LlmHandler { processor }
     }
+}
+#[async_trait]
+impl LogHandler for LlmHandler {
+    async fn handle(&mut self, msg: Message) -> bool {
+        let payload: &[u8] = msg.payload.as_ref();
+        self.processor.process(payload).await
+    }
+
     fn cnt(&self) -> i32 {
         0
     }

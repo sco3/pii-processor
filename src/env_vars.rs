@@ -1,3 +1,4 @@
+use crate::expanduser::expand_user_path;
 use crate::secret_string::SecretString;
 use envy;
 use serde::Deserialize;
@@ -33,6 +34,14 @@ pub struct Cfg {
 
     pub aggregator_sessions_log_url: String,
     pub llm_model: String,
+    #[serde(default = "default_system_prompt_location")]
+    pub system_prompt_location: String,
+}
+
+fn default_system_prompt_location() -> String {
+    expand_user_path("~/.local/system_prompt.txt")
+        .to_string_lossy()
+        .into_owned()
 }
 
 fn default_aws_region_s3() -> String {

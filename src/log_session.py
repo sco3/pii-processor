@@ -1,22 +1,14 @@
 import asyncio
 import base64
+import boto3
 import json
 import lzma
 import os
 import re
 import socket
 import urllib.parse
-from datetime import datetime
-from enum import StrEnum, auto
-from pathlib import PosixPath
-from typing import Optional, Tuple
-
-import boto3
 from botocore.exceptions import ClientError
 from common_data_models.conversation import ConversationItem
-from llm_helper.conversation import ConversationRoles
-from pyarea22.log import logger
-
 from cortex import gpt_clients
 from cortex.agents.redaction.prompts import SYSTEM_PROMPT_STATUS_MESSAGE
 from cortex.config.env_vars import (
@@ -29,6 +21,12 @@ from cortex.config.env_vars import (
     SESSIONS_LOG_URL,
 )
 from cortex.models import session_state
+from datetime import datetime
+from enum import StrEnum, auto
+from llm_helper.conversation import ConversationRoles
+from pathlib import PosixPath
+from pyarea22.log import logger
+from typing import Optional, Tuple
 
 
 class StorageType(StrEnum):

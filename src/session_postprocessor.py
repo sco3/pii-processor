@@ -1,7 +1,5 @@
 """ Module for processing session data after the session has been closed """
 
-from pyarea22.log import logger
-
 import cortex.background_tasks as bg
 from cortex.chat_history import get_conversation_item_list
 from cortex.config import env_vars as cfg
@@ -16,6 +14,7 @@ from cortex.utils.log_session import (
     save_chat_cloudwatch,
     save_session_log_cloudwatch,
 )
+from pyarea22.log import logger
 
 observer_client = ObserverClientSingleton()
 

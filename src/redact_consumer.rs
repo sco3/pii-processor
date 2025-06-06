@@ -2,14 +2,15 @@ use crate::env_vars::Cfg;
 
 use crate::connector::Connector;
 use crate::log_handler::LogHandler;
-use async_nats::jetstream::consumer::pull::Config as PullConfig;
-use async_nats::jetstream::consumer::Consumer;
-use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use async_nats::jetstream::Context;
+use async_nats::jetstream::consumer::Consumer;
+use async_nats::jetstream::consumer::pull::Config as PullConfig;
+use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use futures::StreamExt;
+use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use tokio::sync::Mutex;
 use tracing::{debug, error, info};
 
 pub struct RedactConsumer {
@@ -30,9 +31,8 @@ impl RedactConsumer {
                         error!("Ack failed: {}", e);
                     }
                     debug!("Got message: {:?}", message.payload);
-                    let mut handler_guard = self.handler.lock().unwrap();
-                    handler_guard.handle(message);
-                    
+                    let mut handler_guard = self.handler.lock().await;
+                    handler_guard.handle(message).await;
                 }
             }
             Err(e) => {
