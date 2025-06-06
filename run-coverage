@@ -5,6 +5,6 @@ set -xueo pipefail
 cargo install cargo-llvm-cov
 cargo clean 
 cargo llvm-cov clean 
-cargo llvm-cov --html
+cargo llvm-cov --html --ignore-filename-regex "src/bin/.+"
 
 echo firefox target/llvm-cov/html/index.html
