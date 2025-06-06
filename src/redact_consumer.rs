@@ -16,7 +16,7 @@ pub struct RedactConsumer {
     pub client: async_nats::Client,
     pub jetstream: Context,
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
-    pub run: Arc<AtomicBool>,
+    pub run_flag: Arc<AtomicBool>,
     pub handler: Arc<Mutex<dyn LogHandler + Send + Sync>>,
     pub subject: Option<String>,
 }
@@ -41,7 +41,7 @@ impl RedactConsumer {
         }
     }
     pub fn get_run_flag_clone(&self) -> Arc<AtomicBool> {
-        Arc::clone(&self.run)
+        Arc::clone(&self.run_flag)
     }
 
     pub async fn serve(&mut self) {
@@ -52,7 +52,7 @@ impl RedactConsumer {
         }
         let consumer = consumer_option.unwrap();
 
-        while self.run.load(Ordering::Relaxed) {
+        while self.run_flag.load(Ordering::Relaxed) {
             self.serve_loop(&consumer).await;
         }
 
@@ -152,7 +152,7 @@ impl RedactConsumer {
             client,
             jetstream,
             consumer: None,
-            run: Arc::new(AtomicBool::new(true)),
+            run_flag: Arc::new(AtomicBool::new(true)),
             handler,
             subject: None,
         }
