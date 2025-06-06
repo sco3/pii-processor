@@ -9,6 +9,8 @@ pub fn init_tracing() {
             .with_max_level(tracing::Level::DEBUG)
             .with_env_filter(filter)
             .with_test_writer()
+            .with_file(true)
+            .with_line_number(true)
             .finish();
 
         if let Err(e) = tracing::subscriber::set_global_default(subscriber) {

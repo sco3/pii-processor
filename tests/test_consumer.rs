@@ -16,6 +16,7 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
+use time::OffsetDateTime;
 use tokio;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
@@ -27,7 +28,15 @@ struct DummyHandler {
 
 impl LogHandler for DummyHandler {
     fn handle(&mut self, msg: Message) -> bool {
-        debug!("Message: {:?}", msg);
+        if let Ok(info) = msg.info() {
+            let duration = OffsetDateTime::now_utc() - info.published;
+            debug!(
+                "Message arrive time: {} µs {} ms",
+                duration.whole_microseconds(),
+                duration.whole_milliseconds()
+            );
+        }
+
         self.count += 1;
         true
     }
@@ -76,10 +85,11 @@ async fn test_consumer() {
         let subj = consumer.subject.clone().unwrap_or_default();
         let _ = tokio::join!(
             async {
-                publisher.publish(subj, "asdf".into()).await;
-                sleep(TokioDuration::from_secs(2)).await;
+                // test duration
+                sleep(TokioDuration::from_millis(42)).await;
                 run.store(false, Ordering::Relaxed);
             },
+            publisher.publish(subj, "asdf".into()),
             consumer.serve(),
         );
         let handler_guard = consumer.handler.lock().unwrap();
