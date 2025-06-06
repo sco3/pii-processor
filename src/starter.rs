@@ -29,7 +29,10 @@ impl Starter {
             client: Default::default(),
         };
         let shared_llm_caller = Arc::new(Mutex::new(llm_caller));
-        let llm_log_processor = LlmLogProcessor::new(cfg, shared_llm_caller);
+        let llm_log_processor = LlmLogProcessor::new(
+            cfg.system_prompt_location, //
+            shared_llm_caller,
+        );
         let llm_handler = LlmHandler::new(llm_log_processor);
         let shared_llm_handler = Arc::new(Mutex::new(llm_handler));
         let redact_consumer = RedactConsumer::new(

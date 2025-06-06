@@ -1,7 +1,6 @@
 use super::LlmLogProcessor;
 use crate::llm_caller_trait::ReDucter;
 
-use crate::env_vars::Cfg;
 use crate::session_log_models::SessionLogEntry::ChatMessage;
 use std::fs::read_to_string;
 use std::sync::Arc;
@@ -9,9 +8,9 @@ use tokio::sync::Mutex;
 use tracing::debug;
 
 impl LlmLogProcessor {
-    pub fn new(cfg: Cfg, caller: Arc<Mutex<dyn ReDucter + Send + Sync>>) -> Self {
+    pub fn new(prompt_location: String, caller: Arc<Mutex<dyn ReDucter + Send + Sync>>) -> Self {
         LlmLogProcessor {
-            cfg,
+            prompt_location,
             caller,
             system_prompt: None,
         }
@@ -22,7 +21,7 @@ impl LlmLogProcessor {
             self.system_prompt = Some(system_prompt);
             return self.system_prompt.clone().unwrap();
         }
-        read_to_string(&self.cfg.system_prompt_location) //
+        read_to_string(&self.prompt_location) //
             .unwrap_or_else(|e| {
                 debug!("Failed to read system prompt: {}", e);
                 String::new()

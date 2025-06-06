@@ -2,32 +2,34 @@ mod common;
 
 use crate::common::init_cfg::get_test_cfg;
 use async_nats::jetstream::Message;
+use async_trait::async_trait;
 pub use common::init_logging::init_tracing;
 use ductaper::connector::Connector;
 use ductaper::log_handler::LogHandler;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
+use std::sync::Arc;
 use std::sync::atomic::Ordering;
-use std::sync::{Arc, Mutex};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
-    GenericImage,
-    ImageExt,
+    GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 use time::OffsetDateTime;
 use tokio;
-use tokio::time::sleep;
+use tokio::sync::Mutex;
 use tokio::time::Duration as TokioDuration;
+use tokio::time::sleep;
 use tracing::{debug, info};
 
 struct DummyHandler {
     count: i32,
 }
-
+#[async_trait]
 impl LogHandler for DummyHandler {
-    fn handle(&mut self, msg: Message) -> bool {
+    async fn handle(&mut self, msg: Message) -> bool {
         if let Ok(info) = msg.info() {
             let duration = OffsetDateTime::now_utc() - info.published;
             debug!("Message arrive time: {} µs", duration.whole_microseconds(),);
@@ -88,7 +90,7 @@ async fn test_consumer() {
             publisher.publish(subj, "asdf".into()),
             consumer.serve(),
         );
-        let handler_guard = consumer.handler.lock().unwrap();
+        let handler_guard = consumer.handler.lock().await;
 
         info!("Count: {}", handler_guard.cnt());
         assert_eq!(1, handler_guard.cnt());

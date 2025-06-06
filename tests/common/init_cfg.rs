@@ -33,5 +33,6 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         aws_access_token: None,
         llm_model: "nova".to_string(),
         aggregator_sessions_log_url: "s3:/test".to_string(),
+        system_prompt_location: "/tmp/system_prompt.txt".to_string(),
     }
 }

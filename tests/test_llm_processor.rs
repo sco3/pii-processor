@@ -1,17 +1,19 @@
 use async_trait::async_trait;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_caller_trait::ReDucter;
-use ductaper::llm_log_processor::LlmLogProcessor;
+use ductaper::llm_work::LlmLogProcessor;
 use serde_json::Value;
 use std::fs;
-use std::sync::{Arc, Mutex};
-use tracing::info;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use tracing::{debug, info};
 
-struct DummyLlmCaller;
+struct _DummyLlmCaller;
 
 #[async_trait]
-impl ReDucter for DummyLlmCaller {
+impl ReDucter for _DummyLlmCaller {
     async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
+        debug!("Dummy LLM call with prompt: {} {}", prompt, message);
         None
     }
 }
@@ -26,7 +28,11 @@ async fn test_llm_log_processor() {
     );
     let caller = Arc::new(Mutex::new(raw_caller));
 
-    let processor = LlmLogProcessor { caller };
+    let mut processor = LlmLogProcessor {
+        prompt_location: "//tmp".to_string(),
+        caller,
+        system_prompt: None,
+    };
 
     // Load test file from relative path
     let path = "tests/data/example_new_fields.json";
@@ -34,6 +40,6 @@ async fn test_llm_log_processor() {
         .expect("Failed to read example_new_fields.log");
 
     // Process the payload
-    let result = processor.process(&file_content);
+    let result = processor.process(&file_content).await;
     info!("Processing result: {}", result);
 }
