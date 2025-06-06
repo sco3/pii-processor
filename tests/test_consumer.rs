@@ -30,11 +30,7 @@ impl LogHandler for DummyHandler {
     fn handle(&mut self, msg: Message) -> bool {
         if let Ok(info) = msg.info() {
             let duration = OffsetDateTime::now_utc() - info.published;
-            debug!(
-                "Message arrive time: {} µs {} ms",
-                duration.whole_microseconds(),
-                duration.whole_milliseconds()
-            );
+            debug!("Message arrive time: {} µs", duration.whole_microseconds(),);
         }
 
         self.count += 1;
