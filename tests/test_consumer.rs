@@ -9,6 +9,7 @@ use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
 use std::sync::atomic::Ordering;
+use std::sync::{Arc, Mutex};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
     core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
@@ -29,6 +30,9 @@ impl LogHandler for DummyHandler {
         debug!("Message: {:?}", msg);
         self.count += 1;
         true
+    }
+    fn cnt(&self) -> i32 {
+        self.count
     }
 }
 
@@ -58,7 +62,8 @@ async fn test_consumer() {
         let cfg = get_test_cfg(port);
         let conn = Connector::new(cfg.clone()).await;
         let publisher = Publisher::new(&conn);
-        let dummy = Box::new(DummyHandler { count: 0 });
+        let dummy_handler = DummyHandler { count: 0 };
+        let dummy = Arc::new(Mutex::new(dummy_handler));
 
         let mut consumer = RedactConsumer::new(
             conn, //
@@ -77,6 +82,9 @@ async fn test_consumer() {
             },
             consumer.serve(),
         );
-        info!("Count: {}", dummy);
+        let handler_guard = consumer.handler.lock().unwrap();
+
+        info!("Count: {}", handler_guard.cnt());
+        assert_eq!(1, handler_guard.cnt());
     }
 }

@@ -10,4 +10,7 @@ impl LogHandler for LlmHandler {
         debug!("coming soon {:?}", msg);
         true
     }
+    fn cnt(&self) -> i32 {
+        0
+    }
 }

@@ -1,3 +1,4 @@
+use std::sync::{Arc, Mutex};
 use crate::connector::Connector;
 use crate::env_vars::Cfg;
 use crate::init::Init;
@@ -19,7 +20,12 @@ impl Starter {
         let connector = Connector::new(cfg.clone()).await;
 
         let llm_handler = LlmHandler {};
-        let redact_consumer = RedactConsumer::new(connector, Box::new(llm_handler)).await;
+        let shared_llm_handler = Arc::new(Mutex::new(llm_handler));
+        let redact_consumer = RedactConsumer::new(
+            connector, //
+            shared_llm_handler,
+        )
+        .await;
         Starter { redact_consumer }
     }
 }

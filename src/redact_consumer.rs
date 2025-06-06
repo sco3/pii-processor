@@ -8,7 +8,7 @@ use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
 use async_nats::jetstream::Context;
 use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tracing::{debug, error, info};
 
@@ -17,7 +17,7 @@ pub struct RedactConsumer {
     pub jetstream: Context,
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
     pub run: Arc<AtomicBool>,
-    pub handler: Box<dyn LogHandler>,
+    pub handler: Arc<Mutex<dyn LogHandler + Send + Sync>>,
     pub subject: Option<String>,
 }
 
@@ -30,7 +30,9 @@ impl RedactConsumer {
                         error!("Ack failed: {}", e);
                     }
                     debug!("Got message: {:?}", message.payload);
-                    self.handler.handle(message);
+                    let mut handler_guard = self.handler.lock().unwrap();
+                    handler_guard.handle(message);
+                    
                 }
             }
             Err(e) => {
@@ -138,7 +140,10 @@ impl RedactConsumer {
         }
     }
 
-    pub async fn new(connector: Connector, handler: Box<dyn LogHandler>) -> Self {
+    pub async fn new(
+        connector: Connector, //
+        handler: Arc<Mutex<dyn LogHandler + Send + Sync>>,
+    ) -> Self {
         let client = *connector.get();
 
         let jetstream = async_nats::jetstream::new(client.clone());
