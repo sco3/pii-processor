@@ -27,6 +27,8 @@ testcontainers-modules = { version = "0.12.1", features = ["minio"] }
 bytes = "1.10.1"
 time = "0.3.41"
 async-trait = "0.1.88"
+#crashlog = "0.1.4"
+color-backtrace = "0.7.0"
 
 
 [dev-dependencies]

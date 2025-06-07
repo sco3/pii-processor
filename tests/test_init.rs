@@ -11,11 +11,10 @@ async fn test_init() {
         env::set_var(TENANT, "TENANT");
         env::set_var(APPLICATION, "APPLICATION");
         env::set_var(LLM_MODEL, "nova");
-        env::set_var(LLM_MODEL, "nova");
         env::set_var(AGGREGATOR_SESSIONS_LOG_URL, "s3://test");
     }
 
-    let starter = Starter::new(None).await;
+    let starter = Starter::new().await;
     starter.init();
     starter.start();
 }

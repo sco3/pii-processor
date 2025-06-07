@@ -3,6 +3,7 @@ use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_caller::LLmCaller;
 use crate::llm_handler::LlmHandler;
+use std::env;
 
 use crate::llm_work::LlmLogProcessor;
 use crate::logging;
@@ -18,9 +19,16 @@ pub struct Starter {
 }
 
 impl Starter {
-    pub async fn new(cfg: Option<Cfg>) -> Self {
+    pub async fn new() -> Self {
+        info!("Start");
+        color_backtrace::install();
         dotenv().ok();
-        let cfg = cfg.unwrap_or_else(Cfg::from_env);
+        for (key, value) in env::vars() {
+            println!("{key}: {value}");
+        }
+
+        let cfg = Cfg::from_env();
+        logging::init_log(cfg.log_level.clone());
         let connector = Connector::new(cfg.clone()).await;
         let llm_caller = LLmCaller {
             endpoint: "".to_string(),
@@ -46,12 +54,6 @@ impl Starter {
 
 impl Init for Starter {
     fn init(&self) -> &Self {
-        let cfg = Cfg::from_env();
-
-        logging::init_log(cfg.log_level.clone());
-
-        info!("Config: {:?}", cfg.clone());
-
         self
     }
     fn start(&self) -> &Self {
