@@ -6,6 +6,7 @@ use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 use std::fs;
 use std::sync::atomic::Ordering;
+use std::sync::Arc;
 
 use bytes::Bytes;
 use std::time::Duration;
@@ -15,6 +16,9 @@ use common::init_logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;
+use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
+
+use ductaper::llm_caller::LLmCaller;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
@@ -54,10 +58,22 @@ async fn test_pool() {
 
     let (tx, rx) = bounded::<Message>(1);
 
+    let caller = Arc::new(LLmCaller::new(
+        "http:localhost:4000",
+        "haiku",
+        Some("sk-1234".to_string()),
+    ));
+
+    let processor = LlmLogProcessor::new(
+        "data/system_prompt.txt".to_string(), //
+        caller,
+    );
+
     let pool = WorkerPool {
         size: 1,
         receiver: rx,
         counter: MinuteCounter::new(),
+        llm_log_processor: processor,
     };
     pool.start().await;
     let cfg = get_test_cfg(port);
