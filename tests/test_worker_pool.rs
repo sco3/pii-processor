@@ -1,8 +1,12 @@
 mod common;
+
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
+use std::sync::atomic::Ordering;
+
+use std::time::Duration;
 
 use tracing::{debug, info};
 
@@ -19,6 +23,7 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
+use tokio::time::sleep;
 
 #[tokio::test]
 async fn test_pool() {
@@ -61,10 +66,18 @@ async fn test_pool() {
     let mut consumer = RedactConsumer::new(&conn, tx).await;
     consumer.update_stream(&cfg).await;
     consumer.subscribe(&cfg).await;
-    consumer.serve().await;
+
+    let run_flag = consumer.run_flag.clone();
+    tokio::spawn(async move {
+        consumer.serve().await;
+    });
+
     let subject = cfg.redact_subject;
     info!("Subject: {}", subject);
 
     let publisher = Publisher::new(&conn);
     publisher.publish(subject, "{}".into(), None).await;
+    sleep(Duration::from_millis(42)).await;
+    info!("Stop");
+    run_flag.store(false, Ordering::Relaxed);
 }
