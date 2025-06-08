@@ -29,6 +29,7 @@ time = "0.3.41"
 async-trait = "0.1.88"
 #crashlog = "0.1.4"
 color-backtrace = "0.7.0"
+async-channel = "2.3.1"
 
 
 [dev-dependencies]

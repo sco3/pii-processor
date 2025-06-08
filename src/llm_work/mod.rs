@@ -1,5 +1,7 @@
-mod impls;
+mod process;
 mod parse;
+mod new;
+mod prompt;
 
 use crate::llm_caller_trait::ReDucter;
 use std::sync::Arc;

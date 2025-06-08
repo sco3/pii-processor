@@ -38,9 +38,9 @@ async fn build_s3_client(host_port: u16) -> Client {
 #[tokio::test]
 async fn test_s3() {
     init_tracing();
-    unsafe {
-        std::env::remove_var("DOCKER_HOST");
-    }
+    // unsafe {
+    //     std::env::remove_var("DOCKER_HOST");
+    // }
 
     let minio = minio::MinIO::default();
 

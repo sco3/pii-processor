@@ -1,8 +1,10 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
+use async_channel::{bounded, Sender};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
+use bytes::Bytes;
 pub use common::init_logging::init_tracing;
 use ductaper::connector::Connector;
 use ductaper::log_handler::LogHandler;
@@ -18,7 +20,6 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
-use tokio::sync::broadcast::{channel as broadcast_channel, Sender as BroadcastSender};
 
 use tokio::sync::Mutex;
 use tokio::time::sleep;
@@ -26,16 +27,16 @@ use tokio::time::Duration as TokioDuration;
 use tracing::{debug, info};
 
 struct DummyHandler {
-    count_snd: BroadcastSender<()>,
+    count_snd: Sender<()>,
 }
 
 #[async_trait]
 impl LogHandler for DummyHandler {
     async fn handle(&mut self, msg: Message) -> bool {
-        let start = std::str::from_utf8(&msg.payload)
-            .unwrap_or("0")
-            .parse::<u128>()
-            .unwrap_or_default();
+        let slice = msg.payload.as_ref();
+        let arr: [u8; 16] = slice.try_into().unwrap_or_default();
+        let start = u128::from_be_bytes(arr);
+
         let duration = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
@@ -44,7 +45,7 @@ impl LogHandler for DummyHandler {
 
         debug!("Message arrive time: {} µs", duration);
 
-        if let Err(e) = self.count_snd.send(()) {
+        if let Err(e) = self.count_snd.send(()).await {
             panic!("Send problem : {}", e);
         }
         true
@@ -54,9 +55,9 @@ impl LogHandler for DummyHandler {
 #[tokio::test]
 async fn test_consumer() {
     init_tracing();
-    unsafe {
-        std::env::remove_var("DOCKER_HOST");
-    }
+    // unsafe {
+    //     std::env::remove_var("DOCKER_HOST");
+    // }
 
     let container = GenericImage::new("nats", "2.11.4")
         .with_exposed_port(4222.tcp())
@@ -77,8 +78,8 @@ async fn test_consumer() {
         let cfg = get_test_cfg(port);
         let conn = Connector::new(cfg.clone()).await;
         let publisher = Publisher::new(&conn);
-        let (count_snd, mut count_rcv1) = broadcast_channel::<()>(8);
-        let mut count_rcv2 = count_snd.subscribe();
+        let (count_snd, count_rcv1) = bounded::<()>(8);
+        let count_rcv2 = count_rcv1.clone();
         let dummy_handler = DummyHandler { count_snd };
         let dummy = Arc::new(Mutex::new(dummy_handler));
 
@@ -106,7 +107,9 @@ async fn test_consumer() {
                         .duration_since(UNIX_EPOCH)
                         .unwrap_or_default()
                         .as_micros();
-                    publisher.publish(subj.clone(), ts.to_string().into()).await;
+                    publisher
+                        .publish(subj.clone(), Bytes::copy_from_slice(&ts.to_be_bytes()))
+                        .await;
                 }
                 info!("Exit publish");
             },
@@ -126,8 +129,6 @@ async fn test_consumer() {
                     if count_rcv2.try_recv().is_ok() {
                         total_count.fetch_add(1, Ordering::Relaxed);
                         info!("Counting2: {}", total_count.load(Ordering::Relaxed));
-                    } else {
-                        //info!("Not received: {}", run.load(Ordering::Relaxed));
                     }
                     sleep(TokioDuration::from_nanos(1)).await;
                 }
@@ -136,6 +137,6 @@ async fn test_consumer() {
         );
 
         info!("Count: {}", total_count.load(Ordering::Relaxed));
-        assert_eq!(4, total_count.load(Ordering::Relaxed));
+        assert_eq!(2, total_count.load(Ordering::Relaxed));
     }
 }
