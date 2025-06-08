@@ -4,11 +4,12 @@ use async_channel::bounded;
 use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
+use std::fs;
 use std::sync::atomic::Ordering;
 
+use bytes::Bytes;
 use std::time::Duration;
-
-use tracing::info;
+use tracing::{debug, info};
 
 use common::init_logging::init_tracing;
 
@@ -79,6 +80,14 @@ async fn test_pool() {
         "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
         subject, payload, port
     );
+
+    let path = "tests/data/worker-pool-test.json";
+    let file_content = fs::read(path) //
+        .expect("Failed to read example_new_fields.log");
+
+    let preview: Bytes = Bytes::copy_from_slice(&file_content[..file_content.len().min(80)]);
+    debug!("Payload {} bytes: {:?} ...", file_content.len(), preview);
+
     publisher.publish(subject, payload.into(), None).await;
     sleep(Duration::from_millis(42)).await;
     info!("Stop");

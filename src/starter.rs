@@ -5,16 +5,16 @@ use crate::llm_caller::LLmCaller;
 use crate::llm_handler::LlmHandler;
 use std::env;
 
-use crate::worker_pool::event_counter::MinuteCounter;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
+use crate::worker_pool::event_counter::MinuteCounter;
 use crate::worker_pool::WorkerPool;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use dotenv::dotenv;
 use std::sync::Arc;
-use tokio::sync::Mutex;
+
 use tracing::info;
 
 pub struct Starter {
@@ -40,7 +40,7 @@ impl Starter {
             bearer: None,
             client: Default::default(),
         };
-        let shared_llm_caller = Arc::new(Mutex::new(llm_caller));
+        let shared_llm_caller = Arc::new(llm_caller);
         let llm_log_processor = LlmLogProcessor::new(
             cfg.system_prompt_location, //
             shared_llm_caller,

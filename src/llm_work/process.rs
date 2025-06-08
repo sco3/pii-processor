@@ -14,12 +14,7 @@ impl LlmLogProcessor {
             if let Ok(pii_message) = serde_json::to_string(&chat_history) {
                 debug!("history: {:?}", pii_message);
                 let prompt = self.prompt();
-                let result = self
-                    .caller
-                    .lock()
-                    .await
-                    .call(prompt.as_str(), &pii_message)
-                    .await;
+                let result = self.caller.call(prompt.as_str(), &pii_message).await;
 
                 debug!("Result: {:?}", result);
             }

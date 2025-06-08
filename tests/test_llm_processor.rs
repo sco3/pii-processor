@@ -5,7 +5,7 @@ use ductaper::reducter::ReDucter;
 use serde_json::Value;
 use std::fs;
 use std::sync::Arc;
-use tokio::sync::Mutex;
+
 use tracing::{debug, info};
 
 struct _DummyLlmCaller;
@@ -26,7 +26,7 @@ async fn test_llm_log_processor() {
         "nova",
         Some("sk-1234".to_string()),
     );
-    let caller = Arc::new(Mutex::new(raw_caller));
+    let caller = Arc::new(raw_caller);
 
     let mut processor = LlmLogProcessor {
         prompt_location: "//tmp".to_string(),
