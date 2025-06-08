@@ -22,10 +22,6 @@ pub struct RedactConsumer {
 }
 
 impl RedactConsumer {
-    pub fn stop(&self) {
-        self.run_flag.store(false, Ordering::Relaxed)
-    }
-
     async fn fetch(&mut self, consumer: &Consumer<PullConfig>) {
         match consumer.fetch().max_messages(1).messages().await {
             Ok(mut messages) => {

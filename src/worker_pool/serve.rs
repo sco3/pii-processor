@@ -6,7 +6,7 @@ use tracing::debug;
 impl WorkerPool {
     pub async fn serve_messages(recv: Receiver<Message>) {
         while let Ok(msg) = recv.recv().await {
-            debug!("Message: {:?}", msg);
+            debug!("Message: {:?} {:?}", msg.payload, msg.headers);
         }
     }
 }

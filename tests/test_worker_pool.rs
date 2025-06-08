@@ -14,7 +14,7 @@ use common::init_logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;
-use ductaper::event_counter::MinuteCounter;
+use ductaper::worker_pool::event_counter::MinuteCounter;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use testcontainers::core::wait::HttpWaitStrategy;
@@ -76,6 +76,7 @@ async fn test_pool() {
     info!("Subject: {}", subject);
 
     let publisher = Publisher::new(&conn);
+
     publisher.publish(subject, "{}".into(), None).await;
     sleep(Duration::from_millis(42)).await;
     info!("Stop");

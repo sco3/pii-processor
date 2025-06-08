@@ -5,7 +5,7 @@ use crate::llm_caller::LLmCaller;
 use crate::llm_handler::LlmHandler;
 use std::env;
 
-use crate::event_counter::MinuteCounter;
+use crate::worker_pool::event_counter::MinuteCounter;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
