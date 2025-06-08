@@ -6,6 +6,12 @@ pub struct MinuteCounter {
     map: Mutex<HashMap<u64, usize>>, // key = minute timestamp
 }
 
+impl Default for MinuteCounter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MinuteCounter {
     fn current_minute(&self) -> u64 {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
