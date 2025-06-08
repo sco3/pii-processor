@@ -1,5 +1,5 @@
 use crate::ai_tags::Ai;
-use crate::llm_caller_trait::ReDucter;
+use crate::reducter::ReDucter;
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
 use reqwest::RequestBuilder;

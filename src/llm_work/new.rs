@@ -1,4 +1,4 @@
-use crate::llm_caller_trait::ReDucter;
+use crate::reducter::ReDucter;
 use crate::llm_work::LlmLogProcessor;
 use std::sync::Arc;
 use tokio::sync::Mutex;

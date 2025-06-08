@@ -4,7 +4,7 @@ pub mod env_vars;
 pub mod expanduser;
 pub mod init;
 pub mod llm_caller;
-pub mod llm_caller_trait;
+pub mod reducter;
 pub mod llm_handler;
 pub mod llm_work;
 pub mod log_handler;

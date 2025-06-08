@@ -3,7 +3,7 @@ mod parse;
 mod new;
 mod prompt;
 
-use crate::llm_caller_trait::ReDucter;
+use crate::reducter::ReDucter;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
