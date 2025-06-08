@@ -22,7 +22,7 @@ pub struct RedactConsumer {
 }
 
 impl RedactConsumer {
-    async fn serve_loop(&mut self, consumer: &Consumer<PullConfig>) {
+    async fn fetch(&mut self, consumer: &Consumer<PullConfig>) {
         match consumer.fetch().max_messages(1).messages().await {
             Ok(mut messages) => {
                 while let Some(Ok(message)) = messages.next().await {
@@ -46,18 +46,26 @@ impl RedactConsumer {
 
     pub async fn serve(&mut self) {
         info!("Start serving");
-        let consumer_option = self.consumer.take();
-        if consumer_option.is_none() {
-            error!("Not subscribed.");
-            return;
-        }
-        let consumer = consumer_option.unwrap();
 
-        while self.run_flag.load(Ordering::Relaxed) {
-            self.serve_loop(&consumer).await;
+        let consumer = match &self.consumer {
+            Some(c) => c.clone(),
+            None => {
+                error!("Not subscribed.");
+                return;
+            }
+        };
+
+        while self.run() {
+            self.fetch(&consumer).await;
         }
+
         info!("Exit serve");
     }
+
+    fn run(&mut self) -> bool {
+        self.run_flag.load(Ordering::Relaxed)
+    }
+
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
             Ok(stream) => stream,
@@ -133,9 +141,6 @@ impl RedactConsumer {
         async_nats::jetstream::stream::Config {
             name: cfg.queue_stream.to_string(),
             subjects: subjects.to_vec(),
-            //max_age: Duration::from_secs(cfg.queue_stream_max_age),
-            //retention: RetentionPolicy::Limits,
-            //discard: DiscardPolicy::Old,
             ..Default::default()
         }
     }

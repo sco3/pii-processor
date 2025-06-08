@@ -60,6 +60,7 @@ async fn test_pool() {
 
     let mut consumer = RedactConsumer::new(&conn, tx).await;
     consumer.update_stream(&cfg).await;
+    consumer.subscribe(&cfg).await;
     consumer.serve().await;
     let subject = cfg.redact_subject;
     info!("Subject: {}", subject);
