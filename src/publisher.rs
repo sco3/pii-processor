@@ -1,7 +1,6 @@
 use crate::connector::Connector;
-use async_nats::Client;
+use async_nats::{Client, HeaderMap};
 use bytes::Bytes;
-use tracing::error;
 
 pub struct Publisher {
     nats: Box<Client>,
@@ -12,13 +11,19 @@ impl Publisher {
         let nats = connector.get();
         Publisher { nats }
     }
-    pub async fn publish(&self, subject: String, data: Bytes) -> bool {
-        match self.nats.publish(subject, data).await {
-            Ok(_) => true,
-            Err(e) => {
-                error!("Publish error: {:?}", e);
-                false
-            }
+    pub async fn publish(
+        &self, //
+        subject: String,
+        data: Bytes,
+        headers: Option<HeaderMap>,
+    ) -> bool {
+        if let Some(headers) = headers {
+            self.nats
+                .publish_with_headers(subject, headers, data)
+                .await
+                .is_ok()
+        } else {
+            self.nats.publish(subject, data).await.is_ok()
         }
     }
 }

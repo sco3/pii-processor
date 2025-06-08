@@ -123,7 +123,11 @@ async fn test_consumer() {
                         .unwrap_or_default()
                         .as_micros();
                     publisher
-                        .publish(subj.clone(), Bytes::copy_from_slice(&ts.to_be_bytes()))
+                        .publish(
+                            subj.clone(), //
+                            Bytes::copy_from_slice(&ts.to_be_bytes()),
+                            None,
+                        )
                         .await;
                 }
                 info!("Exit publish");

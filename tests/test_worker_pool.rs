@@ -8,6 +8,10 @@ use tracing::{debug, info};
 
 use common::init_logging::init_tracing;
 
+use crate::common::init_cfg::get_test_cfg;
+use ductaper::connector::Connector;
+use ductaper::publisher::Publisher;
+use ductaper::redact_consumer::RedactConsumer;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
     core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
@@ -49,4 +53,10 @@ async fn test_pool() {
         receiver: rx,
     };
     pool.start().await;
+    let cfg = get_test_cfg(port);
+    let conn = Connector::new(cfg.clone()).await;
+    let publisher = Publisher::new(&conn);
+    let consumer = RedactConsumer::new(conn, tx);
+    let subject = cfg.redact_subject;
+    info!("Subject: {}", subject);
 }
