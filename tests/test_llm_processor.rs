@@ -1,11 +1,11 @@
 use async_trait::async_trait;
+use bytes::Bytes;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::reducter::ReDucter;
 use serde_json::Value;
 use std::fs;
 use std::sync::Arc;
-
 use tracing::{debug, info};
 
 struct _DummyLlmCaller;
@@ -27,11 +27,10 @@ async fn test_llm_log_processor() {
         Some("sk-1234".to_string()),
     );
     let caller = Arc::new(raw_caller);
-
-    let mut processor = LlmLogProcessor {
-        prompt_location: "//tmp".to_string(),
+    // prompt_location: "//tmp".to_string(),
+    let processor = LlmLogProcessor {
         caller,
-        system_prompt: None,
+        system_prompt: String::new(),
     };
 
     // Load test file from relative path
@@ -40,6 +39,6 @@ async fn test_llm_log_processor() {
         .expect("Failed to read example_new_fields.log");
 
     // Process the payload
-    let result = processor.process(&file_content).await;
+    let result = processor.process(Bytes::from(file_content)).await;
     info!("Processing result: {}", result);
 }

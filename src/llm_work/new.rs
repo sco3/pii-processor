@@ -4,11 +4,13 @@ use crate::reducter::ReDucter;
 use std::sync::Arc;
 
 impl LlmLogProcessor {
-    pub fn new(prompt_location: String, caller: Arc<dyn ReDucter + Send + Sync>) -> Self {
+    pub fn new(
+        caller: Arc<dyn ReDucter + Send + Sync>, //
+        system_prompt: String,
+    ) -> Self {
         LlmLogProcessor {
-            prompt_location,
             caller,
-            system_prompt: None,
+            system_prompt,
         }
     }
 }

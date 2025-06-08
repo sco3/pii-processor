@@ -19,6 +19,7 @@ use ductaper::connector::Connector;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 
 use ductaper::llm_caller::LLmCaller;
+use ductaper::llm_work::prompt::prompt;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
@@ -64,16 +65,15 @@ async fn test_pool() {
         Some("sk-1234".to_string()),
     ));
 
-    let processor = LlmLogProcessor::new(
-        "data/system_prompt.txt".to_string(), //
-        caller,
-    );
+    let system_promp = prompt("data/system_prompt.txt".to_string());
+    let processor = LlmLogProcessor::new(caller, system_promp);
+    let shared_processor = Arc::new(processor);
 
     let pool = WorkerPool {
         size: 1,
         receiver: rx,
         counter: MinuteCounter::new(),
-        llm_log_processor: processor,
+        llm_log_processor: shared_processor,
     };
     pool.start().await;
     let cfg = get_test_cfg(port);
@@ -91,7 +91,7 @@ async fn test_pool() {
     });
 
     let publisher = Publisher::new(&conn);
-    let payload = "{}";
+    let payload = "[]";
     info!(
         "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
         subject, payload, port

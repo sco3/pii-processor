@@ -41,12 +41,19 @@ impl Starter {
             client: Default::default(),
         };
         let shared_llm_caller = Arc::new(llm_caller);
-        let llm_log_processor = LlmLogProcessor::new(
-            cfg.system_prompt_location, //
-            shared_llm_caller,
-        );
 
-        let (snd, rcv) = bounded::<Message>(cfg.redact_max_tasks);
+        let system_prompt = crate::llm_work::prompt::prompt(
+            cfg.system_prompt_location, //
+        );
+        let processor = LlmLogProcessor::new(
+            shared_llm_caller,
+            system_prompt, //
+        );
+        let llm_log_processor = Arc::new(processor);
+
+        let (snd, rcv) = bounded::<Message>(
+            cfg.redact_max_tasks, //
+        );
 
         let redact_consumer = RedactConsumer::new(
             &connector, //
