@@ -1,7 +1,6 @@
 use crate::env_vars::Cfg;
 
 use crate::connector::Connector;
-use crate::log_handler::LogHandler;
 use async_channel::Sender;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
@@ -11,7 +10,6 @@ use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::sync::Mutex;
 use tracing::{debug, error, info};
 
 pub struct RedactConsumer {

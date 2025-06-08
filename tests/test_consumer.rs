@@ -21,7 +21,6 @@ use testcontainers::{
     ImageExt,
 };
 
-use tokio::sync::Mutex;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
 use tracing::{debug, info};
