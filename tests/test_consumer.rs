@@ -100,6 +100,7 @@ async fn test_consumer() {
         consumer.subscribe(&cfg).await;
         let run = consumer.get_run_flag_clone();
         let subj = consumer.subject.clone().unwrap_or_default();
+        info!("Subject: {}", subj);
         let total_count = AtomicI64::new(0);
 
         let mut dummy_handler = DummyHandler {

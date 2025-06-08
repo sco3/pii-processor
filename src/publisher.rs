@@ -1,6 +1,7 @@
 use crate::connector::Connector;
 use async_nats::{Client, HeaderMap};
 use bytes::Bytes;
+use tracing::debug;
 
 pub struct Publisher {
     nats: Box<Client>,
@@ -17,6 +18,7 @@ impl Publisher {
         data: Bytes,
         headers: Option<HeaderMap>,
     ) -> bool {
+        debug!("Publish {:?} to {}", data, subject);
         if let Some(headers) = headers {
             self.nats
                 .publish_with_headers(subject, headers, data)

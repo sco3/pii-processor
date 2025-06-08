@@ -81,7 +81,8 @@ impl RedactConsumer {
             }
         };
         let subj = Self::get_full_subject(&cfg);
-        let durable_name = format!("consumer_{}", subj);
+        let durable_safe = subj.replace('.', "_");
+        let durable_name = format!("consumer_{}", durable_safe);
         info!("Creating consumer with durable name: {}", durable_name);
 
         self.subject = Some(subj.clone());
@@ -107,7 +108,8 @@ impl RedactConsumer {
     }
 
     pub async fn update_stream(&self, cfg: &Cfg) {
-        let mut subjects = vec![cfg.redact_subject.clone(), "test".to_string()];
+        let subj = Self::get_full_subject(&cfg);
+        let mut subjects = vec![subj.clone(), "test".to_string()];
         let mut stream_config = Self::get_stream_cfg(cfg, &mut subjects);
         match self
             .jetstream

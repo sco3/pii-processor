@@ -49,7 +49,7 @@ async fn test_pool() {
         }
     };
 
-    info!("Container port: {port}");
+    info!("Nat server: nats://localhost:{port}");
 
     let (tx, rx) = bounded::<Message>(1);
 
@@ -74,8 +74,12 @@ async fn test_pool() {
     });
 
     let publisher = Publisher::new(&conn);
-
-    publisher.publish(subject, "{}".into(), None).await;
+    let payload = "{}";
+    info!(
+        "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
+        subject, payload, port
+    );
+    publisher.publish(subject, payload.into(), None).await;
     sleep(Duration::from_millis(42)).await;
     info!("Stop");
     run_flag.store(false, Ordering::Relaxed);
