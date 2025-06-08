@@ -48,7 +48,7 @@ impl RedactConsumer {
         info!("Start serving");
         let consumer_option = self.consumer.take();
         if consumer_option.is_none() {
-            error!("Consumer not found");
+            error!("Not subscribed.");
             return;
         }
         let consumer = consumer_option.unwrap();
@@ -57,8 +57,6 @@ impl RedactConsumer {
             self.serve_loop(&consumer).await;
         }
         info!("Exit serve");
-
-        self.consumer = Some(consumer);
     }
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
