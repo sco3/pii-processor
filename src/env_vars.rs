@@ -37,10 +37,10 @@ pub struct Cfg {
     #[serde(default = "default_system_prompt_location")]
     pub system_prompt_location: String,
     #[serde(default = "default_redact_max_tasks")]
-    pub redact_max_tasks: u32,
+    pub redact_max_tasks: usize,
 }
 
-fn default_redact_max_tasks() -> u32 {
+fn default_redact_max_tasks() -> usize {
     8
 }
 

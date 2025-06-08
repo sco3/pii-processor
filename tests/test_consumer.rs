@@ -1,7 +1,7 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use async_channel::{bounded, Sender};
+use async_channel::{bounded, Receiver, Sender};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use bytes::Bytes;
@@ -11,7 +11,7 @@ use ductaper::log_handler::LogHandler;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
-use std::sync::atomic::{AtomicI64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
@@ -28,6 +28,17 @@ use tracing::{debug, info};
 
 struct DummyHandler {
     count_snd: Sender<()>,
+    receiver: Receiver<Message>,
+    run: Arc<AtomicBool>,
+}
+
+impl DummyHandler {
+    pub async fn start(&mut self) {
+        while let Ok(msg) = self.receiver.recv().await {
+            self.handle(msg).await;
+        }
+        info!("Exit handler");
+    }
 }
 
 #[async_trait]
@@ -80,12 +91,12 @@ async fn test_consumer() {
         let publisher = Publisher::new(&conn);
         let (count_snd, count_rcv1) = bounded::<()>(8);
         let count_rcv2 = count_rcv1.clone();
-        let dummy_handler = DummyHandler { count_snd };
-        let dummy = Arc::new(Mutex::new(dummy_handler));
 
+        //let dummy = Arc::new(Mutex::new(dummy_handler));
+        let (msg_send, receiver) = bounded::<Message>(1);
         let mut consumer = RedactConsumer::new(
             conn, //
-            dummy,
+            msg_send,
         )
         .await;
         consumer.update_stream(&cfg).await;
@@ -93,12 +104,20 @@ async fn test_consumer() {
         let run = consumer.get_run_flag_clone();
         let subj = consumer.subject.clone().unwrap_or_default();
         let total_count = AtomicI64::new(0);
+
+        let mut dummy_handler = DummyHandler {
+            count_snd,
+            receiver: receiver.clone(),
+            run: consumer.get_run_flag_clone(),
+        };
+
         let _ = tokio::join!(
             async {
                 // test duration
                 sleep(TokioDuration::from_millis(42)).await;
                 info!("Exit sleep");
                 run.store(false, Ordering::Relaxed);
+                receiver.close();
                 info!("Exit time limit");
             },
             async {
@@ -133,6 +152,7 @@ async fn test_consumer() {
                     sleep(TokioDuration::from_nanos(1)).await;
                 }
             },
+            dummy_handler.start(),
             consumer.serve(),
         );
 

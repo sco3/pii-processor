@@ -8,6 +8,9 @@ use std::env;
 use crate::llm_work::LlmLogProcessor;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
+use crate::worker_pool::WorkerPool;
+use async_channel::bounded;
+use async_nats::jetstream::Message;
 use dotenv::dotenv;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -42,12 +45,19 @@ impl Starter {
             shared_llm_caller,
         );
         let llm_handler = LlmHandler::new(llm_log_processor);
-        let shared_llm_handler = Arc::new(Mutex::new(llm_handler));
+        //let shared_llm_handler = Arc::new(Mutex::new(llm_handler));
+        let (snd, rcv) = bounded::<Message>(cfg.redact_max_tasks);
+
         let redact_consumer = RedactConsumer::new(
             connector, //
-            shared_llm_handler,
+            snd,
         )
         .await;
+
+        let pool = WorkerPool {
+            size: cfg.redact_max_tasks,
+            receiver: rcv,
+        };
         Starter { redact_consumer }
     }
 }

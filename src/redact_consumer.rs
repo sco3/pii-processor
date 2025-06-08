@@ -2,10 +2,11 @@ use crate::env_vars::Cfg;
 
 use crate::connector::Connector;
 use crate::log_handler::LogHandler;
+use async_channel::Sender;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
-use async_nats::jetstream::Context;
+use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
@@ -18,7 +19,7 @@ pub struct RedactConsumer {
     pub jetstream: Context,
     pub consumer: Option<Consumer<async_nats::jetstream::consumer::pull::Config>>,
     pub run_flag: Arc<AtomicBool>,
-    pub handler: Arc<Mutex<dyn LogHandler + Send + Sync>>,
+    pub sender: Sender<Message>,
     pub subject: Option<String>,
 }
 
@@ -31,8 +32,9 @@ impl RedactConsumer {
                         error!("Ack failed: {}", e);
                     }
                     debug!("Got message: {:?}", message.payload);
-                    let mut handler_guard = self.handler.lock().await;
-                    handler_guard.handle(message).await;
+                    if let Err(e) = self.sender.send(message).await {
+                        error!("Failed to send message to channel: {}", e);
+                    }
                 }
             }
             Err(e) => {
@@ -144,7 +146,7 @@ impl RedactConsumer {
 
     pub async fn new(
         connector: Connector, //
-        handler: Arc<Mutex<dyn LogHandler + Send + Sync>>,
+        sender: Sender<Message>,
     ) -> Self {
         let client = *connector.get();
 
@@ -155,7 +157,7 @@ impl RedactConsumer {
             jetstream,
             consumer: None,
             run_flag: Arc::new(AtomicBool::new(true)),
-            handler,
+            sender,
             subject: None,
         }
     }
