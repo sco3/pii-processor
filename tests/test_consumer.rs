@@ -9,37 +9,45 @@ use ductaper::log_handler::LogHandler;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
+use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::Arc;
-use std::sync::atomic::Ordering;
+use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    GenericImage, ImageExt,
-    core::{IntoContainerPort, WaitFor},
-    runners::AsyncRunner,
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
+    GenericImage,
+    ImageExt,
 };
-use time::OffsetDateTime;
-use tokio;
+use tokio::sync::broadcast::{channel as broadcast_channel, Sender as BroadcastSender};
+
 use tokio::sync::Mutex;
-use tokio::time::Duration as TokioDuration;
 use tokio::time::sleep;
+use tokio::time::Duration as TokioDuration;
 use tracing::{debug, info};
 
 struct DummyHandler {
-    count: i32,
+    count_snd: BroadcastSender<()>,
 }
+
 #[async_trait]
 impl LogHandler for DummyHandler {
     async fn handle(&mut self, msg: Message) -> bool {
-        if let Ok(info) = msg.info() {
-            let duration = OffsetDateTime::now_utc() - info.published;
-            debug!("Message arrive time: {} µs", duration.whole_microseconds(),);
-        }
+        let start = std::str::from_utf8(&msg.payload)
+            .unwrap_or("0")
+            .parse::<u128>()
+            .unwrap_or_default();
+        let duration = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_micros()
+            - start;
 
-        self.count += 1;
+        debug!("Message arrive time: {} µs", duration);
+
+        if let Err(e) = self.count_snd.send(()) {
+            panic!("Send problem : {}", e);
+        }
         true
-    }
-    fn cnt(&self) -> i32 {
-        self.count
     }
 }
 
@@ -69,7 +77,9 @@ async fn test_consumer() {
         let cfg = get_test_cfg(port);
         let conn = Connector::new(cfg.clone()).await;
         let publisher = Publisher::new(&conn);
-        let dummy_handler = DummyHandler { count: 0 };
+        let (count_snd, mut count_rcv1) = broadcast_channel::<()>(8);
+        let mut count_rcv2 = count_snd.subscribe();
+        let dummy_handler = DummyHandler { count_snd };
         let dummy = Arc::new(Mutex::new(dummy_handler));
 
         let mut consumer = RedactConsumer::new(
@@ -81,18 +91,51 @@ async fn test_consumer() {
         consumer.subscribe(&cfg).await;
         let run = consumer.get_run_flag_clone();
         let subj = consumer.subject.clone().unwrap_or_default();
+        let total_count = AtomicI64::new(0);
         let _ = tokio::join!(
             async {
                 // test duration
                 sleep(TokioDuration::from_millis(42)).await;
+                info!("Exit sleep");
                 run.store(false, Ordering::Relaxed);
+                info!("Exit time limit");
             },
-            publisher.publish(subj, "asdf".into()),
+            async {
+                for _ in 0..2 {
+                    let ts = SystemTime::now()
+                        .duration_since(UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_micros();
+                    publisher.publish(subj.clone(), ts.to_string().into()).await;
+                }
+                info!("Exit publish");
+            },
+            async {
+                while run.load(Ordering::Relaxed) {
+                    if count_rcv1.try_recv().is_ok() {
+                        total_count.fetch_add(1, Ordering::Relaxed);
+                        info!("Counting1: {}", total_count.load(Ordering::Relaxed));
+                    } else {
+                        //info!("Not received: {}", run.load(Ordering::Relaxed));
+                    }
+                    sleep(TokioDuration::from_nanos(1)).await;
+                }
+            },
+            async {
+                while run.load(Ordering::Relaxed) {
+                    if count_rcv2.try_recv().is_ok() {
+                        total_count.fetch_add(1, Ordering::Relaxed);
+                        info!("Counting2: {}", total_count.load(Ordering::Relaxed));
+                    } else {
+                        //info!("Not received: {}", run.load(Ordering::Relaxed));
+                    }
+                    sleep(TokioDuration::from_nanos(1)).await;
+                }
+            },
             consumer.serve(),
         );
-        let handler_guard = consumer.handler.lock().await;
 
-        info!("Count: {}", handler_guard.cnt());
-        assert_eq!(1, handler_guard.cnt());
+        info!("Count: {}", total_count.load(Ordering::Relaxed));
+        assert_eq!(4, total_count.load(Ordering::Relaxed));
     }
 }

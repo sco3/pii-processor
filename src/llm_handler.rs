@@ -19,7 +19,5 @@ impl LogHandler for LlmHandler {
         self.processor.process(payload).await
     }
 
-    fn cnt(&self) -> i32 {
-        0
-    }
+    
 }

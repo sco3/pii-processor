@@ -2,13 +2,13 @@ use crate::env_vars::Cfg;
 
 use crate::connector::Connector;
 use crate::log_handler::LogHandler;
-use async_nats::jetstream::Context;
-use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
+use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
+use async_nats::jetstream::Context;
 use futures::StreamExt;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
 use tracing::{debug, error, info};
@@ -45,6 +45,7 @@ impl RedactConsumer {
     }
 
     pub async fn serve(&mut self) {
+        info!("Start serving");
         let consumer_option = self.consumer.take();
         if consumer_option.is_none() {
             error!("Consumer not found");
@@ -55,6 +56,7 @@ impl RedactConsumer {
         while self.run_flag.load(Ordering::Relaxed) {
             self.serve_loop(&consumer).await;
         }
+        info!("Exit serve");
 
         self.consumer = Some(consumer);
     }

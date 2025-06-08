@@ -36,6 +36,12 @@ pub struct Cfg {
     pub llm_model: String,
     #[serde(default = "default_system_prompt_location")]
     pub system_prompt_location: String,
+    #[serde(default = "default_redact_max_tasks")]
+    pub redact_max_tasks: u32,
+}
+
+fn default_redact_max_tasks() -> u32 {
+    8
 }
 
 fn default_system_prompt_location() -> String {
