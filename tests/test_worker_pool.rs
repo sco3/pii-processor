@@ -55,8 +55,13 @@ async fn test_pool() {
     pool.start().await;
     let cfg = get_test_cfg(port);
     let conn = Connector::new(cfg.clone()).await;
-    let publisher = Publisher::new(&conn);
-    let consumer = RedactConsumer::new(conn, tx);
+
+    let mut consumer = RedactConsumer::new(&conn, tx).await;
+    consumer.update_stream(&cfg).await;
+    consumer.serve().await;
     let subject = cfg.redact_subject;
     info!("Subject: {}", subject);
+
+    let publisher = Publisher::new(&conn);
+    publisher.publish(subject, "{}".into(), None).await;
 }

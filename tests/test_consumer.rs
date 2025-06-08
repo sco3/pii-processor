@@ -92,7 +92,7 @@ async fn test_consumer() {
         //let dummy = Arc::new(Mutex::new(dummy_handler));
         let (msg_send, receiver) = bounded::<Message>(1);
         let mut consumer = RedactConsumer::new(
-            conn, //
+            &conn, //
             msg_send,
         )
         .await;

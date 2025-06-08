@@ -49,7 +49,7 @@ impl Starter {
         let (snd, rcv) = bounded::<Message>(cfg.redact_max_tasks);
 
         let redact_consumer = RedactConsumer::new(
-            connector, //
+            &connector, //
             snd,
         )
         .await;

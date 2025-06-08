@@ -143,7 +143,7 @@ impl RedactConsumer {
     }
 
     pub async fn new(
-        connector: Connector, //
+        connector: &Connector, //
         sender: Sender<Message>,
     ) -> Self {
         let client = *connector.get();
