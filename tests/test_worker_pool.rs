@@ -18,9 +18,6 @@ use testcontainers::{
 #[tokio::test]
 async fn test_pool() {
     init_tracing();
-    // unsafe {
-    //     std::env::remove_var("DOCKER_HOST");
-    // }
 
     let container = GenericImage::new("nats", "2.11.4")
         .with_exposed_port(4222.tcp())
@@ -35,16 +32,21 @@ async fn test_pool() {
         .await
         .expect("Failed to start Nats");
 
-    if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
-        info!("Container port: {port}");
+    let port = match container.get_host_port_ipv4(4222.tcp()).await {
+        Ok(p) => p,
+        Err(e) => {
+            panic!("Failed to get port: {}", e);
+        }
+    };
 
-        let (tx, rx) = bounded::<Message>(1);
-        debug!("Tx: {:?}", tx);
+    info!("Container port: {port}");
 
-        let pool = WorkerPool {
-            size: 1,
-            receiver: rx,
-        };
-        pool.start().await;
-    }
+    let (tx, rx) = bounded::<Message>(1);
+    debug!("Tx: {:?}", tx);
+
+    let pool = WorkerPool {
+        size: 1,
+        receiver: rx,
+    };
+    pool.start().await;
 }
