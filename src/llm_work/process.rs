@@ -1,4 +1,4 @@
-use crate::llm_work::LlmLogProcessor;
+use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::session_log_models::SessionLogEntry::ChatMessage;
 use tracing::debug;
 

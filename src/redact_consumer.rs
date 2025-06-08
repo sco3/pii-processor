@@ -4,12 +4,12 @@ use crate::connector::Connector;
 use async_channel::Sender;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
-use async_nats::jetstream::stream::{Config, DiscardPolicy, RetentionPolicy};
+use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::time::Duration;
+
 use tracing::{debug, error, info};
 
 pub struct RedactConsumer {
@@ -135,9 +135,9 @@ impl RedactConsumer {
         async_nats::jetstream::stream::Config {
             name: cfg.queue_stream.to_string(),
             subjects: subjects.to_vec(),
-            max_age: Duration::from_secs(cfg.queue_stream_max_age),
-            retention: RetentionPolicy::Limits,
-            discard: DiscardPolicy::Old,
+            //max_age: Duration::from_secs(cfg.queue_stream_max_age),
+            //retention: RetentionPolicy::Limits,
+            //discard: DiscardPolicy::Old,
             ..Default::default()
         }
     }

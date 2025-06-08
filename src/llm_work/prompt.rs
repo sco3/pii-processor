@@ -1,6 +1,7 @@
-use crate::llm_work::LlmLogProcessor;
+use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use std::fs::read_to_string;
 use tracing::debug;
+
 
 impl LlmLogProcessor {
     pub fn prompt(&mut self) -> String {

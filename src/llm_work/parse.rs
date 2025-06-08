@@ -1,7 +1,6 @@
-use super::LlmLogProcessor;
+use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::session_log_models::SessionLogType;
 use std::cmp::min;
-
 use tracing::{debug, error};
 
 impl LlmLogProcessor {

@@ -71,7 +71,7 @@ fn default_redact_subject() -> String {
 }
 
 fn default_queue_stream() -> String {
-    "queue-stream".to_string()
+    "converastion-stream".to_string()
 }
 
 impl Cfg {
