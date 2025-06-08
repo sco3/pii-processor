@@ -10,6 +10,7 @@ use common::init_logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;
+use ductaper::event_counter::MinuteCounter;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use testcontainers::core::wait::HttpWaitStrategy;
@@ -51,6 +52,7 @@ async fn test_pool() {
     let pool = WorkerPool {
         size: 1,
         receiver: rx,
+        counter: MinuteCounter::new(),
     };
     pool.start().await;
     let cfg = get_test_cfg(port);
