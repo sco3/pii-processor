@@ -65,6 +65,12 @@ impl RedactConsumer {
     fn run(&mut self) -> bool {
         self.run_flag.load(Ordering::Relaxed)
     }
+    pub fn get_full_subject(cfg: &Cfg) -> String {
+        format!(
+            "{}.{}.{}",
+            &cfg.tenant, &cfg.application, &cfg.redact_subject
+        )
+    }
 
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
@@ -74,11 +80,10 @@ impl RedactConsumer {
                 return;
             }
         };
-
-        let durable_name = format!("consumer_{}", cfg.redact_subject);
+        let subj = Self::get_full_subject(&cfg);
+        let durable_name = format!("consumer_{}", subj);
         info!("Creating consumer with durable name: {}", durable_name);
 
-        let subj = cfg.redact_subject.clone();
         self.subject = Some(subj.clone());
         self.consumer = Some(
             match stream

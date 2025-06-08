@@ -14,9 +14,9 @@ use common::init_logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;
-use ductaper::worker_pool::event_counter::MinuteCounter;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
+use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
     core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
@@ -66,14 +66,13 @@ async fn test_pool() {
     let mut consumer = RedactConsumer::new(&conn, tx).await;
     consumer.update_stream(&cfg).await;
     consumer.subscribe(&cfg).await;
+    let subject = consumer.subject.clone().unwrap_or_default();
+    info!("Subject: {}", subject);
 
     let run_flag = consumer.run_flag.clone();
     tokio::spawn(async move {
         consumer.serve().await;
     });
-
-    let subject = cfg.redact_subject;
-    info!("Subject: {}", subject);
 
     let publisher = Publisher::new(&conn);
 
