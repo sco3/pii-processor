@@ -96,7 +96,7 @@ async fn test_s3() {
         let s3 = S3Helper::new(s3);
         let ls = s3.list_buckets().await;
         assert_eq!(ls.len(), 1);
-        if let Some(name) = ls.get(0) {
+        if let Some(name) = ls.first() {
             info!("Bucket found: {}", name);
             assert_eq!(*name, test_bucket)
         } else {
