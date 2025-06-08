@@ -8,7 +8,7 @@ use std::sync::atomic::Ordering;
 
 use std::time::Duration;
 
-use tracing::{debug, info};
+use tracing::info;
 
 use common::init_logging::init_tracing;
 
@@ -52,7 +52,6 @@ async fn test_pool() {
     info!("Container port: {port}");
 
     let (tx, rx) = bounded::<Message>(1);
-    debug!("Tx: {:?}", tx);
 
     let pool = WorkerPool {
         size: 1,
