@@ -44,7 +44,7 @@ impl Starter {
             cfg.system_prompt_location, //
             shared_llm_caller,
         );
-        let llm_handler = LlmHandler::new(llm_log_processor);
+        let _llm_handler = LlmHandler::new(llm_log_processor);
         //let shared_llm_handler = Arc::new(Mutex::new(llm_handler));
         let (snd, rcv) = bounded::<Message>(cfg.redact_max_tasks);
 
@@ -54,7 +54,7 @@ impl Starter {
         )
         .await;
 
-        let pool = WorkerPool {
+        let _pool = WorkerPool {
             size: cfg.redact_max_tasks,
             receiver: rcv,
         };

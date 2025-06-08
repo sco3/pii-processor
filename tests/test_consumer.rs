@@ -11,8 +11,7 @@ use ductaper::log_handler::LogHandler;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;
-use std::sync::atomic::{AtomicBool, AtomicI64, Ordering};
-use std::sync::Arc;
+use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
@@ -28,7 +27,6 @@ use tracing::{debug, info};
 struct DummyHandler {
     count_snd: Sender<()>,
     receiver: Receiver<Message>,
-    run: Arc<AtomicBool>,
 }
 
 impl DummyHandler {
@@ -107,7 +105,6 @@ async fn test_consumer() {
         let mut dummy_handler = DummyHandler {
             count_snd,
             receiver: receiver.clone(),
-            run: consumer.get_run_flag_clone(),
         };
 
         let _ = tokio::join!(
