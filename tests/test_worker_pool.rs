@@ -104,7 +104,10 @@ async fn test_pool() {
     let preview: Bytes = Bytes::copy_from_slice(&file_content[..file_content.len().min(80)]);
     debug!("Payload {} bytes: {:?} ...", file_content.len(), preview);
 
-    publisher.publish(subject, payload.into(), None).await;
+    publisher
+        .publish(subject.clone(), payload.into(), None)
+        .await;
+    publisher.publish(subject, Bytes::from("{}"), None).await;
     sleep(Duration::from_millis(42)).await;
     info!("Stop");
     run_flag.store(false, Ordering::Relaxed);

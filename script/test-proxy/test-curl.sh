@@ -10,7 +10,7 @@ curl --location 'http://0.0.0.0:4000/v1/models' \
 
 
 export PROMPT=$(<system_prompt.txt )
-export MSG=$(<example_new_fields.log )
+export MSG=$(<worker-pool-test.json )
 
 
 yq eval '.messages[0].content = strenv(PROMPT)' input.json -o json > /tmp/data1.json
