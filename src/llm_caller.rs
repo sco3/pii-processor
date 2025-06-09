@@ -65,7 +65,7 @@ impl LLmCaller {
         let res = match req.send().await {
             Ok(res) => res,
             Err(e) => {
-                error!("Request failed: {}", e);
+                error!("Request failed: {:?}", e);
                 return None;
             }
         };

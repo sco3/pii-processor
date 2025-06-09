@@ -45,8 +45,7 @@ async fn test_llm_caller() {
         then.status(200).body(expected_str);
     });
 
-    // proxy url sample
-    // "http://0.0.0.0:4000/chat/completions".to_string(),
+    // proxy url sample: "http://0.0.0.0:4000/chat/completions",
 
     let caller = LLmCaller::new(
         server.url("/chat/completions").to_string(),
