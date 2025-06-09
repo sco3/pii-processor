@@ -8,7 +8,7 @@ default-run = "ductaper"
 incremental = true
 
 [dependencies]
-async-nats = {version="0.41.0", features = ["server_2_11"]}
+async-nats = { version = "0.41.0", features = ["server_2_11"] }
 envy = "0.4.2"
 reqwest = { version = "0.12.18", features = ["json"] }
 serde = "1.0.219"
@@ -23,11 +23,8 @@ aws-config = "1.6.3"
 aws-sdk-s3 = "1.90.0"
 aws-credential-types = "1.2.3"
 dotenv = "0.15.0"
-testcontainers-modules = { version = "0.12.1", features = ["minio"] }
 bytes = "1.10.1"
-time = "0.3.41"
 async-trait = "0.1.88"
-#crashlog = "0.1.4"
 color-backtrace = "0.7.0"
 async-channel = "2.3.1"
 
@@ -36,6 +33,7 @@ async-channel = "2.3.1"
 httpmock = "0.7.0"
 serial_test = "3.2.0"
 testcontainers = { version = "0.24.0", features = ["http_wait"] }
+testcontainers-modules = { version = "0.12.1", features = ["minio"] }
 
 
 [[bin]]
