@@ -3,7 +3,6 @@ use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_work::texter::texter;
 use ductaper::reducter::ReDucter;
 use ductaper::session_log_models::SessionLogType;
-use serde_json;
 use serde_json::Value;
 use std::env::var;
 use std::fs::read;

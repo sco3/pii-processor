@@ -1,4 +1,3 @@
-use serde::{Deserialize, Serialize};
 
 pub const USER: &str = "user";
 pub const SYSTEM: &str = "system";
