@@ -17,11 +17,13 @@ const TOKEN: &str = "sk-1234";
 async fn main() {
     init_tracing();
 
-    let models = vec![/*"nova",*/ "haiku"];
+    let models = vec!["haiku"];
 
-    let mut system_prompt = read_to_string("data/system_prompt.txt") //
+    let system_prompt = read_to_string("data/system_prompt.txt") //
         .unwrap();
-    system_prompt.push_str("\n show only redactions dictionary.");
+
+    // system_prompt.push_str("\n show only redactions dictionary.");
+
     let session_log = read("tests/data/worker-pool-test.json").unwrap();
 
     if var("ASDF").unwrap_or_default() == "ASDF" {
