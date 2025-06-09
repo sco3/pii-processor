@@ -44,13 +44,12 @@ async fn response_details(caller: LLmCaller, prompt: &str, msg: &str) {
             info!("Call result: {:?}", v);
             let choices = &v["choices"];
             info!("Choices: {:?}", choices);
-            if choices.is_array() {
-                if let Some(choice_array) = choices.as_array() {
-                    for choice in choice_array {
-                        info!("Choice {:?}", choice);
-                        info!("Message {}", choice["message"]["content"]);
-                        info!("----")
-                    }
+
+            if let Some(choice_array) = choices.as_array() {
+                for choice in choice_array {
+                    info!("Choice {:?}", choice);
+                    info!("Message {}", choice["message"]["content"]);
+                    info!("----")
                 }
             }
         }
