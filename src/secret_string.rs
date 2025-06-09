@@ -1,3 +1,4 @@
+use crate::list_env::mask;
 use serde::Deserialize;
 use std::fmt;
 
@@ -26,11 +27,7 @@ impl From<String> for SecretString {
 }
 impl fmt::Debug for SecretString {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let masked = if self.value.len() > 4 {
-            format!("{}****", &self.value[..4])
-        } else {
-            format!("{}****", self.value)
-        };
+        let masked = mask(self.value.clone());
         write!(f, "{}", masked)
     }
 }

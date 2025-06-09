@@ -66,8 +66,8 @@ async fn test_pool() {
         Some("sk-1234".to_string()),
     ));
 
-    let system_promp = prompt("data/system_prompt.txt".to_string());
-    let processor = LlmLogProcessor::new(caller, system_promp);
+    let system_prompt = prompt(&"data/system_prompt.txt".to_string());
+    let processor = LlmLogProcessor::new(caller, system_prompt);
     let shared_processor = Arc::new(processor);
 
     let pool = WorkerPool {

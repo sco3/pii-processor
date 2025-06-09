@@ -3,7 +3,7 @@ use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_caller::LLmCaller;
 
-use std::env;
+use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::logging;
@@ -27,9 +27,8 @@ impl Starter {
         info!("Start");
         color_backtrace::install();
         dotenv().ok();
-        for (key, value) in env::vars() {
-            println!("{key}: {value}");
-        }
+
+        list_env();
 
         let cfg = Cfg::from_env();
         logging::init_log(cfg.log_level.clone());
@@ -70,6 +69,7 @@ impl Starter {
         };
         Starter { redact_consumer }
     }
+
 }
 
 impl Init for Starter {

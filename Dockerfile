@@ -18,6 +18,6 @@ RUN cargo build --release
 
 FROM alpine:3.22
 COPY --from=builder /app/target/release/ductaper /usr/local/bin/ductaper
-RUN mkdir -p /.local
-COPY data/system_prompt.txt /.local/system_prompt.txt  
+RUN mkdir -p /root/.local
+COPY data/system_prompt.txt /root/.local/system_prompt.txt  
 CMD ["ductaper"]

@@ -3,11 +3,11 @@
 set -xueo pipefail
 
 docker run \
-    -v $(pwd)/data/system_prompt.txt:/root/.local/system_prompt.txt \
     -e TENANT=T \
     -e APPLICATION=A  \
     -e AGGREGATOR_SESSIONS_LOG_URL=s3://bucket \
     -e LLM_MODEL=nova \
     -it ductaper:latest
 
+#    -v $(pwd)/data/system_prompt.txt:/root/.local/system_prompt.txt \
 
