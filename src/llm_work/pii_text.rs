@@ -6,7 +6,7 @@ use llm_work::conv_roles::{ASSISTANT, USER};
 
 use tracing::debug;
 
-pub fn extract_text(session_items: SessionLogType) -> String {
+pub fn pii_text(session_items: SessionLogType) -> String {
     let mut chat_log = String::new();
     for msg in session_items {
         if let ChatMessage(chat_msg) = msg {

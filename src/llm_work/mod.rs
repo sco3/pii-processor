@@ -6,5 +6,5 @@ mod parse;
 pub mod preview;
 mod process;
 pub mod prompt;
-pub mod texter;
+pub mod pii_text;
 pub mod conv_roles;

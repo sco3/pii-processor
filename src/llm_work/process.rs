@@ -1,12 +1,13 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::llm_work::texter::extract_text;
+use crate::llm_work::pii_text::pii_text;
 use bytes::Bytes;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Bytes) -> bool {
+        debug!("Payload: {:?}", payload);
         if let Some(log) = Self::parse(payload) {
-            let redaction_text = extract_text(log);
+            let redaction_text = pii_text(log);
             debug!("history: {:?}", redaction_text);
             let prompt = self.system_prompt.clone();
             let result = self
