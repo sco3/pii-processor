@@ -7,3 +7,4 @@ pub mod preview;
 mod process;
 pub mod prompt;
 pub mod texter;
+pub mod conv_roles;
