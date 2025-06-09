@@ -1,23 +1,24 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
-
 use std::fs;
+use std::time::Instant;
+
 //use tokio;
 
 #[tokio::main]
 async fn main() {
     let client = reqwest::Client::new();
 
-    let system_prompt = read_to_string("system_prompt.txt").unwrap_or_default();
-    let message = read_to_string("example_new_fields.log").unwrap_or_default();
-    let template = read_to_string("input.json").unwrap_or_default();
+    let system_prompt = fs::read_to_string("system_prompt.txt").unwrap_or_default();
+    let message = fs::read_to_string("worker-pool-test.json").unwrap_or_default();
+    let template = fs::read_to_string("input.json").unwrap_or_default();
 
     let mut json_body: serde_json::Value = serde_json::from_str(&template).unwrap_or(json!({}));
     json_body["messages"][0]["content"] = json!(system_prompt);
     json_body["messages"][1]["content"] = json!(message);
 
-    let str_body = serde_json::to_string(&json_body).unwrap_or("{}".to_string());
-    let _ = write("body.json", &str_body);
+    let str_body = serde_json::to_string_pretty(&json_body).unwrap_or("{}".to_string());
+    let _ = fs::write("body.json", &str_body);
 
     let start = Instant::now();
     if let Ok(resp) = client

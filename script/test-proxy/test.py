@@ -10,7 +10,7 @@ from time import time
 data = json.load(open("input.json"))
 
 prompt = Path("system_prompt.txt").read_text()
-msg= Path("example_new_fields.log").read_text()
+msg= Path("example_new_fields.json").read_text()
 
 data["messages"][0]["content"] = prompt
 data["messages"][1]["content"] = msg

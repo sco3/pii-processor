@@ -13,7 +13,7 @@ export PROMPT=$(<system_prompt.txt )
 export MSG=$(<worker-pool-test.json )
 
 
-yq eval '.messages[0].content = strenv(PROMPT)' input.json -o json > /tmp/data1.json
+yq eval '.messages[0].content = strenv(PROMPT)' input2.json -o json > /tmp/data1.json
 
 yq eval '.messages[1].content = strenv(MSG)' /tmp/data1.json -o json > /tmp/data.json
 
