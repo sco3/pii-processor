@@ -1,24 +1,43 @@
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::reducter::ReDucter;
+use std::time::Instant;
 use tracing::info;
+
+const URL: &str = "http://0.0.0.0:4000/chat/completions";
+const TOKEN: &str = "sk-1234";
 
 #[tokio::main]
 async fn main() {
     init_tracing();
-    call_hi_with_model("haiku").await;
-    call_hi_with_model("nova").await;
+    call_with_model("haiku", "Hello", "Hi").await;
+    call_with_model("nova", "Hello", "Hi").await;
+    call_with_model(
+        "nova", //
+        r#"
+        You are a PII redactor that only returns redacted text 
+        with no additional text or explanations.
+        "#,
+        "Hello I am Jack Daniels.",
+    )
+    .await;
 }
 
-async fn call_hi_with_model(model: &str) {
-    let url = "http://0.0.0.0:4000/chat/completions".to_string();
+async fn call_with_model(model: &str, prompt: &str, msg: &str) {
+    let start = Instant::now();
+    let url = URL.to_string();
     let caller = LLmCaller::new(
         url, //
         model.to_string(),
-        Some("sk-1234".to_string()),
+        Some(TOKEN.to_string()),
     );
     info!("Model: {} --------------------- ", model);
-    match caller.call("Hello", "Hi").await {
+    response_details(caller, prompt, msg).await;
+    info!("Took: {} ms", start.elapsed().as_millis())
+}
+
+async fn response_details(caller: LLmCaller, prompt: &str, msg: &str) {
+    match caller.call(prompt, msg).await {
         Some(v) => {
             info!("Model: {}", v["model"]);
             info!("----");
