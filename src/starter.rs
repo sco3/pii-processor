@@ -76,7 +76,5 @@ impl Init for Starter {
     fn init(&self) -> &Self {
         self
     }
-    fn start(&self) -> &Self {
-        self
-    }
+    fn start(&self) {}
 }
