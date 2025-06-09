@@ -5,3 +5,4 @@ pub mod preview;
 mod process;
 pub mod prompt;
 pub mod generate_chat_history_str;
+pub mod brevity;

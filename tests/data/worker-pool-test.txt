@@ -1,0 +1,269 @@
+user: Session Started.
+assistant: Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.
+
+Responses will be provided in three clearly marked sections:
+
+===APPROVED Q&A===
+
+Answers from FAQs.pdf that can be directly relayed to customers
+
+===PDF KNOWLEDGEBASE===
+
+Additional information from other documents that you should review before responding
+
+===THINKING===
+
+Analysis and guidance  to help you understand the context and handle potential follow-up questions
+
+To use the system:
+1. Simply paste the customer's question directly into the input box
+2. The system will search both our FAQ database and other documentation
+3. Review all sections of the response:
+   - Use the APPROVED Q&A section for direct customer responses
+   - Review the PDF KNOWLEDGEBASE section for additional context
+   - Use the THINKING section for guidance on handling the query
+4. If no approved answer exists, you will be instructed to escalate to a specialist
+
+All responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.
+user: I am Joulie Yen, What could you do for me?
+assistant: To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.
+user: The customer asked the following question:
+
+What services does Level Health offer?
+
+The possible answers to this are as follows:
+
+- Document: WR1124_TOC-B500.pdf
+- Page: 3
+- Content:
+## QuickClinic
+
+Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+These services can be accessed through the Level Health app and on the website.
+![img-1.jpeg](img-1.jpeg)
+
+- Document: WR1124_TOC-B500-D2D.pdf
+- Page: 3
+- Content:
+## QuickClinic
+
+Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+These services can be accessed through the Level Health app and on the website.
+![img-1.jpeg](img-1.jpeg)
+
+- Document: WR1124_TOC-C.pdf
+- Page: 3
+- Content:
+## QuickClinic
+
+Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website.
+![img-1.jpeg](img-1.jpeg)
+
+- Document: WR1124_TOC-B300.pdf
+- Page: 3
+- Content:
+## QuickClinic
+
+Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website.
+![img-1.jpeg](img-1.jpeg)
+
+- Document: WR1124_TOC-B150.pdf
+- Page: 3
+- Content:
+## QuickClinic
+
+Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website.
+![img-1.jpeg](img-1.jpeg)
+
+
+assistant: <question>What services does Level Health offer?</question>
+<context>N/A</context>
+
+===APPROVED Q&A===
+No pre-approved answer found in FAQs.pdf.
+
+===PDF KNOWLEDGEBASE===
+Level Health offers a service called QuickClinic. Here's the description:
+
+"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website."
+
+Source: WR1124_TOC-B500.pdf, page 3
+(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)
+
+===THINKING===
+The customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.
+
+When responding to the customer, you should focus on the key points:
+1. The main service offered is called QuickClinic.
+2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).
+3. It's available 24/7.
+4. It can be used for prescription refills, health concerns, or professional reassurance.
+5. The service is accessible through the Level Health app and website.
+
+Since this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.
+
+<tag>ADDITIONAL_INFO</tag>
+assistant: <question>What services does Level Health offer?</question>
+<context>N/A</context>
+
+===APPROVED Q&A===
+No pre-approved answer found in FAQs.pdf.
+
+===PDF KNOWLEDGEBASE===
+Level Health offers a service called QuickClinic. Here's the description:
+
+"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website."
+
+Source: WR1124_TOC-B500.pdf, page 3
+(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)
+
+===THINKING===
+The customer's question about Level Health's services is answered consistently across multiple documents. All sources provide identical information about the QuickClinic service. This service appears to be a core offering of Level Health, providing 24/7 access to medical professionals through their app and website.
+
+When responding to the customer, you should focus on the key points:
+1. The main service offered is called QuickClinic.
+2. It provides immediate medical advice from qualified professionals (doctors, midwives, mental health professionals).
+3. It's available 24/7.
+4. It can be used for prescription refills, health concerns, or professional reassurance.
+5. The service is accessible through the Level Health app and website.
+
+Since this information isn't from the FAQs.pdf, you should use this as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services, you may need to escalate the query as we only have information about QuickClinic from these documents.
+
+<tag>ADDITIONAL_INFO</tag>
+assistant: Based on the information provided by our knowledge base, I can offer you the following response:
+
+===APPROVED Q&A===
+No pre-approved answer found in FAQs.pdf.
+
+===PDF KNOWLEDGEBASE===
+Level Health offers a service called QuickClinic. Here's the description:
+
+"Skip the waiting rooms and get immediate medical advice from qualified doctors, midwives and mental health professionals. Whether you need a prescription refill, have a health concern, or need professional reassurance, our doctors are available 24/7, in your pocket.
+
+These services can be accessed through the Level Health app and on the website."
+
+Source: WR1124_TOC-B500.pdf, page 3
+(Note: The same information is found in WR1124_TOC-B500-D2D.pdf, WR1124_TOC-C.pdf, WR1124_TOC-B300.pdf, and WR1124_TOC-B150.pdf, all on page 3)
+
+===THINKING===
+When responding to the customer's question about what Level Health can do for them, you should focus on the QuickClinic service, which appears to be a core offering. Here's how you might structure your response:
+
+1. Introduce the QuickClinic service as Level Health's primary offering.
+2. Highlight the key benefits:
+   - Immediate medical advice from qualified professionals
+   - Available 24/7
+   - Accessible through the Level Health app and website
+   - Can be used for prescription refills, health concerns, or professional reassurance
+3. Emphasize the convenience of skipping waiting rooms and having access to medical professionals "in your pocket."
+
+Remember, since this information isn't from the FAQs.pdf, you should use it as a guide to craft your response rather than quoting it directly. If the customer asks for more specific details about other services beyond QuickClinic, you may need to escalate the query to a specialist, as we only have detailed information about QuickClinic from these documents.
+user: I forgot my password.
+assistant: I understand you've forgotten your password. Let me check our FAQ database for the most appropriate answer to help you with this issue.
+user: The customer asked the following question:
+
+How can I reset my forgotten password?
+
+The possible answers to this are as follows:
+
+- Document: FAQs.pdf
+- Page: 15
+- Content:
+You can request a new password [here](https://levelhealth.ie/web-portals/my-profile-settings)
+
+- Document: FAQs.pdf
+- Page: 14
+- Content:
+Just log in to you Customer Portal to update your postal address, contact number or email address.
+
+- Document: FAQs.pdf
+- Page: 33
+- Content:
+You will receive your renewal invite via email approximetaly 30 days before your Renewal Date
+If your policy is set up on Direct Debit and you don't need to do anything as your policy will automatically renew unless you contact us to make changes.
+Please note that we can only discuss the policy and cover details with the policy holder and can make changes at their request or a third party who has the relevant permissions granted by the Policy holder and noted on the policy. 
+
+If you pay by card annually you will need to log into the Customer Portal and make a payment or call us on 01 261 2000.
+
+- Document: FAQs.pdf
+- Page: 5
+- Content:
+You can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.
+
+
+- Document: FAQs.pdf
+- Page: 9
+- Content:
+To update your card details, please log into your Customer Portal and select 'Payments' to action. 
+
+
+assistant: <question>How can I reset my forgotten password?</question>
+<context>N/A</context>
+
+===APPROVED Q&A===
+You can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.
+Source: FAQs.pdf, page 5
+
+===PDF KNOWLEDGEBASE===
+No additional relevant information found in other documents.
+
+===THINKING===
+The customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.
+
+The answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.
+
+However, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.
+
+If the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.
+
+<tag>APPROVED_FAQ</tag>
+assistant: <question>How can I reset my forgotten password?</question>
+<context>N/A</context>
+
+===APPROVED Q&A===
+You can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.
+Source: FAQs.pdf, page 5
+
+===PDF KNOWLEDGEBASE===
+No additional relevant information found in other documents.
+
+===THINKING===
+The customer's question about resetting a forgotten password is indirectly addressed in the FAQ about accessing policy documents. While it doesn't explicitly mention password reset, it does provide instructions for users who haven't registered or have forgotten their password.
+
+The answer directs the customer to use the 'Forgot Password' option on the login page, which is typically used for password resets. This information can be relayed to the customer as it addresses their need to regain access to their account.
+
+However, it's worth noting that this answer is embedded within instructions about accessing policy documents. You may want to focus on the relevant part about using the 'Forgot Password' feature when communicating with the customer.
+
+If the customer requires more specific instructions about the password reset process, you may need to escalate the query to get more detailed information that isn't currently available in the FAQs.
+
+<tag>APPROVED_FAQ</tag>
+assistant: Thank you for your question about forgetting your password. I have an approved answer from our FAQ that can help you with this issue.
+
+===APPROVED Q&A===
+You can find your policy documents online. Please log in to your Customer Portal [here](https://levelhealth.ie/web-portals) and click on the 'My Documents' section to select the document that you wish to view. If you have not registered yet, you can do so if you click 'Forgot Password' on the login page.
+Source: FAQs.pdf, page 5
+
+===PDF KNOWLEDGEBASE===
+No additional relevant information found in other documents.
+
+===THINKING===
+When responding to the customer about their forgotten password, you should focus on the relevant part of the FAQ answer. Here's how you might approach it:
+
+1. Direct the customer to the Customer Portal login page at https://levelhealth.ie/web-portals.
+2. Instruct them to click on the 'Forgot Password' option on the login page.
+3. Explain that this will allow them to reset their password or register if they haven't done so already.
+
+While the FAQ doesn't provide step-by-step instructions for the password reset process, it does point the customer in the right direction. If the customer asks for more detailed instructions about the password reset process after following these steps, you may need to escalate the query to get more specific information.
+
+Also, note that the FAQ mentions accessing policy documents. While this isn't directly related to the password reset, you could mention this as an additional piece of information once they regain access to their account, as it might be useful for them to know.
+
+Remember to use the information from the APPROVED Q&A section when directly quoting to the customer, as it's the officially approved response.
