@@ -1,12 +1,14 @@
 use crate::ai_tags::Ai;
 use crate::reducter::ReDucter;
+
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
 use serde_json::json;
 use serde_json::Value;
-use tracing::{debug, error};
+use std::time::Instant;
+use tracing::{debug, error, info};
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -93,8 +95,11 @@ impl ReDucter for LLmCaller {
         let body = self.build_body(model, prompt, message);
         debug!("Request body: {}", pretty(&body));
         let req = self.build_request(body);
+        let start = Instant::now();
+        let output = Self::send(req).await;
+        info!("Call took: {} ms", start.elapsed().as_millis());
 
-        Self::send(req).await
+        output
     }
 }
 
