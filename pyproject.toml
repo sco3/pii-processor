@@ -12,3 +12,9 @@ dependencies = [
 dev = [
     "requests>=2.32.3",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[[tool.uv.index]]
+url = "https://area22-493334834594.d.codeartifact.eu-west-1.amazonaws.com/pypi/area22/simple/"
