@@ -35,7 +35,8 @@ fn user_content(chat_log: &mut String, content: &String) {
 
     if let Some(start_idx) = content.find(USER_TAG_START) {
         if let Some(end_idx) = content.find(USER_TAG_END) {
-            let user_input = content[start_idx + USER_TAG_START.len()..end_idx].trim();
+            let range = start_idx + USER_TAG_START.len()..end_idx;
+            let user_input = content[range].trim();
             chat_log.push_str(&format!("{}: {}\n", USER, user_input));
         } else {
             // fallback if end tag is missing
@@ -52,7 +53,8 @@ fn assistant_content(chat_log: &mut String, content: &String) {
 
     if let Some(start_idx) = content.find(ASSISTANT_TAG_START) {
         if let Some(end_idx) = content.find(ASSISTANT_TAG_END) {
-            let response = content[start_idx + ASSISTANT_TAG_START.len()..end_idx].trim();
+            let range = start_idx + ASSISTANT_TAG_START.len()..end_idx;
+            let response = content[range].trim();
             chat_log.push_str(&format!("{}: {}\n", ASSISTANT, response));
         } else {
             // fallback if end tag is missing
