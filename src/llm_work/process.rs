@@ -4,7 +4,7 @@ use bytes::Bytes;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
-    pub async fn process(&self, payload: Bytes) -> bool {
+    pub async fn process(&self, payload: Vec<u8>) -> bool {
         debug!("Payload: {:?}", payload);
         if let Some(log) = Self::parse(payload) {
             let redaction_text = pii_text(log);

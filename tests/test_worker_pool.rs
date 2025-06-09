@@ -113,7 +113,7 @@ async fn test_pool() {
     publisher
         .publish(
             subject.clone(), //
-            Bytes::from("{}"),
+            "{}".into(),
             None,
         )
         .await;
@@ -137,7 +137,7 @@ async fn test_session_log_file(subject: String, publisher: Publisher) {
     publisher
         .publish(
             subject, //
-            Bytes::copy_from_slice(&file_content),
+            file_content,
             None,
         )
         .await;

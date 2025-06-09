@@ -15,17 +15,17 @@ impl Publisher {
     pub async fn publish(
         &self, //
         subject: String,
-        data: Bytes,
+        data: Vec<u8>,
         headers: Option<HeaderMap>,
     ) -> bool {
         debug!("Publish {:?} to {}", data, subject);
         if let Some(headers) = headers {
             self.nats
-                .publish_with_headers(subject, headers, data)
+                .publish_with_headers(subject, headers, data.into())
                 .await
                 .is_ok()
         } else {
-            self.nats.publish(subject, data).await.is_ok()
+            self.nats.publish(subject, data.into()).await.is_ok()
         }
     }
 }

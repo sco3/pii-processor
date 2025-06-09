@@ -1,4 +1,3 @@
-use bytes::Bytes;
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
@@ -21,11 +20,7 @@ async fn main() {
 
     let session_log = read("tests/data/worker-pool-test.json").unwrap();
 
-    let buf = Bytes::copy_from_slice(&session_log);
-
-    let log_preview = &buf[..buf.len().min(42)];
-    let log_preview_str = String::from_utf8_lossy(log_preview);
-    debug!("Session log {:?}", log_preview_str);
+    debug!("Session log {:?}", session_log);
 
     let caller = Arc::new(LLmCaller::new(
         URL, //
@@ -40,8 +35,6 @@ async fn main() {
             model.to_string(),
         );
 
-        let bytes = Bytes::copy_from_slice(&session_log);
-
-        processor.process(bytes).await;
+        processor.process(session_log.clone()).await;
     }
 }

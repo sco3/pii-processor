@@ -12,7 +12,7 @@ impl WorkerPool {
     ) {
         while let Ok(msg) = recv.recv().await {
             debug!("Message: {:?} {:?}", msg.payload, msg.headers);
-            processor.process(msg.payload.clone()).await;
+            processor.process(msg.payload.to_vec()).await;
         }
     }
 }
