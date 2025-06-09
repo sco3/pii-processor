@@ -37,9 +37,9 @@ impl LLmCaller {
             .map(|t| format!("{} {}", Ai::BEARER, t))
     }
 
-    fn build_body(&self, prompt: &str, message: &str) -> Value {
+    fn build_body(&self, model: &str, prompt: &str, message: &str) -> Value {
         json!({
-            Ai::MODEL: self.model,
+            Ai::MODEL: model,
             Ai::MESSAGES: [
                 { Ai::ROLE: Ai::SYSTEM, Ai::CONTENT: prompt },
                 { Ai::ROLE: Ai::USER, Ai::CONTENT: message }
@@ -89,8 +89,8 @@ impl LLmCaller {
 }
 #[async_trait]
 impl ReDucter for LLmCaller {
-    async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
-        let body = self.build_body(prompt, message);
+    async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
+        let body = self.build_body(model, prompt, message);
         let req = self.build_request(body);
         Self::send(req).await
     }

@@ -7,10 +7,12 @@ impl LlmLogProcessor {
     pub fn new(
         caller: Arc<dyn ReDucter + Send + Sync>, //
         system_prompt: String,
+        model: String,
     ) -> Self {
         LlmLogProcessor {
             caller,
             system_prompt,
+            model,
         }
     }
 }

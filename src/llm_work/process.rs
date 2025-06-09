@@ -15,7 +15,14 @@ impl LlmLogProcessor {
             if let Ok(pii_message) = serde_json::to_string(&chat_history) {
                 debug!("history: {:?}", pii_message);
                 let prompt = self.system_prompt.clone();
-                let result = self.caller.call(prompt.as_str(), &pii_message).await;
+                let result = self
+                    .caller
+                    .call(
+                        self.model.as_str(), //
+                        prompt.as_str(),
+                        &pii_message, /* &str */
+                    )
+                    .await;
 
                 debug!("Result: {:?}", result);
             }

@@ -47,6 +47,7 @@ impl Starter {
         let processor = LlmLogProcessor::new(
             shared_llm_caller,
             system_prompt, //
+            cfg.llm_model,
         );
         let llm_log_processor = Arc::new(processor);
 
@@ -69,7 +70,6 @@ impl Starter {
         };
         Starter { redact_consumer }
     }
-
 }
 
 impl Init for Starter {

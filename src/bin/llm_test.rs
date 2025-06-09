@@ -10,17 +10,23 @@ const TOKEN: &str = "sk-1234";
 #[tokio::main]
 async fn main() {
     init_tracing();
-    //call_with_model("haiku", "Hello", "Hi").await;
-    //call_with_model("nova", "Hello", "Hi").await;
-    call_with_model(
-        "nova", //
-        r#"
+    let models = vec!["nova", "haiku"];
+    for model in &models {
+        call_with_model(model, "Hello", "Hi").await;
+    }
+
+    for model in &models {
+        call_with_model(
+            model, //
+            r#"
         You are a PII redactor that only returns redacted text 
         with no additional text or explanations.
         "#,
-        "Hello I am Jack Daniels.",
-    )
-    .await;
+            "Hello I am Jack Daniels.",
+        )
+        .await;
+    }
+    //
 }
 
 async fn call_with_model(model: &str, prompt: &str, msg: &str) {
@@ -32,12 +38,12 @@ async fn call_with_model(model: &str, prompt: &str, msg: &str) {
         Some(TOKEN.to_string()),
     );
     info!("Model: {} --------------------- ", model);
-    response_details(caller, prompt, msg).await;
+    response_details(caller, model, prompt, msg).await;
     info!("Took: {} ms", start.elapsed().as_millis())
 }
 
-async fn response_details(caller: LLmCaller, prompt: &str, msg: &str) {
-    match caller.call(prompt, msg).await {
+async fn response_details(caller: LLmCaller, model: &str, prompt: &str, msg: &str) {
+    match caller.call(model, prompt, msg).await {
         Some(v) => {
             info!("Model: {}", v["model"]);
             info!("----");
