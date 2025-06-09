@@ -1,7 +1,7 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::texter::extract_text;
 use bytes::Bytes;
-use tracing::debug;
+use tracing::{debug, error};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Bytes) -> bool {
@@ -19,6 +19,15 @@ impl LlmLogProcessor {
                 .await;
 
             debug!("Result: {:?}", result);
+            match result {
+                Some(v) => {
+                    let choices = &v["choices"];
+                    debug!("Choices: {}", choices);
+                }
+                None => {
+                    error!("Wrong response {:?}", result);
+                }
+            }
         }
         true
     }
