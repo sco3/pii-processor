@@ -45,7 +45,7 @@ async fn main() {
     }
 }
 
-async fn simple_tests(models: &Vec<&str>, system_prompt: &String) {
+async fn simple_tests(models: &Vec<&str>, system_prompt: &str) {
     for model in models {
         call_with_model(model, "Hello", "Hi").await;
     }
@@ -65,7 +65,7 @@ async fn simple_tests(models: &Vec<&str>, system_prompt: &String) {
     for model in models {
         call_with_model(
             model, //
-            system_prompt.as_str(),
+            system_prompt,
             "Hello I am Jack Daniels.",
         )
         .await;
