@@ -52,7 +52,7 @@ async fn test_llm_caller() {
         "nova".to_string(),
         Some("sk-1234".to_string()),
     );
-    caller.call("Hello", "Hi").await;
+    caller.call("haiku", "Hello", "Hi").await;
     mock.assert();
 }
 

@@ -12,8 +12,11 @@ struct _DummyLlmCaller;
 
 #[async_trait]
 impl ReDucter for _DummyLlmCaller {
-    async fn call(&self, prompt: &str, message: &str) -> Option<Value> {
-        debug!("Dummy LLM call with prompt: {} {}", prompt, message);
+    async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
+        debug!(
+            "Dummy LLM call with prompt: {} {} {}",
+            model, prompt, message
+        );
         None
     }
 }
@@ -31,6 +34,7 @@ async fn test_llm_log_processor() {
     let processor = LlmLogProcessor {
         caller,
         system_prompt: String::new(),
+        model: "haiku".to_string(),
     };
 
     // Load test file from relative path

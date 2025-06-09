@@ -67,7 +67,11 @@ async fn test_pool() {
     ));
 
     let system_prompt = prompt(&"data/system_prompt.txt".to_string());
-    let processor = LlmLogProcessor::new(caller, system_prompt);
+    let processor = LlmLogProcessor::new(
+        caller, //
+        system_prompt,
+        "haiku".to_string(),
+    );
     let shared_processor = Arc::new(processor);
 
     let pool = WorkerPool {
@@ -117,7 +121,7 @@ async fn test_pool() {
 
     test_session_log_file(subject, publisher).await;
     ///////////////////////////////////////////////////////////////////
-    sleep(Duration::from_millis(420000)).await;
+    sleep(Duration::from_millis(42)).await;
     info!("Stop");
     run_flag.store(false, Ordering::Relaxed);
 }
