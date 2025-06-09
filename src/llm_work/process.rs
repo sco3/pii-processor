@@ -1,31 +1,24 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::session_log_models::SessionLogEntry::ChatMessage;
+use crate::llm_work::texter::extract_text;
 use bytes::Bytes;
 use tracing::debug;
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Bytes) -> bool {
         if let Some(log) = Self::parse(payload) {
-            let mut chat_history = Vec::new();
-            for entry in log {
-                if let ChatMessage(msg) = entry {
-                    chat_history.push(msg);
-                }
-            }
-            if let Ok(pii_message) = serde_json::to_string(&chat_history) {
-                debug!("history: {:?}", pii_message);
-                let prompt = self.system_prompt.clone();
-                let result = self
-                    .caller
-                    .call(
-                        self.model.as_str(), //
-                        prompt.as_str(),
-                        &pii_message, /* &str */
-                    )
-                    .await;
+            let redaction_text = extract_text(log);
+            debug!("history: {:?}", redaction_text);
+            let prompt = self.system_prompt.clone();
+            let result = self
+                .caller
+                .call(
+                    self.model.as_str(), //
+                    prompt.as_str(),
+                    &redaction_text, /* &str */
+                )
+                .await;
 
-                debug!("Result: {:?}", result);
-            }
+            debug!("Result: {:?}", result);
         }
         true
     }

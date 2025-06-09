@@ -91,7 +91,13 @@ impl LLmCaller {
 impl ReDucter for LLmCaller {
     async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
         let body = self.build_body(model, prompt, message);
+        debug!("Request body: {}", pretty(&body));
         let req = self.build_request(body);
+
         Self::send(req).await
     }
+}
+
+fn pretty(body: &Value) -> String {
+    serde_json::to_string_pretty(&body).unwrap_or_default()
 }
