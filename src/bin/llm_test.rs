@@ -1,6 +1,6 @@
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
-use ductaper::llm_work::texter::texter;
+use ductaper::llm_work::texter::extract_text;
 use ductaper::reducter::ReDucter;
 use ductaper::session_log_models::SessionLogType;
 use serde_json::Value;
@@ -31,7 +31,7 @@ async fn main() {
     let session_log: SessionLogType = serde_json::from_slice(session_log.as_ref()) //
         .expect("Failed to deserialize session log");
 
-    let text = texter(session_log);
+    let text = extract_text(session_log);
 
     info!("Text: {}", text);
 
@@ -127,12 +127,9 @@ async fn response_details(caller: LLmCaller, model: &str, prompt: &str, msg: &st
                         }
                     }
                     info!("----")
-
-                    // msg[""]
                 }
             }
         }
-
         None => {
             info!("No value")
         }

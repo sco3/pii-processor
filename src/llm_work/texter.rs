@@ -6,14 +6,13 @@ use llm_work::conv_roles::{ASSISTANT, USER};
 
 use tracing::debug;
 
-pub fn texter(session_items: SessionLogType) -> String {
+pub fn extract_text(session_items: SessionLogType) -> String {
     let mut chat_log = String::new();
     for msg in session_items {
         if let ChatMessage(chat_msg) = msg {
             debug!("Role: {}", chat_msg.role.as_str());
             let role = chat_msg.role.as_str();
             let content = chat_msg.content.replace("\n", " ");
-
             match role {
                 USER => {
                     user_content(&mut chat_log, &content);
