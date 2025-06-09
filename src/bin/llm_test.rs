@@ -10,8 +10,8 @@ const TOKEN: &str = "sk-1234";
 #[tokio::main]
 async fn main() {
     init_tracing();
-    call_with_model("haiku", "Hello", "Hi").await;
-    call_with_model("nova", "Hello", "Hi").await;
+    //call_with_model("haiku", "Hello", "Hi").await;
+    //call_with_model("nova", "Hello", "Hi").await;
     call_with_model(
         "nova", //
         r#"
