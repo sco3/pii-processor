@@ -27,13 +27,21 @@ async fn main() {
     let log_preview_str = String::from_utf8_lossy(log_preview);
     debug!("Session log {:?}", log_preview_str);
 
-    for model in models {
-        let caller = LLmCaller::new(URL, "haiku", Some(TOKEN.to_string()));
+    let caller = Arc::new(LLmCaller::new(
+        URL, //
+        "haiku",
+        Some(TOKEN.to_string()),
+    ));
 
-        let processor =
-            LlmLogProcessor::new(Arc::new(caller), system_prompt.clone(), model.to_string());
-        processor
-            .process(Bytes::copy_from_slice(&session_log))
-            .await;
+    for model in models {
+        let processor = LlmLogProcessor::new(
+            caller.clone(), //
+            system_prompt.clone(),
+            model.to_string(),
+        );
+
+        let bytes = Bytes::copy_from_slice(&session_log);
+
+        processor.process(bytes).await;
     }
 }
