@@ -2,11 +2,11 @@ use crate::ai_tags::Ai;
 use crate::reducter::ReDucter;
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
-use tracing::error;
+use serde_json::Value;
+use tracing::{debug, error};
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -69,6 +69,7 @@ impl LLmCaller {
                 return None;
             }
         };
+        debug!("Call result status: {}", res.status());
 
         if !res.status().is_success() {
             let status = res.status();

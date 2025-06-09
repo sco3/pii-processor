@@ -1,4 +1,4 @@
-use ductaper::logging;
+use crate::logging;
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 #[allow(dead_code)]
 pub fn init_tracing() {

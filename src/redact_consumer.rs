@@ -10,6 +10,7 @@ use futures::StreamExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
+use crate::llm_work::preview::preview_bytes;
 use tracing::{debug, error, info};
 
 pub struct RedactConsumer {
@@ -29,7 +30,7 @@ impl RedactConsumer {
                     if let Err(e) = message.ack().await {
                         error!("Ack failed: {}", e);
                     }
-                    debug!("Got message: {:?}", message.payload);
+                    debug!("Got message: {:?}", preview_bytes(&message.payload));
                     if let Err(e) = self.sender.send(message).await {
                         error!("Failed to send message to channel: {}", e);
                     }

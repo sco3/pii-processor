@@ -12,13 +12,14 @@ use bytes::Bytes;
 use std::time::Duration;
 use tracing::{debug, info};
 
-use common::init_logging::init_tracing;
+use ductaper::init_logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 
 use ductaper::llm_caller::LLmCaller;
+use ductaper::llm_work::preview::preview;
 use ductaper::llm_work::prompt::prompt;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
@@ -91,24 +92,49 @@ async fn test_pool() {
     });
 
     let publisher = Publisher::new(&conn);
-    let payload = "[]";
+    let empty_payload = "[]";
     info!(
         "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
-        subject, payload, port
+        subject, empty_payload, port
     );
+    // empty payload
+    publisher
+        .publish(
+            subject.clone(), //
+            empty_payload.into(),
+            None,
+        )
+        .await;
+    // wrong payload
+    publisher
+        .publish(
+            subject.clone(), //
+            Bytes::from("{}"),
+            None,
+        )
+        .await;
+    //////////////////////////////////////////////////////////////////
 
+    test_session_log_file(subject, publisher).await;
+    ///////////////////////////////////////////////////////////////////
+    sleep(Duration::from_millis(420000)).await;
+    info!("Stop");
+    run_flag.store(false, Ordering::Relaxed);
+}
+
+async fn test_session_log_file(subject: String, publisher: Publisher) {
     let path = "tests/data/worker-pool-test.json";
     let file_content = fs::read(path) //
         .expect("Failed to read example_new_fields.log");
 
-    let preview: Bytes = Bytes::copy_from_slice(&file_content[..file_content.len().min(80)]);
-    debug!("Payload {} bytes: {:?} ...", file_content.len(), preview);
+    let preview: Bytes = preview(&file_content);
+    debug!("Session log preview: {:?}", preview);
 
     publisher
-        .publish(subject.clone(), payload.into(), None)
+        .publish(
+            subject, //
+            Bytes::copy_from_slice(&file_content),
+            None,
+        )
         .await;
-    publisher.publish(subject, Bytes::from("{}"), None).await;
-    sleep(Duration::from_millis(42)).await;
-    info!("Stop");
-    run_flag.store(false, Ordering::Relaxed);
 }

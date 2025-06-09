@@ -5,7 +5,7 @@ use async_channel::{bounded, Receiver, Sender};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use bytes::Bytes;
-pub use common::init_logging::init_tracing;
+pub use ductaper::init_logging::init_tracing;
 use ductaper::connector::Connector;
 use ductaper::log_handler::LogHandler;
 use ductaper::publisher::Publisher;

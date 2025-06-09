@@ -1,0 +1,10 @@
+use bytes::Bytes;
+
+pub fn preview(file_content: &Vec<u8>) -> Bytes {
+    let data = &file_content[..file_content.len().min(80)];
+    let head = Bytes::copy_from_slice(data);
+    head
+}
+pub fn preview_bytes(file_content: &Bytes) -> Bytes {
+    file_content.slice(..file_content.len().min(80))
+}
