@@ -43,7 +43,7 @@ impl Starter {
         let shared_llm_caller = Arc::new(llm_caller);
 
         let system_prompt = crate::llm_work::prompt::prompt(
-            cfg.system_prompt_location, //
+            &cfg.system_prompt_location, //
         );
         let processor = LlmLogProcessor::new(
             shared_llm_caller,
