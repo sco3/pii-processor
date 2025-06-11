@@ -1,5 +1,5 @@
 use ductaper::init_logging::init_tracing;
-use ductaper::llm_caller::LLmCaller;
+use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use std::fs::{read, read_to_string};
 use std::sync::Arc;

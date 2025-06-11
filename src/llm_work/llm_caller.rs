@@ -3,12 +3,12 @@ use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
+use serde_json::Value;
 use std::time::Instant;
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, Level};
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -81,7 +81,19 @@ impl LLmCaller {
         }
 
         match res.json::<Value>().await {
-            Ok(body) => Some(body),
+            Ok(body) => {
+                if tracing::enabled!(Level::DEBUG) {
+                    match serde_json::to_string_pretty(&body) {
+                        Ok(pretty_body) => {
+                            debug!("Response:\n{}", pretty_body);
+                        }
+                        Err(_) => {
+                            debug!("Pretty print failed. Original Response: {}", body);
+                        }
+                    }
+                }
+                Some(body)
+            }
             Err(e) => {
                 error!("Failed to parse JSON response: {}", e);
                 None

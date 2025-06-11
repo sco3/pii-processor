@@ -10,7 +10,7 @@ port=$(docker ps --format '{{json .}}' | grep s3mock | yq -P | yq .Ports | tr ',
 aws s3api put-object \
   --bucket test-bucket \
   --key test-key.txt \
-  --body Cargo.toml \
+  --body ../../Cargo.toml \
   --endpoint-url http://localhost:$port
 
 

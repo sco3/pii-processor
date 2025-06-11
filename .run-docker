@@ -7,6 +7,7 @@ docker run \
     -e APPLICATION=A  \
     -e AGGREGATOR_SESSIONS_LOG_URL=s3://bucket \
     -e LLM_MODEL=nova \
+    -e AWS_ASDF=1 \
     -it ductaper:latest
 
 #    -v $(pwd)/data/system_prompt.txt:/root/.local/system_prompt.txt \

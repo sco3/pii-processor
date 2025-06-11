@@ -6,8 +6,8 @@ COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM lukemathwalker/cargo-chef:0.1.71-rust-1.87-alpine3.22 AS builder
-RUN apk update
-RUN apk add libc-dev openssl-dev build-base musl-dev pkgconfig openssl-libs-static
+#RUN apk update
+#RUN apk add libc-dev openssl-dev build-base musl-dev pkgconfig openssl-libs-static
 WORKDIR /app
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --recipe-path recipe.json
