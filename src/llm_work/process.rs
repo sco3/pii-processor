@@ -7,8 +7,6 @@ use std::collections::HashMap;
 use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
-    fn update_log(&self, _log: SessionLog, _redacts: HashMap<String, String>) {}
-
     pub async fn process(&self, payload: Vec<u8>) {
         Self::debug("Payload", &payload);
 
@@ -31,7 +29,7 @@ impl LlmLogProcessor {
         //replace redacted strings
         let redacts = self.redactions(response).unwrap_or_default();
         if !redacts.is_empty() {
-            self.update_log(log, redacts);
+            self.update_log(log, &redacts);
         }
     }
 
