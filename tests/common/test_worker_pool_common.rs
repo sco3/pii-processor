@@ -1,15 +1,13 @@
-mod common;
-
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
-use std::fs;
-use std::sync::atomic::Ordering;
+
+use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 
 use bytes::Bytes;
-use std::time::Duration;
+
 use tracing::{debug, info};
 
 use ductaper::init_logging::init_tracing;
@@ -30,10 +28,15 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
-use tokio::time::sleep;
+use tokio::time::{sleep, Duration};
+#[allow(unused_variables)]
+#[allow(dead_code)]
+pub struct TestPoolResult {
+    pub run_flag: Arc<AtomicBool>,
+    pub pool: WorkerPool,
+}
 
-#[tokio::test]
-async fn test_pool() {
+pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     init_tracing();
 
     let container = GenericImage::new("nats", "2.11.4")
@@ -96,49 +99,19 @@ async fn test_pool() {
     });
 
     let publisher = Publisher::new(&conn);
-    let empty_payload = "[]";
+
     info!(
-        "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
-        subject, empty_payload, port
+        "Publish:\n\nnats pub {} '{:?}' -s nats://localhost:{}\n\n",
+        subject, payload, port
     );
     // empty payload
     publisher
         .publish(
             subject.clone(), //
-            empty_payload.into(),
+            payload,
             None,
         )
         .await;
-    // wrong payload
-    publisher
-        .publish(
-            subject.clone(), //
-            "{}".into(),
-            None,
-        )
-        .await;
-    //////////////////////////////////////////////////////////////////
 
-    test_session_log_file(subject, publisher).await;
-    ///////////////////////////////////////////////////////////////////
-    sleep(Duration::from_millis(42)).await;
-    info!("Stop");
-    run_flag.store(false, Ordering::Relaxed);
-}
-
-async fn test_session_log_file(subject: String, publisher: Publisher) {
-    let path = "tests/data/worker-pool-test.json";
-    let file_content = fs::read(path) //
-        .expect("Failed to read example_new_fields.log");
-
-    let preview: Bytes = preview(&file_content);
-    debug!("Session log preview: {:?}", preview);
-
-    publisher
-        .publish(
-            subject, //
-            file_content,
-            None,
-        )
-        .await;
+    TestPoolResult { run_flag, pool }
 }

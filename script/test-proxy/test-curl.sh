@@ -13,21 +13,18 @@ export PROMPT=$(<system_prompt.txt )
 export MSG=$(<worker-pool-test.json )
 
 
-yq eval '.messages[0].content = strenv(PROMPT)' input2.json -o json > /tmp/data1.json
+yq eval '.messages[0].content = strenv(PROMPT)' input2.json -o json > /tmp/curl-prompt.json
 
-yq eval '.messages[1].content = strenv(MSG)' /tmp/data1.json -o json > /tmp/data.json
+yq eval '.messages[1].content = strenv(MSG)' /tmp/curl-prompt.json -o json > /tmp/curl-data.json
 
-rm -f /tmp/out*.yaml
-rm -f  /tmp/out*.json
-
+rm -rf /tmp/curl-out*
 
 time curl -s -v 'http://0.0.0.0:4000/chat/completions' \
 	--header 'Authorization: Bearer sk-1234' \
 	--header 'Content-Type: application/json' \
-	--data @/tmp/data.json > /tmp/out.json
+	--data @/tmp/curl-data.json > /tmp/curl-out.json
 
 
-yq .choices[0].message.content -r -P -o yaml /tmp/out.json > /tmp/out1.yaml
-# yq -P -o yaml /tmp/out1.json
-
+yq .choices[0].message.content -r -P -o yaml /tmp/curl-out.json > /tmp/curl-out-content.txt
+yq .choices[0].message.content -r -P -o yaml /tmp/curl-out.json  | yq -P
 

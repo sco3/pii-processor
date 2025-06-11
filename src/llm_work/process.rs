@@ -1,11 +1,15 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::pii_text::pii_text;
-use bytes::Bytes;
+use std::str::from_utf8;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Vec<u8>) -> bool {
-        debug!("Payload: {:?}", payload);
+        if let Ok(text) = from_utf8(&payload) {
+            debug!("Payload: {}", text);
+        } else {
+            debug!("Payload (not valid UTF-8): {:?}", payload);
+        }
         if let Some(log) = Self::parse(payload) {
             let redaction_text = pii_text(log);
             debug!("history: {:?}", redaction_text);
