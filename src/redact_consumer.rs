@@ -2,13 +2,13 @@ use crate::env_vars::Cfg;
 
 use crate::connector::Connector;
 use async_channel::Sender;
-use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;
+use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use crate::llm_work::preview::preview_bytes;
 use tracing::{debug, error, info};

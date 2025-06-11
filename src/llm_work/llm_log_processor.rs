@@ -1,4 +1,4 @@
-use crate::reducter::ReDucter;
+use crate::llm_work::reducter::ReDucter;
 use std::sync::Arc;
 
 pub struct LlmLogProcessor {

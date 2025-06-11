@@ -1,7 +1,7 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use async_channel::{bounded, Receiver, Sender};
+use async_channel::{Receiver, Sender, bounded};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 
@@ -15,13 +15,13 @@ use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
-    GenericImage,
-    ImageExt,
+    GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 
-use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
+use tokio::time::sleep;
 use tracing::{debug, info};
 
 struct DummyHandler {

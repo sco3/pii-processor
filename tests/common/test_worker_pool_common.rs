@@ -3,9 +3,8 @@ use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 
-use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
-
+use std::sync::atomic::AtomicBool;
 
 use tracing::info;
 
@@ -22,17 +21,18 @@ use ductaper::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
-    GenericImage,
-    ImageExt,
+    ContainerAsync, GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 #[allow(unused_variables)]
 #[allow(dead_code)]
 pub struct TestPoolResult {
     pub run_flag: Arc<AtomicBool>,
     pub pool: WorkerPool,
+    pub container: ContainerAsync<GenericImage>,
 }
-
+#[allow(dead_code)]
 pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     init_tracing();
 
@@ -61,7 +61,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     let (tx, rx) = bounded::<Message>(1);
 
     let caller = Arc::new(LLmCaller::new(
-        "http:localhost:4000",
+        "http:localhost:4000/chat/completions",
         "haiku",
         Some("sk-1234".to_string()),
     ));
@@ -97,9 +97,10 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
 
     let publisher = Publisher::new(&conn);
 
+    let str = String::from_utf8(payload.clone()).expect("Should be valid utf8 text");
     info!(
-        "Publish:\n\nnats pub {} '{:?}' -s nats://localhost:{}\n\n",
-        subject, payload, port
+        "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
+        subject, str, port
     );
     // empty payload
     publisher
@@ -110,5 +111,14 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         )
         .await;
 
-    TestPoolResult { run_flag, pool }
+    info!(
+        "Publish:\n\nnats pub {} '{}' -s nats://localhost:{}\n\n",
+        subject, "something", port
+    );
+
+    TestPoolResult {
+        run_flag,
+        pool,
+        container,
+    }
 }

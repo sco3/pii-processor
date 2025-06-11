@@ -11,7 +11,6 @@ pub mod log_handler;
 pub mod logging;
 pub mod publisher;
 pub mod redact_consumer;
-pub mod reducter;
 pub mod s3ctx;
 pub mod s3error;
 pub mod s3helper;

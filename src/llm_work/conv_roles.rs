@@ -1,4 +1,3 @@
-
 pub const USER: &str = "user";
 pub const SYSTEM: &str = "system";
 pub const ASSISTANT: &str = "assistant";

@@ -21,9 +21,9 @@ async fn read_session_log_file() -> Vec<u8> {
 #[tokio::test]
 
 pub async fn test_with_log() {
-    let payload = read_session_log_file();
-    let tp = test_pool(Vec::new()).await;
-    sleep(Duration::from_millis(42)).await;
+    let payload = read_session_log_file().await;
+    let tp = test_pool(payload).await;
+    sleep(Duration::from_secs(42 / 10)).await;
 
     tp.run_flag.store(false, Ordering::Relaxed);
 }

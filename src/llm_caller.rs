@@ -1,12 +1,12 @@
 use crate::ai_tags::Ai;
-use crate::reducter::ReDucter;
+use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
-use serde_json::json;
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
+use serde_json::json;
 use std::time::Instant;
 use tracing::{debug, error, info};
 
@@ -93,7 +93,11 @@ impl LLmCaller {
 impl ReDucter for LLmCaller {
     async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
         let body = self.build_body(model, prompt, message);
-        debug!("Request body: {}", pretty(&body));
+        debug!(
+            "Request body: {} \n endpoint: {}",
+            pretty(&body),
+            self.endpoint
+        );
         let req = self.build_request(body);
         let start = Instant::now();
         let output = Self::send(req).await;

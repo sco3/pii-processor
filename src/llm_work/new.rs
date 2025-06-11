@@ -1,6 +1,6 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
-use crate::reducter::ReDucter;
+use crate::llm_work::reducter::ReDucter;
 use std::sync::Arc;
 
 impl LlmLogProcessor {

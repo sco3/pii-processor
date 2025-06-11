@@ -1,7 +1,7 @@
 use aws_config::{BehaviorVersion, ConfigLoader, Region};
 use aws_credential_types::Credentials;
-use aws_sdk_s3::config::Builder as S3ConfigBuilder;
 use aws_sdk_s3::Client;
+use aws_sdk_s3::config::Builder as S3ConfigBuilder;
 use std::error::Error;
 
 pub struct S3Ctx {

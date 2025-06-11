@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::reducter::ReDucter;
+use ductaper::llm_work::reducter::ReDucter;
 use serde_json::Value;
 use std::fs;
 use std::sync::Arc;
@@ -43,5 +43,5 @@ async fn test_llm_log_processor() {
 
     // Process the payload
     let result = processor.process(file_content).await;
-    info!("Processing result: {}", result);
+    info!("Processing result: {:?}", result);
 }
