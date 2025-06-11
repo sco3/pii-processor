@@ -6,8 +6,8 @@ use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 
 pub use ductaper::init_logging::init_tracing;
-use ductaper::s3ctx::S3Ctx;
-use ductaper::s3helper::S3Helper;
+use ductaper::storage::s3ctx::S3Ctx;
+use ductaper::storage::s3helper::S3Helper;
 
 use testcontainers::runners::AsyncRunner;
 use testcontainers_modules::minio;

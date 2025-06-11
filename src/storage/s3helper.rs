@@ -1,5 +1,5 @@
-use crate::s3ctx::S3Ctx;
-use crate::s3error::aws_err;
+use crate::storage::s3ctx::S3Ctx;
+use crate::storage::s3error::aws_err;
 use tracing::{debug, error, info};
 pub struct S3Helper {
     s3ctx: S3Ctx,
