@@ -4,11 +4,10 @@ use crate::session_log_models::SessionLogType;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use std::str::from_utf8;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
-    fn update_log(&self, log: SessionLogType, redacts: HashMap<String, String>) {}
+    fn update_log(&self, _log: SessionLogType, _redacts: HashMap<String, String>) {}
 
     pub async fn process(&self, payload: Vec<u8>) {
         self.log_payload(&payload);
@@ -31,7 +30,7 @@ impl LlmLogProcessor {
             .await;
         //replace redacted strings
         let redacts = self.redactions(response).unwrap_or_default();
-        if redacts.len() > 0 {
+        if !redacts.is_empty() {
             self.update_log(log, redacts);
         }
     }
