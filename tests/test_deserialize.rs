@@ -1,4 +1,4 @@
-use ductaper::session_log_models::{SessionLogEntry, SessionLogType};
+use ductaper::session_log_models::{SessionLogEntry, SessionLog};
 
 use std::fs;
 
@@ -10,7 +10,7 @@ fn test_deserialize_example_new_fields() {
         .expect("Failed to read example_new_fields.log");
 
     // Attempt to deserialize JSON into SessionLogType (Vec<SessionLogEntry>)
-    let session_log: SessionLogType = serde_json::from_str(&file_content) //
+    let session_log: SessionLog = serde_json::from_str(&file_content) //
         .expect("Failed to deserialize session log");
 
     // Basic sanity checks - adjust depending on expected content

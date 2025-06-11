@@ -2,7 +2,7 @@ use ductaper::init_logging::init_tracing;
 use ductaper::llm_caller::LLmCaller;
 use ductaper::llm_work::pii_text::pii_text;
 use ductaper::llm_work::reducter::ReDucter;
-use ductaper::session_log_models::SessionLogType;
+use ductaper::session_log_models::SessionLog;
 use serde_json::Value;
 use std::env::var;
 use std::fs::read;
@@ -30,7 +30,7 @@ async fn main() {
         simple_tests(&models, &system_prompt).await;
     }
 
-    let session_log: SessionLogType = serde_json::from_slice(session_log.as_ref()) //
+    let session_log: SessionLog = serde_json::from_slice(session_log.as_ref()) //
         .expect("Failed to deserialize session log");
 
     let text = pii_text(&session_log);

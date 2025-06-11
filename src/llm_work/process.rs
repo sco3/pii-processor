@@ -1,13 +1,13 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::pii_text::pii_text;
-use crate::session_log_models::SessionLogType;
+use crate::session_log_models::SessionLog;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
-    fn update_log(&self, _log: SessionLogType, _redacts: HashMap<String, String>) {
+    fn update_log(&self, _log: SessionLog, _redacts: HashMap<String, String>) {
         
     }
 

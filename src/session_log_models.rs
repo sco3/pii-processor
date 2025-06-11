@@ -178,4 +178,4 @@ pub enum SessionLogEntry {
 }
 
 /// Root type for session log
-pub type SessionLogType = Vec<SessionLogEntry>;
+pub type SessionLog = Vec<SessionLogEntry>;

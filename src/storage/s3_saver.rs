@@ -1,4 +1,4 @@
-use crate::session_log_models::SessionLogType;
+use crate::session_log_models::SessionLog;
 use crate::storage::s3helper::S3Helper;
 use crate::storage::saver::Saver;
 use async_trait::async_trait;
@@ -10,7 +10,7 @@ struct S3Saver {
 
 #[async_trait]
 impl Saver for S3Saver {
-    async fn save(&self, log: SessionLogType, file_name: &str) -> bool {
+    async fn save(&self, log: SessionLog, file_name: &str) -> bool {
         match serde_json::to_string_pretty(&log) {
             Ok(data) => {
                 self.s3helper
