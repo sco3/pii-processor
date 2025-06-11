@@ -3,11 +3,7 @@ use async_trait::async_trait;
 
 #[async_trait]
 pub trait Saver: Send + Sync {
-    async fn save(
-        &self,
-        _log: SessionLogType,
-        _file_name: &str,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        Ok(())
+    async fn save(&self, _log: SessionLogType, _file_name: &str) -> bool {
+        false
     }
 }

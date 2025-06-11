@@ -7,7 +7,9 @@ use std::collections::HashMap;
 use tracing::{debug, error};
 
 impl LlmLogProcessor {
-    fn update_log(&self, _log: SessionLogType, _redacts: HashMap<String, String>) {}
+    fn update_log(&self, _log: SessionLogType, _redacts: HashMap<String, String>) {
+        
+    }
 
     pub async fn process(&self, payload: Vec<u8>) {
         self.log_payload(&payload);
