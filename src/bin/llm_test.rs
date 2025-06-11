@@ -41,7 +41,7 @@ async fn main() {
         call_with_model(
             model, //
             system_prompt.as_str(),
-            &text2,
+            text2,
         )
         .await;
     }

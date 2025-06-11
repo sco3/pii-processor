@@ -6,9 +6,8 @@ use reqwest::StatusCode;
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 
-use bytes::Bytes;
 
-use tracing::{debug, info};
+use tracing::info;
 
 use ductaper::init_logging::init_tracing;
 
@@ -17,7 +16,6 @@ use ductaper::connector::Connector;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 
 use ductaper::llm_caller::LLmCaller;
-use ductaper::llm_work::preview::preview;
 use ductaper::llm_work::prompt::prompt;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
@@ -28,7 +26,6 @@ use testcontainers::{
     GenericImage,
     ImageExt,
 };
-use tokio::time::{sleep, Duration};
 #[allow(unused_variables)]
 #[allow(dead_code)]
 pub struct TestPoolResult {

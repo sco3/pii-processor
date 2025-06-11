@@ -2,7 +2,6 @@ mod common;
 use crate::common::test_worker_pool_common::test_pool;
 use bytes::Bytes;
 use ductaper::llm_work::preview::preview;
-use ductaper::publisher::Publisher;
 use std::fs;
 use std::sync::atomic::Ordering;
 use std::time::Duration;
