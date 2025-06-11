@@ -1,0 +1,5 @@
+#!/usr/bin/env -S bash
+
+set -xueo pipefail 
+
+docker build . -t ductaper:$(git branch --show-current)

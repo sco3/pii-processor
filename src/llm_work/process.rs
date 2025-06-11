@@ -4,23 +4,21 @@ use crate::session_log_models::SessionLog;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{debug, error};
+use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
-    fn update_log(&self, _log: SessionLog, _redacts: HashMap<String, String>) {
-        
-    }
+    fn update_log(&self, _log: SessionLog, _redacts: HashMap<String, String>) {}
 
     pub async fn process(&self, payload: Vec<u8>) {
-        self.log_payload(&payload);
+        Self::debug("Payload", &payload);
 
         let Some(log) = Self::parse(payload.clone()) else {
-            error!("Session log format error: {:?}", payload);
+            Self::error("Parse error", &payload);
             return;
         };
 
         let redaction_text = pii_text(&log);
-        debug!("history: {:?}", redaction_text);
+        debug!("history: {}", redaction_text);
 
         let response = self
             .caller
@@ -37,10 +35,20 @@ impl LlmLogProcessor {
         }
     }
 
-    fn log_payload(&self, payload: &[u8]) {
-        match std::str::from_utf8(payload) {
-            Ok(text) => debug!("Payload: {}", text),
-            Err(_) => debug!("Payload (not valid UTF-8): {:?}", payload),
+    fn debug(label: &str, payload: &Vec<u8>) {
+        if tracing::enabled!(Level::DEBUG) {
+            match str::from_utf8(&payload) {
+                Ok(text) => debug!("{} (non-UTF-8 bytes): {}", label, text),
+                Err(_) => debug!("{} (non-UTF-8 bytes): {:?}", label, payload),
+            }
+        }
+    }
+    fn error(label: &str, payload: &Vec<u8>) {
+        if tracing::enabled!(Level::DEBUG) {
+            match str::from_utf8(&payload) {
+                Ok(text) => error!("{} (non-UTF-8 bytes): {}", label, text),
+                Err(_) => error!("{} (non-UTF-8 bytes): {:?}", label, payload),
+            }
         }
     }
 
