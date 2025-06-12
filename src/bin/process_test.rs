@@ -48,6 +48,6 @@ async fn main() {
             Arc::new(DummySaver {}),
         );
 
-        processor.process(session_log.clone()).await;
+        processor.process(session_log.clone(), "asdf.json").await;
     }
 }

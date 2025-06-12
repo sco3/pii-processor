@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use tracing::{Level, debug, error};
 
 impl LlmLogProcessor {
-    pub async fn process(&self, payload: Vec<u8>) {
+    pub async fn process(&self, payload: Vec<u8>, _name: &str) {
         Self::debug("Payload", &payload);
 
         let Some(mut log) = Self::parse(payload.clone()) else {

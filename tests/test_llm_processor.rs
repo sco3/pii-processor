@@ -46,6 +46,6 @@ async fn test_llm_log_processor() {
         .expect("Failed to read example_new_fields.log");
 
     // Process the payload
-    let result = processor.process(file_content).await;
+    let result = processor.process(file_content, "test.json").await;
     info!("Processing result: {:?}", result);
 }
