@@ -3,7 +3,7 @@ use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::header::{HeaderValue, AUTHORIZATION, CONTENT_TYPE};
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
 use serde_json::json;
 use serde_json::Value;
