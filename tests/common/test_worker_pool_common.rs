@@ -8,7 +8,7 @@ use std::sync::atomic::AtomicBool;
 
 use tracing::info;
 
-use ductaper::init_logging::init_tracing;
+use ductaper::logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
 use ductaper::connector::Connector;

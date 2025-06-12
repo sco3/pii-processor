@@ -6,8 +6,8 @@ use async_nats::jetstream::Message;
 use async_trait::async_trait;
 
 use ductaper::connector::Connector;
-pub use ductaper::init_logging::init_tracing;
 use ductaper::llm_work::log_handler::LogHandler;
+pub use ductaper::logging::init_tracing;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;

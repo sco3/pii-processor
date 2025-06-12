@@ -5,7 +5,7 @@ use aws_config::meta::region::RegionProviderChain;
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 
-pub use ductaper::init_logging::init_tracing;
+pub use ductaper::logging::init_tracing;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
 

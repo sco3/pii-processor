@@ -1,6 +1,6 @@
-use ductaper::init_logging::init_tracing;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::reducter::ReDucter;
+use ductaper::logging::init_tracing;
 use httpmock::Method::POST;
 use httpmock::MockServer;
 use serde_json::json;

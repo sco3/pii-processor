@@ -7,7 +7,7 @@ use crate::storage::s3_saver::S3Saver;
 use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::logging;
+
 use crate::redact_consumer::RedactConsumer;
 use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
@@ -16,26 +16,30 @@ use async_nats::jetstream::Message;
 use dotenv::dotenv;
 use std::sync::Arc;
 
+use crate::logging::init_log;
 use crate::storage::get_bucket::get_bucket;
 use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3helper::S3Helper;
-use tracing::info;
 
 pub struct Starter {
     //pub cfg: Cfg,
     pub redact_consumer: RedactConsumer,
+    pub worker_pool: WorkerPool,
 }
 
 impl Starter {
     pub async fn new() -> Self {
-        info!("Start");
+        println!("Create application.");
+
         color_backtrace::install();
         dotenv().ok();
 
         list_env();
 
         let cfg = Cfg::from_env();
-        logging::init_log(cfg.log_level.clone());
+
+        init_log(Some(cfg.log_level.as_str()));
+
         let connector = Connector::new(cfg.clone()).await;
         let llm_caller = LLmCaller {
             endpoint: "".to_string(),
@@ -84,13 +88,16 @@ impl Starter {
         .await;
 
         let counter = MinuteCounter::new();
-        let _pool = WorkerPool {
+        let worker_pool = WorkerPool {
             size: cfg.redact_max_tasks,
             receiver: rcv,
             counter,
             llm_log_processor,
         };
-        Starter { redact_consumer }
+        Starter {
+            redact_consumer,
+            worker_pool,
+        }
     }
 }
 
@@ -98,5 +105,7 @@ impl Init for Starter {
     fn init(&self) -> &Self {
         self
     }
-    fn start(&self) {}
+    async fn start(&self) {
+        self.worker_pool.start().await;
+    }
 }

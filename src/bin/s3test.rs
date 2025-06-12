@@ -7,7 +7,7 @@ use tracing::info;
 
 #[tokio::main]
 async fn main() {
-    init_log("info".to_string());
+    init_log(Some("info"));
     dotenv().ok();
     let cfg = Cfg::from_env();
     let test_bucket = "dz-bucket-1234".to_string();

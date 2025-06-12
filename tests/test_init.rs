@@ -16,5 +16,5 @@ async fn test_init() {
 
     let starter = Starter::new().await;
     starter.init();
-    starter.start();
+    starter.start().await;
 }

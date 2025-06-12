@@ -3,7 +3,6 @@ pub mod connector;
 pub mod env_vars;
 pub mod expanduser;
 pub mod init;
-pub mod init_logging;
 pub mod list_env;
 pub mod llm_work;
 pub mod logging;
