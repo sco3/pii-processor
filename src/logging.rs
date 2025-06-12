@@ -1,5 +1,5 @@
 use std::sync::Once;
-use tracing::{Level, error};
+use tracing::{Level, error, info};
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 pub static LOG_INIT: Once = Once::new();
@@ -9,7 +9,7 @@ pub fn init_log(level_str: Option<&str>) {
     LOG_INIT.call_once(|| {
         let mut level: Level = Level::INFO;
         if let Some(s) = level_str {
-            match s.parse::<Level>() {
+            match s.to_uppercase().parse::<Level>() {
                 Ok(l) => {
                     level = l;
                 }
@@ -18,10 +18,19 @@ pub fn init_log(level_str: Option<&str>) {
                 }
             }
         }
-
-        let filter = EnvFilter::new(
-            "debug,async_nats=warn,hyper_util=warn,S3=warn", //
-        );
+        let mut filter = EnvFilter::new(level.to_string());
+        filter = filter
+            .add_directive(
+                "async_nats=warn"
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "hyper_util=warn"
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive("S3=warn".parse().expect("Failed to parse directive"));
 
         let subscriber = FmtSubscriber::builder()
             .with_max_level(level)
@@ -34,6 +43,10 @@ pub fn init_log(level_str: Option<&str>) {
         if let Err(e) = tracing::subscriber::set_global_default(subscriber) {
             println!("Sorry. Tracing already initialized: {}", e);
         }
+        info!(
+            "Logging level: {} from configuration: {:?}).",
+            level, level_str
+        );
     });
 }
 

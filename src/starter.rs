@@ -8,18 +8,18 @@ use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
+use crate::logging::init_log;
 use crate::redact_consumer::RedactConsumer;
+use crate::storage::get_bucket::get_bucket;
+use crate::storage::s3ctx::S3Ctx;
+use crate::storage::s3helper::S3Helper;
 use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use dotenv::dotenv;
 use std::sync::Arc;
-
-use crate::logging::init_log;
-use crate::storage::get_bucket::get_bucket;
-use crate::storage::s3ctx::S3Ctx;
-use crate::storage::s3helper::S3Helper;
+use tracing::info;
 
 pub struct Starter {
     //pub cfg: Cfg,
@@ -29,15 +29,11 @@ pub struct Starter {
 
 impl Starter {
     pub async fn new() -> Self {
-        println!("Create application.");
-
+        info!("Create application.");
         color_backtrace::install();
         dotenv().ok();
-
         list_env();
-
         let cfg = Cfg::from_env();
-
         init_log(Some(cfg.log_level.as_str()));
 
         let connector = Connector::new(cfg.clone()).await;
@@ -106,6 +102,8 @@ impl Init for Starter {
         self
     }
     async fn start(&self) {
+        info!("Start application");
         self.worker_pool.start().await;
+        info!("Stop application");
     }
 }
