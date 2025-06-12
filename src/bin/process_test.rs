@@ -5,7 +5,6 @@ use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::session_log_models::SessionLog;
 use ductaper::storage::saver::Saver;
 use std::fs::{read, read_to_string};
-use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
 use tracing::debug;
 

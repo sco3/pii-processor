@@ -50,18 +50,9 @@ impl Starter {
             &cfg.system_prompt_location, //
         );
         let bucket = get_bucket(cfg.aggregator_sessions_log_url.as_str()).unwrap();
-        let access_key: Option<String> = match cfg.aws_access_key_id {
-            Some(v) => Some(v.get_string()),
-            None => None,
-        };
-        let secret_key: Option<String> = match cfg.aws_secret_access_key {
-            Some(v) => Some(v.get_string()),
-            None => None,
-        };
-        let access_token: Option<String> = match cfg.aws_access_token {
-            Some(v) => Some(v.get_string()),
-            None => None,
-        };
+        let access_key: Option<String> = cfg.aws_access_key_id.map(|v| v.get_string());
+        let secret_key: Option<String> = cfg.aws_secret_access_key.map(|v| v.get_string());
+        let access_token: Option<String> = cfg.aws_access_token.map(|v| v.get_string());
 
         let s3ctx = S3Ctx::new(
             bucket.clone(),
