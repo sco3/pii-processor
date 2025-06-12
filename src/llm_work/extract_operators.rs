@@ -44,7 +44,9 @@ pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
                                     valid_replacements.insert(s.to_string());
                                 }
                             }
-                            return Some(valid_replacements);
+                            if valid_replacements.len() > 0 {
+                                return Some(valid_replacements);
+                            }
                         }
                     }
                 }

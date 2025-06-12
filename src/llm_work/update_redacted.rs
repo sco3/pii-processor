@@ -35,6 +35,7 @@ impl LlmLogProcessor {
         for redact in redacts {
             content = content.replace(redact.0, redact.1);
         }
+
         content
     }
 }

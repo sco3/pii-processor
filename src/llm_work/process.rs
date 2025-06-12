@@ -68,29 +68,36 @@ impl LlmLogProcessor {
         }
     }
 
-    fn parse_redactions(content: &str) -> Option<HashMap<String, String>> {
-        match serde_json::from_str::<Value>(content) {
-            Ok(v) => v
-                .get("redactions")
-                .and_then(|val| val.as_object())
-                .map(|obj| {
-                    obj.iter()
-                        .filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string())))
-                        .collect()
-                }),
-            Err(e) => {
-                error!("Invalid json in content: {}", e);
-                None
+    ///
+    fn parse_redactions(&self, content: &str) -> Option<HashMap<String, String>> {
+        let parsed: Value = serde_json::from_str(content).ok()?;
+        let redactions = parsed.get("redactions")?.as_object()?;
+
+        let mut result = HashMap::new();
+        for (key, value) in redactions {
+            if let Some(replace_with) = value.as_str() {
+                // sometimes LLM creates redactions not from the system prompt
+                // they should be filtered out (non valid are not inserted).
+                if let Some(vr) = &self.valid_redactions {
+                    // valid redactions found and they include replacement
+                    if vr.contains(replace_with) {
+                        result.insert(key.clone(), replace_with.to_string());
+                    }
+                } else {
+                    // valid redaction not found this is most unlikely event
+                    result.insert(key.clone(), replace_with.to_string());
+                }
             }
         }
-    }
 
+        Some(result)
+    }
     fn redactions(&self, response: Option<Value>) -> Option<HashMap<String, String>> {
         let value = response?;
         let content = Self::extract_content(&value)?;
         debug!("Content: {:?}", content);
 
-        let redactions = Self::parse_redactions(content)?;
+        let redactions = self.parse_redactions(content)?;
         debug!("Redactions: {:?}", redactions);
         Some(redactions)
     }
