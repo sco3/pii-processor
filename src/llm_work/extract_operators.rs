@@ -9,7 +9,6 @@ use tracing::debug;
 /// with the corresponding closing "}". It then cleans up the extracted fragment
 /// to make it valid JSON before parsing.
 /// * `Option<HashSet<String>>` if parsing is successful or None
-
 pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
     // Regex to find the "OPERATORS = {" and capture everything up to and including the closing "}".
     // The capturing group `([\s\S]*?\n\})` includes the outer curly braces.
@@ -44,7 +43,7 @@ pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
                                     valid_replacements.insert(s.to_string());
                                 }
                             }
-                            if valid_replacements.len() > 0 {
+                            if !valid_replacements.is_empty() {
                                 return Some(valid_replacements);
                             }
                         }

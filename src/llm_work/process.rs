@@ -68,7 +68,7 @@ impl LlmLogProcessor {
         }
     }
 
-    ///
+    /// parse llm response redactions
     fn parse_redactions(&self, content: &str) -> Option<HashMap<String, String>> {
         let parsed: Value = serde_json::from_str(content).ok()?;
         let redactions = parsed.get("redactions")?.as_object()?;
