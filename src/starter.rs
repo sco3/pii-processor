@@ -22,6 +22,7 @@ use dotenv::dotenv;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio;
+use tokio::signal;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
 use tracing::info;
@@ -107,8 +108,6 @@ impl Starter {
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
-        info!("Start application");
-
         let consumer = Arc::clone(&self.redact_consumer);
         let cfg = self.cfg.clone();
 
@@ -121,7 +120,7 @@ impl Init for Starter {
 
         self.worker_pool.start().await;
 
-        sleep(Duration::from_secs(3600)).await;
+        signal::ctrl_c().await.expect("Failed to listen for shutdown signal");
 
         info!("Stop application");
     }
