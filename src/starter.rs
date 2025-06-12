@@ -13,15 +13,17 @@ use crate::redact_consumer::RedactConsumer;
 use crate::storage::get_bucket::get_bucket;
 use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3helper::S3Helper;
-use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
+use crate::worker_pool::WorkerPool;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use dotenv::dotenv;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio;
 use tokio::sync::Mutex;
+use tokio::time::sleep;
 use tracing::info;
 
 pub struct Starter {
@@ -116,8 +118,10 @@ impl Init for Starter {
             consumer.subscribe(&cfg).await;
             consumer.serve().await;
         });
-        
-        //self.worker_pool.start().await;
+
+        self.worker_pool.start().await;
+
+        sleep(Duration::from_secs(3600)).await;
 
         info!("Stop application");
     }
