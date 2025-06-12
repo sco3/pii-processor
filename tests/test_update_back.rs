@@ -1,15 +1,12 @@
 mod common;
-use async_trait::async_trait;
 use common::dummy_caller::DummyCaller;
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::llm_work::reducter::ReDucter;
 use ductaper::session_log_models::SessionLog;
-use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::fs;
 use std::sync::Arc;
-use tracing::{debug, info};
+use tracing::info;
 
 #[tokio::test]
 pub async fn test_update_pii_redactions() {

@@ -14,7 +14,7 @@ use tracing::debug;
 ///
 /// Returns:
 /// * `Result<Value, String>`: Ok(Value) if parsing is successful,
-///                            Err(String) if the fragment cannot be found or parsed.
+///   Err(String) if the fragment cannot be found or parsed.
 pub fn extract_and_parse_operators_fragment(text: &str) -> Result<Value, String> {
     // Regex to find the "OPERATORS = {" and capture everything up to and including the closing "}".
     // The capturing group `([\s\S]*?\n\})` includes the outer curly braces.
