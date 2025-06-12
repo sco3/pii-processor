@@ -1,5 +1,5 @@
 use std::sync::Once;
-use tracing::{Level, error, info};
+use tracing::{error, info, Level};
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 pub static LOG_INIT: Once = Once::new();
@@ -30,8 +30,39 @@ pub fn init_log(level_str: Option<&str>) {
                     .parse()
                     .expect("Failed to parse directive"),
             )
-            .add_directive("S3=warn".parse().expect("Failed to parse directive"));
-
+            .add_directive(
+                "S3=warn".parse().expect("Failed to parse directive"), //
+            )
+            .add_directive(
+                "aws_sdk_s3=warn"
+                    .parse()
+                    .expect("Failed to parse directive"), //
+            )
+            .add_directive(
+                "aws_smithy_runtime=warn"
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "aws_smithy_runtime_api=warn"
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "aws_config=warn"
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "aws_types=warn" //
+                    .parse()
+                    .expect("Failed to parse directive"),
+            ).add_directive(
+            "aws_smithy_http_client=warn" //
+                .parse()
+                .expect("Failed to parse directive"),
+        );
+        
         let subscriber = FmtSubscriber::builder()
             .with_max_level(level)
             .with_env_filter(filter)
