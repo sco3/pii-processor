@@ -116,6 +116,7 @@ impl Init for Starter {
             consumer.subscribe(&cfg).await;
             consumer.serve().await;
         });
+        
         //self.worker_pool.start().await;
 
         info!("Stop application");

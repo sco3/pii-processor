@@ -1,5 +1,4 @@
 use crate::common::init_cfg::{AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, TENANT};
-use ductaper::init::Init;
 use ductaper::starter::Starter;
 use std::env;
 
@@ -14,5 +13,5 @@ async fn test_init() {
         env::set_var(AGGREGATOR_SESSIONS_LOG_URL, "s3://test");
     }
 
-    let starter = Starter::new().await;
+    let _starter = Starter::new().await;
 }
