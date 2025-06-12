@@ -17,14 +17,17 @@ use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
+use async_trait::async_trait;
 use dotenv::dotenv;
 use std::sync::Arc;
+use tokio;
+use tokio::sync::Mutex;
 use tracing::info;
 
 pub struct Starter {
-    //pub cfg: Cfg,
-    pub redact_consumer: RedactConsumer,
+    pub redact_consumer: Arc<Mutex<RedactConsumer>>,
     pub worker_pool: WorkerPool,
+    pub cfg: Cfg,
 }
 
 impl Starter {
@@ -49,13 +52,13 @@ impl Starter {
             &cfg.system_prompt_location, //
         );
         let bucket = get_bucket(cfg.aggregator_sessions_log_url.as_str()).unwrap();
-        let access_key: Option<String> = cfg.aws_access_key_id.map(|v| v.get_string());
-        let secret_key: Option<String> = cfg.aws_secret_access_key.map(|v| v.get_string());
-        let access_token: Option<String> = cfg.aws_access_token.map(|v| v.get_string());
+        let access_key: Option<String> = cfg.aws_access_key_id.clone().map(|v| v.get_string());
+        let secret_key: Option<String> = cfg.aws_secret_access_key.clone().map(|v| v.get_string());
+        let access_token: Option<String> = cfg.aws_access_token.clone().map(|v| v.get_string());
 
         let s3ctx = S3Ctx::new(
             bucket.clone(),
-            cfg.aws_region_s3,
+            cfg.aws_region_s3.clone(),
             access_key,
             secret_key,
             access_token,
@@ -68,7 +71,7 @@ impl Starter {
         let processor = LlmLogProcessor::new(
             shared_llm_caller,
             system_prompt, //
-            cfg.llm_model,
+            cfg.llm_model.clone(),
             s3saver,
         );
         let llm_log_processor = Arc::new(processor);
@@ -77,11 +80,13 @@ impl Starter {
             cfg.redact_max_tasks, //
         );
 
-        let redact_consumer = RedactConsumer::new(
-            &connector, //
-            snd,
-        )
-        .await;
+        let redact_consumer = Arc::new(Mutex::new(
+            RedactConsumer::new(
+                &connector, //
+                snd,
+            )
+            .await,
+        ));
 
         let counter = MinuteCounter::new();
         let worker_pool = WorkerPool {
@@ -93,17 +98,26 @@ impl Starter {
         Starter {
             redact_consumer,
             worker_pool,
+            cfg,
         }
     }
 }
-
+#[async_trait]
 impl Init for Starter {
-    fn init(&self) -> &Self {
-        self
-    }
-    async fn start(&self) {
+    async fn start(&mut self) {
         info!("Start application");
-        self.worker_pool.start().await;
+
+        let consumer = Arc::clone(&self.redact_consumer);
+        let cfg = self.cfg.clone();
+
+        tokio::spawn(async move {
+            let mut consumer = consumer.lock().await;
+            consumer.update_stream(&cfg).await;
+            consumer.subscribe(&cfg).await;
+            consumer.serve().await;
+        });
+        //self.worker_pool.start().await;
+
         info!("Stop application");
     }
 }

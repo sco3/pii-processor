@@ -105,9 +105,11 @@ impl LLmCaller {
 impl ReDucter for LLmCaller {
     async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
         let body = self.build_body(model, prompt, message);
+        let pretty_body = pretty(&body);
         debug!(
-            "Request body: {} \n endpoint: {}",
-            pretty(&body),
+            "Request body size: {} body: {}\n endpoint: {}",
+            pretty_body.len(),
+            pretty_body,
             self.endpoint
         );
         let req = self.build_request(body);

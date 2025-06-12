@@ -3,5 +3,5 @@ use ductaper::starter::Starter;
 
 #[tokio::main]
 async fn main() {
-    Starter::new().await.init().start().await;
+    Starter::new().await.start().await;
 }

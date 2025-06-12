@@ -1,6 +1,7 @@
 use crate::worker_pool::WorkerPool;
 use std::sync::Arc;
 use tokio::spawn;
+use tracing::info;
 
 impl WorkerPool {
     pub async fn start(&self) {
@@ -11,5 +12,6 @@ impl WorkerPool {
                 Self::serve_messages(recv, processor).await;
             });
         }
+        info!("Worker pool with {} workers started.", self.size)
     }
 }
