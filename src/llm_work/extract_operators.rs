@@ -1,7 +1,7 @@
 use regex::Regex;
 use serde_json::Value;
 use std::collections::HashSet;
-use tracing::{debug, error};
+use tracing::debug;
 
 /// Extracts a JSON fragment
 ///

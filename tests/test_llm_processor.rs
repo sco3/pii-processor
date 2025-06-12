@@ -6,7 +6,6 @@ use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::llm_work::reducter::ReDucter;
 use serde_json::Value;
-use std::collections::HashSet;
 use std::fs;
 use std::sync::Arc;
 use tracing::{debug, info};
