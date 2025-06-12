@@ -41,7 +41,6 @@ pub fn get_bucket(s3_url: &str) -> Option<String> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -51,5 +50,4 @@ mod tests {
         let url = "s3://my-test-bucket";
         assert_eq!(get_bucket(url), Some("my-test-bucket".to_string()));
     }
-
 }

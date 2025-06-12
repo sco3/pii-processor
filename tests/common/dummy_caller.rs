@@ -1,10 +1,7 @@
 use async_trait::async_trait;
 use ductaper::llm_work::reducter::ReDucter;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use tracing::debug;
-
-
-
 
 pub struct DummyCaller {}
 #[async_trait]

@@ -4,14 +4,13 @@ use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::storage::s3_saver::S3Saver;
 
-
 use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
-use crate::worker_pool::event_counter::MinuteCounter;
 use crate::worker_pool::WorkerPool;
+use crate::worker_pool::event_counter::MinuteCounter;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use dotenv::dotenv;

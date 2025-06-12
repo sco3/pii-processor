@@ -18,7 +18,6 @@ impl SecretString {
     pub fn get_string(&self) -> String {
         self.value.clone()
     }
-    
 }
 
 impl From<String> for SecretString {
