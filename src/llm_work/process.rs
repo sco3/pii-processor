@@ -3,10 +3,10 @@ use crate::llm_work::pii_text::pii_text;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{Level, debug, error};
+use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
-    pub async fn process(&self, payload: Vec<u8>, _name: &str) {
+    pub async fn process(&self, payload: Vec<u8>, file_name: &str) {
         Self::debug("Payload", &payload);
 
         let Some(mut log) = Self::parse(payload.clone()) else {
@@ -25,11 +25,14 @@ impl LlmLogProcessor {
                 &redaction_text,
             )
             .await;
+
         //replace redacted strings
         let redacts = self.redactions(response).unwrap_or_default();
         if !redacts.is_empty() {
             self.update_log(&mut log, &redacts);
         }
+        debug!("Save result to {}", file_name);
+        self.saver.save(log, file_name).await;
     }
 
     fn debug(label: &str, payload: &Vec<u8>) {
