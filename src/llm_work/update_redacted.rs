@@ -7,8 +7,8 @@ use crate::session_log_models::SessionLogEntry::{
 use std::collections::HashMap;
 
 impl LlmLogProcessor {
-    pub fn update_log(&self, mut log: SessionLog, redacts: &HashMap<String, String>) {
-        for entry in &mut log {
+    pub fn update_log(&self, log: &mut SessionLog, redacts: &HashMap<String, String>) {
+        for entry in log.iter_mut() {
             match entry {
                 ChatMessage(chat_msg) => {
                     chat_msg.content = Self::upd_field(chat_msg.content.clone(), &redacts);

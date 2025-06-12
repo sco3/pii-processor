@@ -4,13 +4,13 @@ use crate::session_log_models::SessionLog;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{Level, debug, error};
+use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Vec<u8>) {
         Self::debug("Payload", &payload);
 
-        let Some(log) = Self::parse(payload.clone()) else {
+        let Some(mut log) = Self::parse(payload.clone()) else {
             Self::error("Parse error", &payload);
             return;
         };
@@ -29,7 +29,7 @@ impl LlmLogProcessor {
         //replace redacted strings
         let redacts = self.redactions(response).unwrap_or_default();
         if !redacts.is_empty() {
-            self.update_log(log, &redacts);
+            self.update_log(&mut log, &redacts);
         }
     }
 
