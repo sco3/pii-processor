@@ -23,7 +23,7 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         log_level: "debug".to_string(),
         redact_subject: "redact".to_string(),
         queue_stream: "queue".to_string(),
-        queue_stream_max_age: 3600 * 24,
+        queue_stream_max_age_seconds: 3600 * 24,
         nats_url: format!("nats://localhost:{nats_port}"),
         tenant: "tenant".to_string(),
         application: "application".to_string(),

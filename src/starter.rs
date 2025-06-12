@@ -36,9 +36,11 @@ impl Starter {
         info!("Create application.");
         color_backtrace::install();
         dotenv().ok();
-        list_env();
+
         let cfg = Cfg::from_env();
         init_log(Some(cfg.log_level.as_str()));
+
+        cfg.pretty();
 
         let connector = Connector::new(cfg.clone()).await;
         let llm_caller = LLmCaller {
@@ -118,7 +120,9 @@ impl Init for Starter {
 
         self.worker_pool.start().await;
 
-        signal::ctrl_c().await.expect("Failed to listen for shutdown signal");
+        signal::ctrl_c()
+            .await
+            .expect("Failed to listen for shutdown signal");
 
         info!("Stop application");
     }

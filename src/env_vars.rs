@@ -1,9 +1,11 @@
 use crate::expanduser::expand_user_path;
 use crate::secret_string::SecretString;
 use envy;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use tracing::info;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, Serialize)]
 pub struct Cfg {
     #[serde(default = "default_nats_url")]
     pub nats_url: String,
@@ -24,7 +26,7 @@ pub struct Cfg {
     pub redact_subject: String,
 
     #[serde(default = "default_queue_stream_max_age")]
-    pub queue_stream_max_age: u64,
+    pub queue_stream_max_age_seconds: u64,
 
     #[serde(default = "default_aws_region_s3")]
     pub aws_region_s3: String,
@@ -79,5 +81,15 @@ impl Cfg {
         envy::from_env::<Cfg>().unwrap_or_else(|err| {
             panic!("Failed to load configuration : {}", err);
         })
+    }
+
+    pub fn pretty(&self) {
+        if let Ok(value) = serde_json::to_value(self) {
+            if let Some(obj) = value.as_object() {
+                for (key, val) in obj.iter() {
+                    info!("{} : {}", key.to_uppercase(), val);
+                }
+            }
+        };
     }
 }
