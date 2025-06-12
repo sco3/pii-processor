@@ -20,11 +20,9 @@ use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use dotenv::dotenv;
 use std::sync::Arc;
-use std::time::Duration;
 use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
-use tokio::time::sleep;
 use tracing::info;
 
 pub struct Starter {
