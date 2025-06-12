@@ -4,7 +4,6 @@ use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::storage::s3_saver::S3Saver;
 
-use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 

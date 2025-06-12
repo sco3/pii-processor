@@ -2,7 +2,6 @@ use crate::expanduser::expand_user_path;
 use crate::secret_string::SecretString;
 use envy;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use tracing::info;
 
 #[derive(Deserialize, Debug, Clone, Serialize)]
