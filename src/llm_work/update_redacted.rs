@@ -11,14 +11,14 @@ impl LlmLogProcessor {
         for entry in log.iter_mut() {
             match entry {
                 ChatMessage(chat_msg) => {
-                    chat_msg.content = Self::upd_field(chat_msg.content.clone(), &redacts);
+                    chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
                 }
                 ChatGptEntry(chat_gpt) => {
                     for chat_msg in &mut chat_gpt.chat_gpt.request.chat_history {
-                        chat_msg.content = Self::upd_field(chat_msg.content.clone(), &redacts);
+                        chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
                     }
                     if let Some(msg) = chat_gpt.chat_gpt.response.message.as_mut() {
-                        msg.content = Self::upd_field(msg.content.clone(), &redacts);
+                        msg.content = Self::upd_field(msg.content.clone(), redacts);
                         // for tool_call in msg.tool_calls.as_mut() {
                         // }
                     }

@@ -36,7 +36,7 @@ pub async fn test_update_pii_redactions() {
 
     let out_str = serde_json::to_string_pretty(&log).unwrap();
     info!("Out: {}", out_str);
-    for (orig, _repl) in &reds {
-        assert_eq!(out_str.contains(orig), false);
+    for orig in reds.keys() {
+        assert!(!out_str.contains(orig));
     }
 }

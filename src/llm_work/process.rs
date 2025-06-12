@@ -1,6 +1,5 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::pii_text::pii_text;
-use crate::session_log_models::SessionLog;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -35,7 +34,7 @@ impl LlmLogProcessor {
 
     fn debug(label: &str, payload: &Vec<u8>) {
         if tracing::enabled!(Level::DEBUG) {
-            match str::from_utf8(&payload) {
+            match str::from_utf8(payload) {
                 Ok(text) => debug!("{} (non-UTF-8 bytes): {}", label, text),
                 Err(_) => debug!("{} (non-UTF-8 bytes): {:?}", label, payload),
             }
@@ -43,7 +42,7 @@ impl LlmLogProcessor {
     }
     fn error(label: &str, payload: &Vec<u8>) {
         if tracing::enabled!(Level::DEBUG) {
-            match str::from_utf8(&payload) {
+            match str::from_utf8(payload) {
                 Ok(text) => error!("{} (non-UTF-8 bytes): {}", label, text),
                 Err(_) => error!("{} (non-UTF-8 bytes): {:?}", label, payload),
             }

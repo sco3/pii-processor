@@ -1,6 +1,5 @@
 use regex::Regex;
-use serde_json::{Error, Value};
-use std::collections::HashMap;
+use serde_json::Value;
 use tracing::debug;
 
 /// Extracts a JSON-like fragment (specifically, a Rust HashMap or Python dictionary
