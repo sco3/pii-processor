@@ -1,17 +1,21 @@
 mod common;
 
-use aws_config::BehaviorVersion;
 use aws_config::meta::region::RegionProviderChain;
+use aws_config::BehaviorVersion;
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
+use std::fs::read_to_string;
 
 pub use ductaper::logging::init_tracing;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
 
+use ductaper::session_log_models::SessionLog;
+use ductaper::storage::s3_saver::S3Saver;
+use ductaper::storage::saver::Saver;
 use testcontainers::runners::AsyncRunner;
 use testcontainers_modules::minio;
-use tracing::info;
+use tracing::{debug, info};
 
 const MINIOADMIN: &str = "minioadmin";
 
@@ -118,7 +122,7 @@ async fn test_s3() {
         info!("Read data: {:?}", s);
         assert_eq!(out_data, in_data);
 
-        assert!(s3.del_object(test_bucket, key.clone()).await);
+        assert!(s3.del_object(test_bucket.clone(), key.clone()).await);
         // nonexisting bucket test
         assert!(!s3.del_object("no-bucket".to_string(), key.clone()).await);
 
@@ -126,6 +130,20 @@ async fn test_s3() {
             s3.get_object("no-bucket".to_string(), key.clone())
                 .await
                 .is_none()
+        );
+
+        let saver = S3Saver {
+            bucket: test_bucket.clone(),
+            s3helper: s3,
+        };
+        let log_str = read_to_string(
+            "tests/data/example_new_fields.json", //
         )
+        .unwrap();
+
+        if let Ok(log) = serde_json::from_str::<SessionLog>(log_str.as_str()) {
+            debug!("Ok");
+            saver.save(log, "asdf.json").await;
+        }
     }
 }
