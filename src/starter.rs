@@ -2,19 +2,24 @@ use crate::connector::Connector;
 use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
+use crate::storage::s3_saver::S3Saver;
+
 
 use crate::list_env::list_env;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::logging;
 use crate::redact_consumer::RedactConsumer;
-use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
+use crate::worker_pool::WorkerPool;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use dotenv::dotenv;
 use std::sync::Arc;
 
+use crate::storage::get_bucket::get_bucket;
+use crate::storage::s3ctx::S3Ctx;
+use crate::storage::s3helper::S3Helper;
 use tracing::info;
 
 pub struct Starter {
@@ -44,10 +49,37 @@ impl Starter {
         let system_prompt = crate::llm_work::prompt::prompt(
             &cfg.system_prompt_location, //
         );
+        let bucket = get_bucket(cfg.aggregator_sessions_log_url.as_str()).unwrap();
+        let access_key: Option<String> = match cfg.aws_access_key_id {
+            Some(v) => Some(v.get_string()),
+            None => None,
+        };
+        let secret_key: Option<String> = match cfg.aws_secret_access_key {
+            Some(v) => Some(v.get_string()),
+            None => None,
+        };
+        let access_token: Option<String> = match cfg.aws_access_token {
+            Some(v) => Some(v.get_string()),
+            None => None,
+        };
+
+        let s3ctx = S3Ctx::new(
+            bucket.clone(),
+            cfg.aws_region_s3,
+            access_key,
+            secret_key,
+            access_token,
+            None,
+        )
+        .await;
+
+        let s3helper = S3Helper::new(s3ctx.unwrap());
+        let s3saver = Arc::new(S3Saver { s3helper, bucket });
         let processor = LlmLogProcessor::new(
             shared_llm_caller,
             system_prompt, //
             cfg.llm_model,
+            s3saver,
         );
         let llm_log_processor = Arc::new(processor);
 

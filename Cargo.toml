@@ -28,6 +28,7 @@ async-trait = "0.1.88"
 color-backtrace = "0.7.0"
 async-channel = "2.3.1"
 regex = "1.11.1"
+url = "2.5.4"
 
 
 [dev-dependencies]

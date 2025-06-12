@@ -1,4 +1,7 @@
+mod common;
+
 use async_trait::async_trait;
+use common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::llm_work::reducter::ReDucter;
@@ -34,6 +37,7 @@ async fn test_llm_log_processor() {
         caller,
         system_prompt: String::new(),
         model: "haiku".to_string(),
+        saver: Arc::new(DummySaver::new()),
     };
 
     // Load test file from relative path

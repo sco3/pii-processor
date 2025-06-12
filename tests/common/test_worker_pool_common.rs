@@ -25,6 +25,8 @@ use testcontainers::{
     core::{IntoContainerPort, WaitFor},
     runners::AsyncRunner,
 };
+use crate::common::dummy_saver::DummySaver;
+
 #[allow(unused_variables)]
 #[allow(dead_code)]
 pub struct TestPoolResult {
@@ -71,6 +73,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         caller, //
         system_prompt,
         "haiku".to_string(),
+        Arc::new(DummySaver::new()),
     );
     let shared_processor = Arc::new(processor);
 

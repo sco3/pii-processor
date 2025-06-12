@@ -1,5 +1,6 @@
 mod common;
 use common::dummy_caller::DummyCaller;
+use common::dummy_saver::DummySaver;
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::session_log_models::SessionLog;
@@ -21,6 +22,7 @@ pub async fn test_update_pii_redactions() {
         Arc::new(DummyCaller {}), //
         "".to_string(),
         "".to_string(),
+        Arc::new(DummySaver::new()),
     );
     proc.update_log(&mut log, &reds);
 

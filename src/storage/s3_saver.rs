@@ -3,9 +3,9 @@ use crate::storage::s3helper::S3Helper;
 use crate::storage::saver::Saver;
 use async_trait::async_trait;
 use tracing::error;
-struct S3Saver {
-    s3helper: S3Helper,
-    bucket: String,
+pub struct S3Saver {
+    pub s3helper: S3Helper,
+    pub bucket: String,
 }
 
 #[async_trait]

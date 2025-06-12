@@ -1,11 +1,24 @@
+use async_trait::async_trait;
 use ductaper::init_logging::init_tracing;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
+use ductaper::session_log_models::SessionLog;
+use ductaper::storage::saver::Saver;
 use std::fs::{read, read_to_string};
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
 use tracing::debug;
+
 const TOKEN: &str = "sk-1234";
 const URL: &str = "http://0.0.0.0:4000/chat/completions";
+
+pub struct DummySaver {}
+#[async_trait]
+impl Saver for DummySaver {
+    async fn save(&self, _log: SessionLog, _file_name: &str) -> bool {
+        true
+    }
+}
 
 #[tokio::main]
 async fn main() {
@@ -33,6 +46,7 @@ async fn main() {
             caller.clone(), //
             system_prompt.clone(),
             model.to_string(),
+            Arc::new(DummySaver {}),
         );
 
         processor.process(session_log.clone()).await;
