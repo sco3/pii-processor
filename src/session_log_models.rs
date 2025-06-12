@@ -86,9 +86,9 @@ pub struct ArchType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ToolCallRef {
-    pub tool_calls: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub turn: Option<i32>,
+    pub tool_calls: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

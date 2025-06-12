@@ -1316,6 +1316,7 @@ dependencies = [
  "home",
  "httpmock",
  "mime",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",

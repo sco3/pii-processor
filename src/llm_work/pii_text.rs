@@ -1,6 +1,6 @@
 use crate::llm_work;
-use crate::session_log_models::SessionLogEntry::ChatMessage;
 use crate::session_log_models::SessionLog;
+use crate::session_log_models::SessionLogEntry::ChatMessage;
 
 use llm_work::conv_roles::{ASSISTANT, USER};
 

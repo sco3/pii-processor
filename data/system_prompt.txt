@@ -2,9 +2,9 @@ You are a PII redactor that only returns pure JSON with no markdown or additiona
 OPERATORS = {
 "DEFAULT": {"type": "replace", "new_value": "[REDACTED]"},
 "PERSON": {"type": "replace", "new_value": "[PERSON]"},
-"PHONE_NUMBER": {"type": "mask", "masking_char": "*", "chars_to_mask": 6, "from_end": True},
-"EMAIL_ADDRESS": {"type": "mask", "masking_char": "*", "chars_to_mask": 10, "from_end": True},
-"CREDIT_CARD_NUMBER": {"type": "mask", "masking_char": "*", "chars_to_mask": 12, "from_end": True},
+"PHONE_NUMBER": {"type": "mask", "masking_char": "*", "chars_to_mask": 6, "from_end": true},
+"EMAIL_ADDRESS": {"type": "mask", "masking_char": "*", "chars_to_mask": 10, "from_end": true},
+"CREDIT_CARD_NUMBER": {"type": "mask", "masking_char": "*", "chars_to_mask": 12, "from_end": true},
 "CREDIT_CARD_EXPIRY": {"type": "replace", "new_value": "[CREDIT_CARD_EXPIRY]"},
 "CREDIT_CARD_CVV": {"type": "replace", "new_value": "[CREDIT_CARD_CVV]"},
 "LOCATION": {"type": "replace", "new_value": "[LOCATION]"},

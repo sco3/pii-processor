@@ -2,7 +2,7 @@ mod common;
 
 use common::test_worker_pool_common::test_pool;
 use std::sync::atomic::Ordering;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 use tracing::info;
 
 #[tokio::test]

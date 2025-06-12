@@ -1,4 +1,4 @@
-use ductaper::session_log_models::{SessionLogEntry, SessionLog};
+use ductaper::session_log_models::{SessionLog, SessionLogEntry};
 
 use std::fs;
 
@@ -29,4 +29,8 @@ fn test_deserialize_example_new_fields() {
     }
 
     assert_eq!(session_log.len(), 23, "Expected 23 entries in session log");
+    let out = serde_json::to_string_pretty(&session_log).unwrap();
+    //fs::write("/tmp/test_deserialize.rs", out).unwrap();
+    let diff = (out.len() as f64 - file_content.len() as f64).abs();
+    assert!(diff <= 10.0);
 }
