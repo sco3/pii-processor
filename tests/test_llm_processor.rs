@@ -6,6 +6,7 @@ use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::llm_work::reducter::ReDucter;
 use serde_json::Value;
+use std::collections::HashSet;
 use std::fs;
 use std::sync::Arc;
 use tracing::{debug, info};
@@ -38,6 +39,7 @@ async fn test_llm_log_processor() {
         system_prompt: String::new(),
         model: "haiku".to_string(),
         saver: Arc::new(DummySaver::new()),
+        valid_redactions: None,
     };
 
     // Load test file from relative path

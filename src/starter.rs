@@ -22,6 +22,7 @@ use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
 use tracing::info;
+use crate::llm_work::prompt::read_prompt;
 
 pub struct Starter {
     pub redact_consumer: Arc<Mutex<RedactConsumer>>,
@@ -49,7 +50,7 @@ impl Starter {
         };
         let shared_llm_caller = Arc::new(llm_caller);
 
-        let system_prompt = crate::llm_work::prompt::prompt(
+        let system_prompt = read_prompt(
             &cfg.system_prompt_location, //
         );
         let bucket = get_bucket(cfg.aggregator_sessions_log_url.as_str()).unwrap();

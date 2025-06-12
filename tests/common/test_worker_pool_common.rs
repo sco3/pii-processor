@@ -16,7 +16,7 @@ use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 
 use crate::common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_caller::LLmCaller;
-use ductaper::llm_work::prompt::prompt;
+use ductaper::llm_work::prompt::read_prompt;
 use ductaper::publisher::Publisher;
 use ductaper::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
@@ -68,7 +68,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         Some("sk-1234".to_string()),
     ));
 
-    let system_prompt = prompt(&"data/system_prompt.txt".to_string());
+    let system_prompt = read_prompt(&"data/system_prompt.txt".to_string());
     let processor = LlmLogProcessor::new(
         caller, //
         system_prompt,
