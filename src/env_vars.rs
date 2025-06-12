@@ -11,9 +11,10 @@ pub struct Cfg {
 
     #[serde(default = "default_log_level")]
     pub log_level: String,
-
     #[serde(default = "default_llm_token")]
     pub llm_token: SecretString,
+    #[serde(default = "default_llm_url")]
+    pub llm_url: String,
 
     pub tenant: String,
     pub application: String,
@@ -39,6 +40,10 @@ pub struct Cfg {
     pub system_prompt_location: String,
     #[serde(default = "default_redact_max_tasks")]
     pub redact_max_tasks: usize,
+}
+
+fn default_llm_url() -> String {
+    "http://localhost:4000/chat/completions".to_string()
 }
 
 fn default_redact_max_tasks() -> usize {

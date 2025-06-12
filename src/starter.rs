@@ -4,7 +4,6 @@ use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::storage::s3_saver::S3Saver;
 
-
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
 use crate::logging::init_log;
@@ -43,8 +42,8 @@ impl Starter {
 
         let connector = Connector::new(cfg.clone()).await;
         let llm_caller = LLmCaller {
-            endpoint: "".to_string(),
-            model: "".to_string(),
+            endpoint: cfg.llm_url.clone(),
+            model: cfg.llm_model.clone(),
             bearer: None,
             client: Default::default(),
         };

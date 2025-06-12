@@ -75,15 +75,21 @@ impl RedactConsumer {
 
     pub async fn subscribe(&mut self, cfg: &Cfg) {
         let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
-            Ok(stream) => stream,
+            Ok(stream) => {
+                debug!("Found existing stream: {:?}", stream);
+                stream
+            }
             Err(err) => {
                 error!("Failed to get stream: {}", err);
                 return;
             }
         };
         let subj = Self::get_full_subject(cfg);
+        debug!("Attempting to subscribe to: {}", subj);
+
         let durable_safe = subj.replace('.', "_");
         let durable_name = format!("consumer_{}", durable_safe);
+
         info!("Consumer: {} subject: {}", durable_name, subj);
 
         self.subject = Some(subj.clone());
@@ -93,7 +99,7 @@ impl RedactConsumer {
                     durable_name.as_str(),
                     PullConfig {
                         durable_name: Some(durable_name.clone()),
-                        filter_subject: subj,
+                        filter_subjects: vec![subj],
                         ..Default::default()
                     },
                 )
@@ -110,7 +116,7 @@ impl RedactConsumer {
 
     pub async fn update_stream(&self, cfg: &Cfg) {
         let subj = Self::get_full_subject(cfg);
-        let mut subjects = vec![subj.clone(), "test".to_string()];
+        let mut subjects = vec![subj.clone()];
         let mut stream_config = Self::get_stream_cfg(cfg, &mut subjects);
         match self
             .jetstream
