@@ -3,12 +3,12 @@ use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
+use reqwest::header::{HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
 use serde_json::json;
+use serde_json::Value;
 use std::time::Instant;
-use tracing::{Level, debug, error, info};
+use tracing::{debug, error, info, Level};
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -75,10 +75,19 @@ impl LLmCaller {
 
         if !res.status().is_success() {
             let status = res.status();
+
             let text = res.text().await.ok();
             error!("Request failed with status {}: {:?}", status, text);
             return None;
         }
+
+        let litellm_took = res
+            .headers()
+            .get("x-litellm-response-duration-ms")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("0");
+
+        debug!("Litellm took: {} ms", litellm_took);
 
         match res.json::<Value>().await {
             Ok(body) => {
@@ -104,6 +113,7 @@ impl LLmCaller {
 #[async_trait]
 impl ReDucter for LLmCaller {
     async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
+        let start = Instant::now();
         let body = self.build_body(model, prompt, message);
         let pretty_body = pretty(&body);
         debug!(
@@ -113,7 +123,6 @@ impl ReDucter for LLmCaller {
             self.endpoint
         );
         let req = self.build_request(body);
-        let start = Instant::now();
         let output = Self::send(req).await;
         info!("Call took: {} ms", start.elapsed().as_millis());
 
