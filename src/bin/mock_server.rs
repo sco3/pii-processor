@@ -1,9 +1,9 @@
-use axum::routing::post;
 use axum::Router;
+use axum::body::Body;
+use axum::http::{Response, header};
+use axum::routing::post;
 use ductaper::util::exit_codes::ExitCode;
 use std::process::exit;
-use axum::body::Body;
-use axum::http::{header, Response};
 
 #[tokio::main]
 pub async fn main() {
@@ -14,9 +14,8 @@ pub async fn main() {
             Response::builder()
                 .header(header::CONTENT_TYPE, "application/json")
                 .body(Body::from(content))
-                .unwrap()            
-            
-            }),
+                .unwrap()
+        }),
     );
 
     let listener = match tokio::net::TcpListener::bind("127.0.0.1:4000").await {

@@ -4,7 +4,7 @@ use crate::llm_work::process_result::ProcessResult;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{debug, error, Level};
+use tracing::{Level, debug, error};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Vec<u8>, file_name: &str) -> ProcessResult {

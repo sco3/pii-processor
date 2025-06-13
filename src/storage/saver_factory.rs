@@ -39,12 +39,12 @@ pub async fn get_saver(cfg: &Cfg, storage_toggle: Toggle) -> Arc<dyn Saver + Sen
         };
 
         let s3helper = S3Helper::new(s3ctx);
-        let s3saver = Arc::new(S3Saver {
+
+        (Arc::new(S3Saver {
             s3helper,
             bucket,
             toggle: storage_toggle,
-        });
-        s3saver
+        })) as _
     } else {
         let local_saver = Arc::new(
             LocalSaver::new(cfg.aggregator_sessions_log_url.clone()), //

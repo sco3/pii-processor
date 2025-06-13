@@ -21,7 +21,7 @@ impl Saver for LocalSaver {
         );
         let mut full_path = String::new();
         full_path.push_str(&self.dir);
-        full_path.push_str("/");
+        full_path.push('/');
         full_path.push_str(file_name);
 
         match serde_json::to_string_pretty(&log) {

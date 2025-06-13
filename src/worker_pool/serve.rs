@@ -46,7 +46,8 @@ impl WorkerPool {
                 }
                 ProcessResult::ParseError => {
                     error!("Failed to parse, acknowledge {}", session_log_name);
-                    Self::ack(&msg).await;                }
+                    Self::ack(&msg).await;
+                }
                 ProcessResult::Error => {
                     error!("Failed to process: {}", session_log_name);
                 }
