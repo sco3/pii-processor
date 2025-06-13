@@ -1,5 +1,5 @@
 use std::sync::Once;
-use tracing::{error, info, Level};
+use tracing::{Level, error, info};
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 pub static LOG_INIT: Once = Once::new();

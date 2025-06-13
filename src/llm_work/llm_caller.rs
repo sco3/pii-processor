@@ -1,18 +1,15 @@
 use crate::data::ai_tags::Ai;
 use crate::llm_work::reducter::ReDucter;
-use std::collections::HashMap;
-use std::sync::Arc;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
 use moka::future::Cache;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
-use serde_json::json;
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
+use serde_json::json;
 use std::time::{Duration, Instant};
-use tokio::sync::RwLock;
-use tracing::{debug, error, info, Level};
+use tracing::{Level, debug, error, info};
 
 pub struct LLmCaller {
     pub endpoint: String,

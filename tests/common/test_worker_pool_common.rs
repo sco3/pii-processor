@@ -3,8 +3,8 @@ use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 
-use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 
 use tracing::info;
 
@@ -22,9 +22,9 @@ use ductaper::mq::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner, ContainerAsync,
-    GenericImage,
-    ImageExt,
+    ContainerAsync, GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 
 #[allow(unused_variables)]

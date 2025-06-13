@@ -13,7 +13,7 @@ pub async fn update_redact_stream(
         .update_stream(
             cfg.queue_stream.clone(), //
             vec![StreamAdmin::get_full_subject(
-                &cfg,
+                cfg,
                 cfg.redact_subject.clone(),
             )],
         )

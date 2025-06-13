@@ -68,10 +68,10 @@ impl StreamAdmin {
         }
     }
 
-    fn get_stream_cfg(stream: String, subjects: &Vec<String>) -> Config {
+    fn get_stream_cfg(stream: String, subjects: &[String]) -> Config {
         async_nats::jetstream::stream::Config {
             name: stream,
-            subjects: subjects.clone(),
+            subjects: subjects.to_owned(),
             ..Default::default()
         }
     }

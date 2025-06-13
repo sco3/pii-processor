@@ -3,7 +3,7 @@ pub mod data;
 pub mod llm_work;
 pub mod mq;
 pub mod probe;
+pub mod starter;
 pub mod storage;
 pub mod util;
 pub mod worker_pool;
-pub mod starter;
