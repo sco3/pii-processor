@@ -79,7 +79,7 @@ pub struct ToolCall {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ArchType {
+pub struct ArchTypeItem {
     #[serde(rename = "architecture_type")]
     pub architecture_type: Architecture,
 }
@@ -92,12 +92,12 @@ pub struct ToolCallRef {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ToolCallRefs {
+pub struct ToolCallsItem {
     pub tool_calls: Vec<ToolCallRef>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ChatMessage {
+pub struct ChatMessageItem {
     pub role: String,
     pub content: String,
 
@@ -116,7 +116,7 @@ pub struct TimeSummaryItem {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Request {
-    pub chat_history: Vec<ChatMessage>,
+    pub chat_history: Vec<ChatMessageItem>,
     pub functions: Vec<Function>,
     pub model: String,
     pub gpt_client: String,
@@ -128,7 +128,7 @@ pub struct Response {
     pub agent: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub message: Option<ChatMessage>,
+    pub message: Option<ChatMessageItem>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -159,7 +159,7 @@ pub struct ChatGpt {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ChatGptEntry {
+pub struct ChatGptItem {
     pub chat_gpt: ChatGpt,
 }
 
@@ -170,11 +170,11 @@ pub struct ChatGptEntry {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SessionLogEntry {
-    ArchType(ArchType),
-    ToolCallRefs(ToolCallRefs),
-    ChatMessageEnum(ChatMessage),
-    ChatGptEntry(ChatGptEntry),
-    TimeSummaryItem(TimeSummaryItem),
+    ArchTypeEnum(ArchTypeItem),
+    ToolCallRefsEnum(ToolCallsItem),
+    ChatMessageEnum(ChatMessageItem),
+    ChatGptEnum(ChatGptItem),
+    TimeSummaryEnum(TimeSummaryItem),
 }
 
 /// Root type for session log

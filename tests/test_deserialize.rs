@@ -18,7 +18,7 @@ fn test_deserialize_example_new_fields() {
 
     // For example, check first entry type
     match &session_log[0] {
-        SessionLogEntry::ArchType(msg) => {
+        SessionLogEntry::ArchTypeEnum(msg) => {
             let str = serde_json::to_string(msg).unwrap_or_default();
             assert_eq!(str, r#"{"architecture_type":"Neocortex"}"#);
         }

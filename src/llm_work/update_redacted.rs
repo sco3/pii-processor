@@ -3,7 +3,7 @@ use crate::data::session_log_models::SessionLog;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
 use crate::data::session_log_models::SessionLogEntry::{
-    ArchType, ChatGptEntry, ChatMessageEnum, TimeSummaryItem, ToolCallRefs,
+    ArchTypeEnum, ChatGptEnum, ChatMessageEnum, TimeSummaryEnum, ToolCallRefsEnum,
 };
 use std::collections::HashMap;
 
@@ -15,7 +15,7 @@ impl LlmLogProcessor {
                     chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
                     //Self::process_tool_calls(chat_msg);
                 }
-                ChatGptEntry(chat_gpt) => {
+                ChatGptEnum(chat_gpt) => {
                     for chat_msg in &mut chat_gpt.chat_gpt.request.chat_history {
                         chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
                     }
@@ -25,9 +25,9 @@ impl LlmLogProcessor {
                         // }
                     }
                 }
-                ArchType(_arch_type) => {}
-                ToolCallRefs(_tool_call_ref) => {}
-                TimeSummaryItem(_time_summary) => {}
+                ArchTypeEnum(_arch_type) => {}
+                ToolCallRefsEnum(_tool_call_ref) => {}
+                TimeSummaryEnum(_time_summary) => {}
             }
         }
     }
