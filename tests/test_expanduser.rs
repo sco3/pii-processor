@@ -1,7 +1,7 @@
 use std::fs::{self, File};
 use std::io::Write;
 
-use ductaper::expanduser::expand_user_path;
+use ductaper::config::expanduser::expand_user_path;
 
 #[test]
 fn test_expand_user_path() {

@@ -8,8 +8,8 @@ impl Ai {
     pub const MESSAGES: &'static str = "messages";
     pub const TEMPERATURE: &'static str = "temperature";
     pub const MAX_TOKENS: &'static str = "max_tokens";
-    pub const TOP_P: &'static str = "top_p";
+    //pub const TOP_P: &'static str = "top_p";
     pub const USER: &'static str = "user";
-    pub const SYSTEM: &str = "system";
-    pub const CONTENT: &str = "content";
+    pub const SYSTEM: &'static str = "system";
+    pub const CONTENT: &'static str = "content";
 }

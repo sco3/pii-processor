@@ -1,5 +1,5 @@
 use ductaper::config::env_vars::Cfg;
-use ductaper::secret_string::SecretString;
+use ductaper::config::secret_string::SecretString;
 
 #[allow(dead_code)]
 pub const AGGREGATOR_SESSIONS_LOG_URL: &str = "AGGREGATOR_SESSIONS_LOG_URL";

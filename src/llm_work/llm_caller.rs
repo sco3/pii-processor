@@ -1,4 +1,4 @@
-use crate::ai_tags::Ai;
+use crate::data::ai_tags::Ai;
 use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;

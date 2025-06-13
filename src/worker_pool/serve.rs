@@ -1,5 +1,5 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::session_log_header::SESSION_LOG_HEADER;
+use crate::mq::session_log_header::SESSION_LOG_HEADER;
 use crate::worker_pool::WorkerPool;
 use async_channel::Receiver;
 use async_nats::jetstream::Message;

@@ -1,4 +1,4 @@
-use ductaper::secret_string::SecretString;
+use ductaper::config::secret_string::SecretString;
 #[test]
 fn test_secret_string_values() {
     let asdf = SecretString::new("asdf-1234");

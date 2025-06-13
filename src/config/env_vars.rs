@@ -1,5 +1,5 @@
-use crate::expanduser::expand_user_path;
-use crate::secret_string::SecretString;
+use crate::config::expanduser::expand_user_path;
+use crate::config::secret_string::SecretString;
 use envy;
 use serde::{Deserialize, Serialize};
 use tracing::info;
