@@ -16,3 +16,4 @@ pub mod session_log_models;
 pub mod starter;
 pub mod storage;
 pub mod worker_pool;
+pub mod mq;
