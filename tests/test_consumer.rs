@@ -1,7 +1,7 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use async_channel::{Receiver, Sender, bounded};
+use async_channel::{bounded, Receiver, Sender};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 
@@ -15,13 +15,14 @@ use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    GenericImage, ImageExt,
-    core::{IntoContainerPort, WaitFor},
-    runners::AsyncRunner,
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
+    GenericImage,
+    ImageExt,
 };
 
-use tokio::time::Duration as TokioDuration;
+use ductaper::mq::admin::StreamAdmin;
 use tokio::time::sleep;
+use tokio::time::Duration as TokioDuration;
 use tracing::{debug, info};
 
 struct DummyHandler {
@@ -96,7 +97,10 @@ async fn test_consumer() {
             msg_send,
         )
         .await;
-        consumer.update_stream(&cfg).await;
+
+        let admin = StreamAdmin::new(&conn);
+        admin.update_redact_stream(&cfg, false).await;
+
         consumer.subscribe(&cfg).await;
         let run = consumer.get_run_flag_clone();
         let subj = consumer.subject.clone().unwrap_or_default();

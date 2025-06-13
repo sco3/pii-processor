@@ -1,6 +1,8 @@
 use crate::connector::Connector;
 use crate::env_vars::Cfg;
+use std::process::exit;
 
+use crate::exit_codes::ExitCode;
 use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::Context;
 use tracing::{debug, error};
@@ -73,6 +75,25 @@ impl StreamAdmin {
             name: stream,
             subjects: subjects.clone(),
             ..Default::default()
+        }
+    }
+    pub async fn update_redact_stream(&self, cfg: &Cfg, exit_app: bool) {
+        if let Err(e) = self
+            .update_stream(
+                cfg.queue_stream.clone(), //
+                vec![StreamAdmin::get_full_subject(
+                    &cfg,
+                    cfg.redact_subject.clone(),
+                )],
+            )
+            .await
+        {
+            if exit_app {
+                error!("Cannot update stream {}", e);
+                exit(ExitCode::NatsError.code());
+            } else {
+                panic!("Cannot update stream {}", e);
+            }
         }
     }
 }
