@@ -1,10 +1,11 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
+use crate::llm_work::process_result::ProcessResult;
 use crate::mq::session_log_header::SESSION_LOG_HEADER;
 use crate::worker_pool::WorkerPool;
 use async_channel::Receiver;
 use async_nats::jetstream::Message;
 use std::sync::Arc;
-use tracing::{debug, error};
+use tracing::{debug, error, info};
 
 impl WorkerPool {
     pub async fn serve_messages(
@@ -32,12 +33,30 @@ impl WorkerPool {
                     continue; // Skip processing without header
                 }
             };
-            processor
+            match processor
                 .process(
                     msg.payload.to_vec(), //
                     session_log_name,
                 )
-                .await;
+                .await
+            {
+                ProcessResult::Ok => {
+                    info!("PII processing finished: {}", session_log_name);
+                    Self::ack(&msg).await;
+                }
+                ProcessResult::ParseError => {
+                    error!("Failed to parse, acknowledge {}", session_log_name);
+                    Self::ack(&msg).await;                }
+                ProcessResult::Error => {
+                    error!("Failed to process: {}", session_log_name);
+                }
+            }
+        }
+    }
+
+    async fn ack(msg: &Message) {
+        if let Err(e) = msg.ack().await {
+            error!("Acknowledge: {}", e)
         }
     }
 }

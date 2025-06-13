@@ -1,0 +1,23 @@
+[
+  {
+    "role": "user",
+    "content": "I am Joulie Yen. I forgot my pin for card 1234 5678 1235 1236",
+    "turn": 1
+  },
+  {
+    "role": "assistant",
+    "content": "To properly assist Joulie Yen, I need cvv for card 1234 5678 1235 1236",
+    "tool_calls": [
+      {
+        "index": 1,
+        "function": {
+          "name": "faq_expert_1",
+          "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+        },
+        "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
+        "type": "function"
+      }
+    ],
+    "turn": 1
+  }
+ ]

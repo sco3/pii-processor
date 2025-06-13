@@ -10,6 +10,7 @@ mod parse;
 pub mod pii_text;
 pub mod preview;
 mod process;
+pub mod process_result;
 pub mod prompt;
 pub mod reducter;
 pub mod update_redacted;

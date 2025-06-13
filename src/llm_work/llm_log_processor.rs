@@ -10,3 +10,4 @@ pub struct LlmLogProcessor {
     pub saver: Arc<dyn Saver + Send + Sync>,
     pub valid_redactions: Option<HashSet<String>>,
 }
+

@@ -2,4 +2,4 @@
 
 set -xueo pipefail
 
-nats pub localhost.localhost.redact-log "$(cat ../../tests/data/to_update.json)" --header=session_log_name:redacted.json
+nats pub localhost.localhost.redact-log "$(cat to_update.json)" --header=session_log_name:redacted.json

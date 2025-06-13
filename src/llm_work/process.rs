@@ -1,17 +1,18 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::pii_text::pii_text;
+use crate::llm_work::process_result::ProcessResult;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{Level, debug, error};
+use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
-    pub async fn process(&self, payload: Vec<u8>, file_name: &str) {
+    pub async fn process(&self, payload: Vec<u8>, file_name: &str) -> ProcessResult {
         Self::debug("Payload", &payload);
 
         let Some(mut log) = Self::parse(payload.clone()) else {
             Self::error("Parse error", &payload);
-            return;
+            return ProcessResult::ParseError;
         };
 
         let redaction_text = pii_text(&log);
@@ -26,13 +27,19 @@ impl LlmLogProcessor {
             )
             .await;
 
-        //replace redacted strings
-        let redacts = self.redactions(response).unwrap_or_default();
-        if !redacts.is_empty() {
-            self.update_log(&mut log, &redacts);
+        if let Some(r) = response {
+            //replace redacted strings
+            let redacts = self.redactions(r);
+            if !redacts.is_empty() {
+                self.update_log(&mut log, &redacts);
+            }
+            debug!("Save result to {}", file_name);
+            self.saver.save(log, file_name).await;
+            return ProcessResult::Ok;
+        } else {
+            error!("LLM failure")
         }
-        debug!("Save result to {}", file_name);
-        self.saver.save(log, file_name).await;
+        ProcessResult::Error
     }
 
     fn debug(label: &str, payload: &Vec<u8>) {
@@ -92,13 +99,14 @@ impl LlmLogProcessor {
 
         Some(result)
     }
-    fn redactions(&self, response: Option<Value>) -> Option<HashMap<String, String>> {
-        let value = response?;
-        let content = Self::extract_content(&value)?;
-        debug!("Content: {:?}", content);
-
-        let redactions = self.parse_redactions(content)?;
-        debug!("Redactions: {:?}", redactions);
-        Some(redactions)
+    fn redactions(&self, value: Value) -> HashMap<String, String> {
+        if let Some(content) = Self::extract_content(&value) {
+            debug!("Content: {:?}", content);
+            if let Some(redactions) = self.parse_redactions(content) {
+                debug!("Redactions: {:?}", redactions);
+                return redactions;
+            }
+        }
+        HashMap::new()
     }
 }

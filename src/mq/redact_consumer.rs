@@ -2,13 +2,13 @@ use crate::config::env_vars::Cfg;
 
 use crate::mq::connector::Connector;
 use async_channel::Sender;
-use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
+use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 use crate::llm_work::preview::preview_bytes;
 use tracing::{debug, error, info};
@@ -27,9 +27,10 @@ impl RedactConsumer {
         match consumer.fetch().max_messages(1).messages().await {
             Ok(mut messages) => {
                 while let Some(Ok(message)) = messages.next().await {
-                    if let Err(e) = message.ack().await {
-                        error!("Ack failed: {}", e);
-                    }
+                    // ack after processing
+                    // if let Err(e) = message.ack().await {
+                    //     error!("Ack failed: {}", e);
+                    // }
                     debug!("Got message: {:?}", preview_bytes(&message.payload));
                     if let Err(e) = self.sender.send(message).await {
                         error!("Failed to send message to channel: {}", e);
