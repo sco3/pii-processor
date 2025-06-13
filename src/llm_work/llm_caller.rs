@@ -1,20 +1,25 @@
 use crate::data::ai_tags::Ai;
 use crate::llm_work::reducter::ReDucter;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
+use serde_json::Value;
 use std::time::Instant;
-use tracing::{Level, debug, error, info};
+use tokio::sync::RwLock;
+use tracing::{debug, error, info, Level};
 
 pub struct LLmCaller {
     pub endpoint: String,
     pub model: String,
     pub bearer: Option<String>,
     pub client: reqwest::Client,
+    pub cache_flag: bool,
+    cache: Arc<RwLock<HashMap<Vec<u8>, Value>>>,
 }
 
 impl LLmCaller {
@@ -22,6 +27,7 @@ impl LLmCaller {
         endpoint: impl Into<String>,
         model: impl Into<String>,
         token: Option<String>,
+        cache_flag: bool,
     ) -> Self {
         let bearer = Self::add_bearer(token);
 
@@ -30,6 +36,8 @@ impl LLmCaller {
             model: model.into(),
             bearer,
             client: reqwest::Client::new(),
+            cache_flag,
+            cache: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -109,24 +117,43 @@ impl LLmCaller {
             }
         }
     }
+
+    async fn direct_send(&self, start: Instant, body: Value) -> Option<Value> {
+        let req = self.build_request(body);
+        let output = Self::send(req).await;
+        info!("Call took: {} ms", start.elapsed().as_millis());
+        output
+    }
 }
 #[async_trait]
 impl ReDucter for LLmCaller {
     async fn call(&self, model: &str, prompt: &str, message: &str) -> Option<Value> {
         let start = Instant::now();
         let body = self.build_body(model, prompt, message);
-        let pretty_body = pretty(&body);
-        debug!(
-            "Request body size: {} body: {}\n endpoint: {}",
-            pretty_body.len(),
-            pretty_body,
-            self.endpoint
-        );
-        let req = self.build_request(body);
-        let output = Self::send(req).await;
-        info!("Call took: {} ms", start.elapsed().as_millis());
-
-        output
+        if tracing::enabled!(Level::DEBUG) {
+            let pretty_body = pretty(&body);
+            debug!(
+                "Request body size: {} body: {}\n endpoint: {}",
+                pretty_body.len(),
+                pretty_body,
+                self.endpoint
+            );
+        }
+        if self.cache_flag {
+            if let Ok(key) = serde_json::to_vec(&body) {
+                if let Some(v) = self.cache.read().await.get(&key).cloned() {
+                    info!("Cache hit: {} ms", start.elapsed().as_millis());
+                    return Some(v);
+                } else {
+                    let v = self.direct_send(start, body).await;
+                    if let Some(ref v2) = v {
+                        self.cache.write().await.insert(key, v2.clone());
+                    }
+                    return v;
+                }
+            }
+        }
+        self.direct_send(start, body).await
     }
 }
 

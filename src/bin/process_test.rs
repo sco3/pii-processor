@@ -38,6 +38,7 @@ async fn main() {
         URL, //
         "haiku",
         Some(TOKEN.to_string()),
+        false,
     ));
 
     for model in models {

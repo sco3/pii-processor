@@ -42,6 +42,12 @@ pub struct Cfg {
     pub redact_max_tasks: usize,
     #[serde(default = "default_redact_probe_port")]
     pub redact_probe_port: u16,
+    #[serde(default = "default_redact_cache_enabled")]
+    pub redact_cache_enabled: bool,
+}
+
+fn default_redact_cache_enabled() -> bool {
+    false
 }
 
 fn default_redact_probe_port() -> u16 {

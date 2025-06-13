@@ -3,8 +3,8 @@ use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 
-use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
+use std::sync::Arc;
 
 use tracing::info;
 
@@ -22,9 +22,9 @@ use ductaper::mq::redact_consumer::RedactConsumer;
 use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    ContainerAsync, GenericImage, ImageExt,
-    core::{IntoContainerPort, WaitFor},
-    runners::AsyncRunner,
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner, ContainerAsync,
+    GenericImage,
+    ImageExt,
 };
 
 #[allow(unused_variables)]
@@ -66,6 +66,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         "http:localhost:4000/chat/completions",
         "haiku",
         Some("sk-1234".to_string()),
+        false,
     ));
 
     let system_prompt = read_prompt(&"data/system_prompt.txt".to_string());

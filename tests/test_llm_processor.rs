@@ -30,6 +30,7 @@ async fn test_llm_log_processor() {
         "http://0.0.0.0:4000/chat/completions",
         "nova",
         Some("sk-1234".to_string()),
+        false,
     );
     let caller = Arc::new(raw_caller);
     // prompt_location: "//tmp".to_string(),

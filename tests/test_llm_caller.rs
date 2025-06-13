@@ -51,6 +51,7 @@ async fn test_llm_caller() {
         server.url("/chat/completions").to_string(),
         "nova".to_string(),
         Some("sk-1234".to_string()),
+        false,
     );
     caller.call("haiku", "Hello", "Hi").await;
     mock.assert();
@@ -67,7 +68,12 @@ async fn test_send_request_failure() {
         then.status(500).body("Internal Server Error");
     });
 
-    let caller = LLmCaller::new(server.url("/fail"), "gpt-test", None);
+    let caller = LLmCaller::new(
+        server.url("/fail"), //
+        "gpt-test",
+        None,
+        false,
+    );
     let req = caller.build_request(json!({"key": "value"}));
 
     let result = LLmCaller::send(req).await;
@@ -86,7 +92,12 @@ async fn test_send_json_parse_failure() {
             .body("not-json");
     });
 
-    let caller = LLmCaller::new(server.url("/bad-json"), "gpt-test", None);
+    let caller = LLmCaller::new(
+        server.url("/bad-json"), //
+        "gpt-test",
+        None,
+        false,
+    );
     let req = caller.build_request(json!({"key": "value"}));
 
     let result = LLmCaller::send(req).await;
@@ -95,7 +106,12 @@ async fn test_send_json_parse_failure() {
 
 #[tokio::test]
 async fn test_no_server_failure() {
-    let caller = LLmCaller::new("http://127.0.0.1:1", "gpt-test", None);
+    let caller = LLmCaller::new(
+        "http://127.0.0.1:1", //
+        "gpt-test",
+        None,
+        false,
+    );
     let req = caller.build_request(json!({"key": "value"}));
 
     let result = LLmCaller::send(req).await;

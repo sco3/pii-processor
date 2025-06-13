@@ -53,12 +53,12 @@ impl Starter {
         );
 
         let connector = Connector::new(cfg.clone()).await;
-        let llm_caller = LLmCaller {
-            endpoint: cfg.llm_url.clone(),
-            model: cfg.llm_model.clone(),
-            bearer: None,
-            client: Default::default(),
-        };
+        let llm_caller = LLmCaller::new(
+            cfg.llm_url.clone(),
+            cfg.llm_model.clone(),
+            Some(cfg.llm_token.get_string()),
+            cfg.redact_cache_enabled,
+        );
         let shared_llm_caller = Arc::new(llm_caller);
 
         let system_prompt = read_prompt(
@@ -147,7 +147,7 @@ impl Init for Starter {
             }
             consumer.serve().await;
         });
-        
+
         self.worker_pool.start().await;
         info!("Press Ctrl+C to stop...");
         signal::ctrl_c()
