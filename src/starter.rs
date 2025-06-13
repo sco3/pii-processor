@@ -26,7 +26,7 @@ use std::sync::Arc;
 use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
-use tracing::{error, info, warn};
+use tracing::{error, info};
 
 pub struct Starter {
     pub redact_consumer: Arc<Mutex<RedactConsumer>>,
