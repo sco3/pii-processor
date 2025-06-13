@@ -1,5 +1,5 @@
 use ductaper::llm_work::extract_operators::get_valid_redactions;
-use ductaper::logging::init_tracing;
+use ductaper::util::logging::init_tracing;
 use std::fs;
 use tracing::info;
 

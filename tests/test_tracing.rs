@@ -1,4 +1,4 @@
-use ductaper::logging;
+use ductaper::util::logging;
 use tracing_subscriber::FmtSubscriber;
 
 pub fn init_tracing() {

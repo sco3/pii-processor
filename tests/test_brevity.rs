@@ -1,5 +1,5 @@
 use ductaper::llm_work::brevity::brevify;
-use ductaper::logging::init_tracing;
+use ductaper::util::logging::init_tracing;
 use tracing::info;
 
 #[test]

@@ -1,6 +1,6 @@
 use crate::common::init_cfg::{AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, TENANT};
-use ductaper::exit_codes::ExitCode;
-use ductaper::starter::Starter;
+use ductaper::util::exit_codes::ExitCode;
+use ductaper::util::starter::Starter;
 use std::env;
 
 mod common;

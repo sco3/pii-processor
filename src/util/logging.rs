@@ -57,12 +57,18 @@ pub fn init_log(level_str: Option<&str>) {
                 "aws_types=warn" //
                     .parse()
                     .expect("Failed to parse directive"),
-            ).add_directive(
-            "aws_smithy_http_client=warn" //
-                .parse()
-                .expect("Failed to parse directive"),
-        );
-        
+            )
+            .add_directive(
+                "aws_runtime=warn" //
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "aws_smithy_http_client=warn" //
+                    .parse()
+                    .expect("Failed to parse directive"),
+            );
+
         let subscriber = FmtSubscriber::builder()
             .with_max_level(level)
             .with_env_filter(filter)

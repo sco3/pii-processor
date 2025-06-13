@@ -2,7 +2,7 @@ use crate::config::env_vars::Cfg;
 use crate::mq::connector::Connector;
 use std::process::exit;
 
-use crate::exit_codes::ExitCode;
+use crate::util::exit_codes::ExitCode;
 use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::Context;
 use tracing::{debug, error};

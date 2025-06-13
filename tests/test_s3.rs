@@ -6,7 +6,7 @@ use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 use std::fs::read_to_string;
 
-pub use ductaper::logging::init_tracing;
+pub use ductaper::util::logging::init_tracing;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
 

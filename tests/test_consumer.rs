@@ -7,7 +7,7 @@ use async_trait::async_trait;
 
 use ductaper::mq::connector::Connector;
 use ductaper::llm_work::log_handler::LogHandler;
-pub use ductaper::logging::init_tracing;
+pub use ductaper::util::logging::init_tracing;
 use ductaper::mq::publisher::Publisher;
 use ductaper::mq::redact_consumer::RedactConsumer;
 use reqwest::StatusCode;

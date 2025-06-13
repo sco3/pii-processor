@@ -35,7 +35,7 @@ pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
                     if let Ok(redactions) = serde_json::from_str::<Value>(
                         &clean_json_string, //
                     ) {
-                        debug!("Recactions: {}", redactions);
+                        debug!("Redactions: {}", redactions);
                         if let Some(map) = redactions.as_object() {
                             let mut valid_replacements: HashSet<String> = HashSet::new();
                             for (_, v) in map.iter() {
