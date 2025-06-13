@@ -10,6 +10,7 @@ pub use ductaper::logging::init_tracing;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
 
+use ductaper::probe::toggle::Toggle;
 use ductaper::session_log_models::SessionLog;
 use ductaper::storage::s3_saver::S3Saver;
 use ductaper::storage::saver::Saver;
@@ -131,10 +132,11 @@ async fn test_s3() {
                 .await
                 .is_none()
         );
-
+        let toggle = Toggle::new("s3");
         let saver = S3Saver {
             bucket: test_bucket.clone(),
             s3helper: s3,
+            toggle,
         };
         let log_str = read_to_string(
             "tests/data/example_new_fields.json", //

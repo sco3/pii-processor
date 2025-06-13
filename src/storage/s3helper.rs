@@ -53,7 +53,7 @@ impl S3Helper {
         }
         Some(out)
     }
-    pub async fn put_object(&self, bucket: String, key: String, data: Vec<u8>) {
+    pub async fn put_object(&self, bucket: String, key: String, data: Vec<u8>) -> bool {
         if let Some(s3) = &self.s3ctx.s3 {
             match s3
                 .put_object()
@@ -65,6 +65,7 @@ impl S3Helper {
             {
                 Ok(_) => {
                     info!("Successfully put object: {} in bucket: {}", key, bucket);
+                    return true;
                 }
                 Err(e) => {
                     error!(
@@ -73,9 +74,11 @@ impl S3Helper {
                         bucket,
                         aws_err(&e)
                     );
+                    return false;
                 }
             }
         }
+        false
     }
 
     pub async fn del_object(&self, bucket: String, key: String) -> bool {

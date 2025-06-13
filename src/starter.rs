@@ -7,6 +7,7 @@ use std::process::exit;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
+use crate::exit_codes::ExitCode;
 use crate::llm_work::prompt::read_prompt;
 use crate::logging::init_log;
 use crate::probe::http_probe::HealthProbe;
@@ -25,7 +26,7 @@ use std::sync::Arc;
 use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
-use tracing::{error, info};
+use tracing::{error, info, warn};
 
 pub struct Starter {
     pub redact_consumer: Arc<Mutex<RedactConsumer>>,
@@ -45,6 +46,12 @@ impl Starter {
 
         cfg.pretty();
 
+        let s3toggle = Toggle::new("s3");
+        let probe = HealthProbe::new(
+            vec![s3toggle.clone()], //
+            cfg.redact_probe_port,
+        );
+
         let connector = Connector::new(cfg.clone()).await;
         let llm_caller = LLmCaller {
             endpoint: cfg.llm_url.clone(),
@@ -62,7 +69,7 @@ impl Starter {
         let secret_key: Option<String> = cfg.aws_secret_access_key.clone().map(|v| v.get_string());
         let access_token: Option<String> = cfg.aws_access_token.clone().map(|v| v.get_string());
 
-        let s3ctx = S3Ctx::new(
+        let s3ctx = match S3Ctx::new(
             bucket.clone(),
             cfg.aws_region_s3.clone(),
             access_key,
@@ -70,15 +77,24 @@ impl Starter {
             access_token,
             None,
         )
-        .await;
-        let s3toggle = Toggle::new("s3");
-        let probe = HealthProbe::new(
-            vec![s3toggle], //
-            cfg.redact_probe_port,
-        );
+        .await
+        {
+            Ok(ctx) => {
+                s3toggle.set_ready(true);
+                ctx
+            }
+            Err(e) => {
+                error!("S3 problem: {}", e);
+                exit(ExitCode::S3Error.code());
+            }
+        };
 
-        let s3helper = S3Helper::new(s3ctx.unwrap());
-        let s3saver = Arc::new(S3Saver { s3helper, bucket });
+        let s3helper = S3Helper::new(s3ctx);
+        let s3saver = Arc::new(S3Saver {
+            s3helper,
+            bucket,
+            toggle: s3toggle,
+        });
         let processor = LlmLogProcessor::new(
             shared_llm_caller,
             system_prompt, //
@@ -119,7 +135,7 @@ impl Init for Starter {
     async fn start(&mut self) {
         if let Err(e) = self.probe.start().await {
             error!("Probe failed: {}", e);
-            exit(1);
+            exit(ExitCode::ProbeError.code());
         }
 
         let consumer = Arc::clone(&self.redact_consumer);
@@ -139,5 +155,6 @@ impl Init for Starter {
             .expect("Failed to listen for shutdown signal");
 
         info!("Stop application");
+        exit(ExitCode::Success.code());
     }
 }

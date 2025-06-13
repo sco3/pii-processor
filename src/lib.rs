@@ -1,11 +1,13 @@
 pub mod ai_tags;
 pub mod connector;
 pub mod env_vars;
+pub mod exit_codes;
 pub mod expanduser;
 pub mod init;
 pub mod list_env;
 pub mod llm_work;
 pub mod logging;
+pub mod probe;
 pub mod publisher;
 pub mod redact_consumer;
 pub mod secret_string;
@@ -14,4 +16,3 @@ pub mod session_log_models;
 pub mod starter;
 pub mod storage;
 pub mod worker_pool;
-pub mod probe;
