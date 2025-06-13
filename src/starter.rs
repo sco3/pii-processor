@@ -1,4 +1,4 @@
-use crate::connector::Connector;
+use crate::mq::connector::Connector;
 use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;

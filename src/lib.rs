@@ -1,5 +1,4 @@
 pub mod ai_tags;
-pub mod connector;
 pub mod env_vars;
 pub mod exit_codes;
 pub mod expanduser;

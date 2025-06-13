@@ -1,6 +1,6 @@
 use crate::env_vars::Cfg;
 
-use crate::connector::Connector;
+use crate::mq::connector::Connector;
 use async_channel::Sender;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
 use async_nats::jetstream::consumer::Consumer;

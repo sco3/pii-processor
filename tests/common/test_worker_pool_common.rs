@@ -11,7 +11,7 @@ use tracing::info;
 use ductaper::logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
-use ductaper::connector::Connector;
+use ductaper::mq::connector::Connector;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 
 use crate::common::dummy_saver::DummySaver;

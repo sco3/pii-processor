@@ -1,4 +1,4 @@
-use crate::connector::Connector;
+use crate::mq::connector::Connector;
 use async_nats::{Client, HeaderMap};
 use bytes::Bytes;
 use tracing::{debug, error};
