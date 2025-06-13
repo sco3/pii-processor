@@ -11,8 +11,8 @@ use tracing::info;
 use ductaper::util::logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
-use ductaper::mq::connector::Connector;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
+use ductaper::mq::connector::Connector;
 
 use crate::common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_caller::LLmCaller;
@@ -89,7 +89,9 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
 
     let mut consumer = RedactConsumer::new(&conn, tx).await;
     consumer.update_stream(&cfg).await;
-    consumer.subscribe(&cfg).await;
+    if let Err(e) = consumer.subscribe(&cfg).await {
+        panic!("Subscription: {}", e);
+    }
     let subject = consumer.subject.clone().unwrap_or_default();
     info!("Subject: {}", subject);
 

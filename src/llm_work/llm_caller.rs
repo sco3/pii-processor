@@ -3,12 +3,12 @@ use crate::llm_work::reducter::ReDucter;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
-use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
-use serde_json::json;
+use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
+use serde_json::json;
 use std::time::Instant;
-use tracing::{debug, error, info, Level};
+use tracing::{Level, debug, error, info};
 
 pub struct LLmCaller {
     pub endpoint: String,

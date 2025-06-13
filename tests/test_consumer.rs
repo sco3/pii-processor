@@ -1,28 +1,29 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use async_channel::{bounded, Receiver, Sender};
+use async_channel::{Receiver, Sender, bounded};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 
-use ductaper::mq::connector::Connector;
 use ductaper::llm_work::log_handler::LogHandler;
-pub use ductaper::util::logging::init_tracing;
+use ductaper::mq::connector::Connector;
 use ductaper::mq::publisher::Publisher;
 use ductaper::mq::redact_consumer::RedactConsumer;
+pub use ductaper::util::logging::init_tracing;
 use reqwest::StatusCode;
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
-    GenericImage,
-    ImageExt,
+    GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 
 use ductaper::mq::admin::StreamAdmin;
-use tokio::time::sleep;
+use ductaper::mq::redact_stream::update_redact_stream;
 use tokio::time::Duration as TokioDuration;
+use tokio::time::sleep;
 use tracing::{debug, info};
 
 struct DummyHandler {
@@ -99,9 +100,12 @@ async fn test_consumer() {
         .await;
 
         let admin = StreamAdmin::new(&conn);
-        admin.update_redact_stream(&cfg, false).await;
+        update_redact_stream(&cfg, admin, false).await;
 
-        consumer.subscribe(&cfg).await;
+        if let Err(e) = consumer.subscribe(&cfg).await {
+            panic!("Subscribe fail: {}", e);
+        }
+
         let run = consumer.get_run_flag_clone();
         let subj = consumer.subject.clone().unwrap_or_default();
         info!("Subject: {}", subj);

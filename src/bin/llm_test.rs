@@ -1,8 +1,8 @@
+use ductaper::data::session_log_models::SessionLog;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::pii_text::pii_text;
 use ductaper::llm_work::reducter::ReDucter;
 use ductaper::util::logging::init_tracing;
-use ductaper::data::session_log_models::SessionLog;
 use serde_json::Value;
 use std::env::var;
 use std::fs::read;

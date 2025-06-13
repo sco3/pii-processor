@@ -1,23 +1,23 @@
 use crate::config::env_vars::Cfg;
-use crate::util::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::mq::connector::Connector;
 use crate::storage::s3_saver::S3Saver;
+use crate::util::init::Init;
 use std::process::exit;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
-use crate::util::exit_codes::ExitCode;
 use crate::llm_work::prompt::read_prompt;
-use crate::util::logging::init_log;
 use crate::mq::redact_consumer::RedactConsumer;
 use crate::probe::http_probe::HealthProbe;
 use crate::probe::toggle::Toggle;
 use crate::storage::get_bucket::get_bucket;
 use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3helper::S3Helper;
-use crate::worker_pool::event_counter::MinuteCounter;
+use crate::util::exit_codes::ExitCode;
+use crate::util::logging::init_log;
 use crate::worker_pool::WorkerPool;
+use crate::worker_pool::event_counter::MinuteCounter;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
@@ -144,7 +144,10 @@ impl Init for Starter {
         tokio::spawn(async move {
             let mut consumer = consumer.lock().await;
             consumer.update_stream(&cfg).await;
-            consumer.subscribe(&cfg).await;
+            if let Err(e) = consumer.subscribe(&cfg).await {
+                error!("Subscription failed: {}", e);
+                exit(ExitCode::NatsError.code());
+            }
             consumer.serve().await;
         });
 

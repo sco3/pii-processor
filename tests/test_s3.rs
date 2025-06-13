@@ -1,17 +1,17 @@
 mod common;
 
-use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
+use aws_config::meta::region::RegionProviderChain;
 use aws_credential_types::Credentials;
 use aws_sdk_s3::Client;
 use std::fs::read_to_string;
 
-pub use ductaper::util::logging::init_tracing;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
+pub use ductaper::util::logging::init_tracing;
 
-use ductaper::probe::toggle::Toggle;
 use ductaper::data::session_log_models::SessionLog;
+use ductaper::probe::toggle::Toggle;
 use ductaper::storage::s3_saver::S3Saver;
 use ductaper::storage::saver::Saver;
 use testcontainers::runners::AsyncRunner;
