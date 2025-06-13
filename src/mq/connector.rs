@@ -1,4 +1,4 @@
-use crate::env_vars::Cfg;
+use crate::config::env_vars::Cfg;
 use async_nats::{Client, ConnectOptions};
 use std::time::Duration;
 use tracing::{error, info};

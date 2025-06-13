@@ -1,5 +1,5 @@
+use crate::config::env_vars::Cfg;
 use crate::mq::connector::Connector;
-use crate::env_vars::Cfg;
 use std::process::exit;
 
 use crate::exit_codes::ExitCode;

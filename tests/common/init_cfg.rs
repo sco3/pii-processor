@@ -1,4 +1,4 @@
-use ductaper::env_vars::Cfg;
+use ductaper::config::env_vars::Cfg;
 use ductaper::secret_string::SecretString;
 
 #[allow(dead_code)]

@@ -1,4 +1,4 @@
-use crate::env_vars::Cfg;
+use crate::config::env_vars::Cfg;
 
 use crate::mq::connector::Connector;
 use async_channel::Sender;

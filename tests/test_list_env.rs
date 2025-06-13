@@ -1,4 +1,4 @@
-use ductaper::list_env::list_env;
+use ductaper::config::list_env::list_env;
 use std::env;
 
 #[test]

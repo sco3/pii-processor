@@ -1,7 +1,7 @@
 use crate::common::init_cfg::{
     AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, LLM_TOKEN, LOG_LEVEL, NATS_URL, TENANT,
 };
-use ductaper::env_vars::Cfg;
+use ductaper::config::env_vars::Cfg;
 use serial_test::serial;
 use std::env;
 mod common;

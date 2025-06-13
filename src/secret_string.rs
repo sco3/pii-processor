@@ -1,4 +1,4 @@
-use crate::list_env::mask;
+use crate::config::list_env::mask;
 use serde::{Deserialize, Serialize, Serializer};
 use std::fmt;
 

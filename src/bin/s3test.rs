@@ -1,5 +1,5 @@
 use dotenv::dotenv;
-use ductaper::env_vars::Cfg;
+use ductaper::config::env_vars::Cfg;
 use ductaper::logging::init_log;
 use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
