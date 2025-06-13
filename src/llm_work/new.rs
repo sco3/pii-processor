@@ -1,6 +1,6 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
-use crate::llm_work::extract_operators::get_valid_redactions;
+use crate::llm_work::masks::get_valid_redactions;
 use crate::llm_work::reducter::ReDucter;
 use crate::storage::saver::Saver;
 use std::sync::Arc;

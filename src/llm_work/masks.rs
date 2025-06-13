@@ -28,10 +28,9 @@ fn remove_trailing_commas(json: &str) -> Option<String> {
 
 fn parse_and_extract_redactions(json: &str) -> Option<HashSet<String>> {
     let redactions = serde_json::from_str::<Value>(json).ok()?;
-    debug!("Redactions: {}", redactions);
 
     let map = redactions.as_object()?;
-    let valid_replacements: HashSet<String> = map
+    let masks: HashSet<String> = map
         .values()
         .filter_map(|v| {
             v["new_value"]
@@ -39,6 +38,9 @@ fn parse_and_extract_redactions(json: &str) -> Option<HashSet<String>> {
                 .map(String::from)
         })
         .collect();
+    for mask in masks.iter() {
+        debug!("Supported mask: {}", mask);
+    }
 
-    (!valid_replacements.is_empty()).then_some(valid_replacements)
+    (!masks.is_empty()).then_some(masks)
 }

@@ -1,5 +1,5 @@
 use std::sync::Once;
-use tracing::{Level, error, info};
+use tracing::{error, info, Level};
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 pub static LOG_INIT: Once = Once::new();
@@ -60,6 +60,11 @@ pub fn init_log(level_str: Option<&str>) {
             )
             .add_directive(
                 "aws_runtime=warn" //
+                    .parse()
+                    .expect("Failed to parse directive"),
+            )
+            .add_directive(
+                "aws_sdk_sts=warn" //
                     .parse()
                     .expect("Failed to parse directive"),
             )
