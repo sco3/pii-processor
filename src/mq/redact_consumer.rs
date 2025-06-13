@@ -2,13 +2,13 @@ use crate::config::env_vars::Cfg;
 
 use crate::mq::connector::Connector;
 use async_channel::Sender;
-use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
+use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 use crate::llm_work::preview::preview_bytes;
 use tracing::{debug, error, info};
@@ -74,6 +74,13 @@ impl RedactConsumer {
     }
 
     pub async fn subscribe(&mut self, cfg: &Cfg) -> Result<(), Box<dyn std::error::Error>> {
+        let subj = Self::get_full_subject(cfg);
+        info!("Attempt to subscribe to: {}", subj);
+
+        if subj.is_empty() {
+            return Err("Empty subject".into());
+        }
+
         // Get stream with proper error propagation
         let stream = self
             .jetstream
@@ -86,11 +93,6 @@ impl RedactConsumer {
         debug!("Found existing stream: {:?}", stream);
 
         // Generate subject and validate
-        let subj = Self::get_full_subject(cfg);
-        if subj.is_empty() {
-            return Err("Empty subject".into());
-        }
-        debug!("Attempting to subscribe to: {}", subj);
 
         // Generate durable name safely
         let durable_safe = subj.replace('.', "_");
