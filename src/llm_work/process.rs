@@ -87,7 +87,13 @@ impl LlmLogProcessor {
                 // they should be filtered out (non valid are not inserted).
                 if let Some(vr) = &self.valid_redactions {
                     // valid redactions found and they include replacement
-                    if vr.contains(replace_with) {
+                    if replace_with.starts_with("[") && replace_with.ends_with("]") {
+                        // full redactions like [person]
+                        if vr.contains(replace_with) {
+                            result.insert(key.clone(), replace_with.to_string());
+                        }
+                    } else {
+                        // partial redactions like 1234*** - no need to validate
                         result.insert(key.clone(), replace_with.to_string());
                     }
                 } else {
