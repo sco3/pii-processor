@@ -133,7 +133,7 @@ impl Starter {
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
-        self.probe.start();
+        self.probe.start().await;
 
         let consumer = Arc::clone(&self.redact_consumer);
         let cfg = self.cfg.clone();

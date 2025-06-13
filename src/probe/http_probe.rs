@@ -7,7 +7,8 @@ use axum::response::IntoResponse;
 use axum::routing::get;
 use std::process::exit;
 use std::sync::Arc;
-use tracing::{error, info};
+use tokio::sync::oneshot;
+use tracing::{error, info, warn};
 
 #[derive(Clone)]
 pub struct HealthProbe {
@@ -23,7 +24,9 @@ impl HealthProbe {
         }
     }
 
-    pub fn start(&self) {
+    pub async fn start(&self) -> u16 {
+        let (tx, rx) = oneshot::channel();
+        //let bound_port: u16 = 0;
         let router = Router::new()
             .route("/readyz", get(Self::ready_handler))
             .route("/livez", get(Self::live_handler))
@@ -38,12 +41,22 @@ impl HealthProbe {
                     exit(ExitCode::ProbeError.code());
                 }
             };
-            info!("Probe listening to: {}", addr);
+            if let Ok(bound) = listener.local_addr() {
+                info!("Probe listening to: {}", bound);
+                if let Err(e) = tx.send(bound.port()) {
+                    warn!("Cannot get port for tests: {}", e);
+                }
+            }
+
             if let Err(e) = axum::serve(listener, router).await {
                 error!("Probe serve error: {}", e);
                 exit(ExitCode::ProbeError.code());
             }
         });
+        if let Ok(port) = rx.await {
+            return port;
+        }
+        0
     }
 
     async fn ready_handler(State(state): State<Self>) -> impl IntoResponse {
