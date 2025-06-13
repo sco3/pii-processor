@@ -36,5 +36,6 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         system_prompt_location: "/tmp/system_prompt.txt".to_string(),
         redact_max_tasks: 8,
         llm_url: "http://localhost:4000/chat/completions".to_string(),
+        redact_probe_port: 8118,
     }
 }

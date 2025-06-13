@@ -40,6 +40,12 @@ pub struct Cfg {
     pub system_prompt_location: String,
     #[serde(default = "default_redact_max_tasks")]
     pub redact_max_tasks: usize,
+    #[serde(default = "default_redact_probe_port")]
+    pub redact_probe_port: u16,
+}
+
+fn default_redact_probe_port() -> u16 {
+    8118
 }
 
 fn default_llm_url() -> String {

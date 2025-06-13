@@ -3,10 +3,15 @@ use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::storage::s3_saver::S3Saver;
+use std::error::Error;
+use std::process::exit;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 
+use crate::llm_work::prompt::read_prompt;
 use crate::logging::init_log;
+use crate::probe::http_probe::HealthProbe;
+use crate::probe::toggle::Toggle;
 use crate::redact_consumer::RedactConsumer;
 use crate::storage::get_bucket::get_bucket;
 use crate::storage::s3ctx::S3Ctx;
@@ -21,13 +26,13 @@ use std::sync::Arc;
 use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
-use tracing::info;
-use crate::llm_work::prompt::read_prompt;
+use tracing::{error, info, warn};
 
 pub struct Starter {
     pub redact_consumer: Arc<Mutex<RedactConsumer>>,
     pub worker_pool: WorkerPool,
     pub cfg: Cfg,
+    pub probe: HealthProbe,
 }
 
 impl Starter {
@@ -67,6 +72,11 @@ impl Starter {
             None,
         )
         .await;
+        let s3toggle = Toggle::new("s3");
+        let probe = HealthProbe::new(
+            vec![s3toggle], //
+            cfg.redact_probe_port,
+        );
 
         let s3helper = S3Helper::new(s3ctx.unwrap());
         let s3saver = Arc::new(S3Saver { s3helper, bucket });
@@ -101,12 +111,18 @@ impl Starter {
             redact_consumer,
             worker_pool,
             cfg,
+            probe,
         }
     }
 }
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
+        if let Err(e) = self.probe.start().await {
+            error!("Probe failed: {}", e);
+            exit(1);
+        }
+
         let consumer = Arc::clone(&self.redact_consumer);
         let cfg = self.cfg.clone();
 
