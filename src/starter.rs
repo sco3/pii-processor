@@ -3,7 +3,6 @@ use crate::env_vars::Cfg;
 use crate::init::Init;
 use crate::llm_work::llm_caller::LLmCaller;
 use crate::storage::s3_saver::S3Saver;
-use std::error::Error;
 use std::process::exit;
 
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
@@ -26,7 +25,7 @@ use std::sync::Arc;
 use tokio;
 use tokio::signal;
 use tokio::sync::Mutex;
-use tracing::{error, info, warn};
+use tracing::{error, info};
 
 pub struct Starter {
     pub redact_consumer: Arc<Mutex<RedactConsumer>>,
