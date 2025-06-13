@@ -73,47 +73,57 @@ impl RedactConsumer {
         )
     }
 
-    pub async fn subscribe(&mut self, cfg: &Cfg) {
-        let stream = match self.jetstream.get_stream(&cfg.queue_stream).await {
-            Ok(stream) => {
-                debug!("Found existing stream: {:?}", stream);
-                stream
-            }
-            Err(err) => {
-                error!("Failed to get stream: {}", err);
-                return;
-            }
-        };
+    pub async fn subscribe(&mut self, cfg: &Cfg) -> Result<(), Box<dyn std::error::Error>> {
+        // Get stream with proper error propagation
+        let stream = self
+            .jetstream
+            .get_stream(&cfg.queue_stream)
+            .await
+            .map_err(|e| {
+                error!("Failed to get stream: {}", e);
+                e
+            })?;
+        debug!("Found existing stream: {:?}", stream);
+
+        // Generate subject and validate
         let subj = Self::get_full_subject(cfg);
+        if subj.is_empty() {
+            return Err("Empty subject".into());
+        }
         debug!("Attempting to subscribe to: {}", subj);
 
+        // Generate durable name safely
         let durable_safe = subj.replace('.', "_");
         let durable_name = format!("consumer_{}", durable_safe);
+        if durable_name.len() > 64 {
+            // NATS typical limit
+            return Err("Durable name too long".into());
+        }
 
         info!("Consumer: {} subject: {}", durable_name, subj);
 
-        self.subject = Some(subj.clone());
-        self.consumer = Some(
-            match stream
-                .get_or_create_consumer(
-                    durable_name.as_str(),
-                    PullConfig {
-                        durable_name: Some(durable_name.clone()),
-                        filter_subjects: vec![subj],
-                        ..Default::default()
-                    },
-                )
-                .await
-            {
-                Ok(consumer) => consumer,
-                Err(err) => {
-                    error!("Failed to get or create consumer: {}", err);
-                    return;
-                }
-            },
-        );
-    }
+        // Create consumer first before modifying self
+        let consumer = stream
+            .get_or_create_consumer(
+                &durable_name,
+                PullConfig {
+                    durable_name: Some(durable_name.clone()),
+                    filter_subjects: vec![subj.clone()],
+                    ..Default::default()
+                },
+            )
+            .await
+            .map_err(|e| {
+                error!("Failed to create consumer: {}", e);
+                e
+            })?;
 
+        // Only update state after successful creation
+        self.subject = Some(subj);
+        self.consumer = Some(consumer);
+
+        Ok(())
+    }
     pub async fn update_stream(&self, cfg: &Cfg) {
         let subj = Self::get_full_subject(cfg);
         let mut subjects = vec![subj.clone()];
