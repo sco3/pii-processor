@@ -1,11 +1,13 @@
 use crate::probe::toggle::Toggle;
-use axum::Router;
+use crate::util::exit_codes::ExitCode;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::get;
+use axum::Router;
+use std::process::exit;
 use std::sync::Arc;
-use tracing::info;
+use tracing::{error, info};
 
 #[derive(Clone)]
 pub struct HealthProbe {
@@ -21,23 +23,27 @@ impl HealthProbe {
         }
     }
 
-    pub fn start(&self) -> tokio::task::JoinHandle<()> {
+    pub fn start(&self) {
         let router = Router::new()
             .route("/readyz", get(Self::ready_handler))
             .route("/livez", get(Self::live_handler))
             .with_state(self.clone());
         let port = self.port;
         tokio::spawn(async move {
-            let listener = tokio::net::TcpListener::bind(
-                format!("0.0.0.0:{}", port), //
-            )
-            .await
-            .unwrap();
-
-            info!("Probe server running on port {}", port);
-
-            axum::serve(listener, router).await.unwrap();
-        })
+            let addr = format!("127.0.0.1:{}", port);
+            let listener = match tokio::net::TcpListener::bind(&addr).await {
+                Ok(l) => l,
+                Err(e) => {
+                    error!("Probe failed to start:: {}", e);
+                    exit(ExitCode::ProbeError.code());
+                }
+            };
+            info!("Probe listening to: {}", addr);
+            if let Err(e) = axum::serve(listener, router).await {
+                error!("Probe serve error: {}", e);
+                exit(ExitCode::ProbeError.code());
+            }
+        });
     }
 
     async fn ready_handler(State(state): State<Self>) -> impl IntoResponse {

@@ -16,8 +16,8 @@ use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3helper::S3Helper;
 use crate::util::exit_codes::ExitCode;
 use crate::util::logging::init_log;
-use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
+use crate::worker_pool::WorkerPool;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
@@ -133,10 +133,7 @@ impl Starter {
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
-        if let Err(e) = self.probe.start().await {
-            error!("Probe failed: {}", e);
-            exit(ExitCode::ProbeError.code());
-        }
+        self.probe.start();
 
         let consumer = Arc::clone(&self.redact_consumer);
         let cfg = self.cfg.clone();
@@ -150,9 +147,9 @@ impl Init for Starter {
             }
             consumer.serve().await;
         });
-
+        
         self.worker_pool.start().await;
-
+        info!("Press Ctrl+C to stop...");
         signal::ctrl_c()
             .await
             .expect("Failed to listen for shutdown signal");

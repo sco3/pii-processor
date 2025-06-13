@@ -1,5 +1,5 @@
 use ductaper::util::init::Init;
-use ductaper::util::starter::Starter;
+use ductaper::starter::Starter;
 
 #[tokio::main]
 async fn main() {
