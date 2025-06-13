@@ -6,7 +6,7 @@ use tracing::debug;
 pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
     // Extract the JSON fragment first
     let json_fragment = extract_json_fragment(text)?;
-    debug!("Raw fragment: {}", json_fragment);
+    debug!("Prompt defines following redactions: {}", json_fragment);
 
     // Clean the JSON string
     let clean_json = remove_trailing_commas(&json_fragment)?;

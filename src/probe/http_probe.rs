@@ -1,10 +1,10 @@
 use crate::probe::toggle::Toggle;
 use crate::util::exit_codes::ExitCode;
-use axum::Router;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::get;
+use axum::Router;
 use std::process::exit;
 use std::sync::Arc;
 use tokio::sync::oneshot;
@@ -14,13 +14,20 @@ use tracing::{error, info, warn};
 pub struct HealthProbe {
     components: Arc<Vec<Toggle>>,
     port: u16,
+    entrypoints: String,
 }
+const ROOT: &str = "/";
+const READYZ: &str = "/readyz";
+const LIVEZ: &str = "/livez";
+const ENTRYPOINTS: [&str; 3] = [ROOT, READYZ, LIVEZ];
 
 impl HealthProbe {
     pub fn new(components: Vec<Toggle>, port: u16) -> Self {
+        let entrypoints = serde_json::to_string(&ENTRYPOINTS).unwrap_or_default();
         Self {
             components: Arc::new(components),
             port,
+            entrypoints,
         }
     }
 
@@ -28,9 +35,11 @@ impl HealthProbe {
         let (tx, rx) = oneshot::channel();
         //let bound_port: u16 = 0;
         let router = Router::new()
-            .route("/readyz", get(Self::ready_handler))
-            .route("/livez", get(Self::live_handler))
+            .route(ROOT, get(Self::root_handler))
+            .route(READYZ, get(Self::ready_handler))
+            .route(LIVEZ, get(Self::live_handler))
             .with_state(self.clone());
+
         let port = self.port;
         tokio::spawn(async move {
             let addr = format!("127.0.0.1:{}", port);
@@ -79,5 +88,8 @@ impl HealthProbe {
 
     async fn live_handler() -> impl IntoResponse {
         (StatusCode::OK, "Ok")
+    }
+    async fn root_handler(State(probe): State<HealthProbe>) -> impl IntoResponse {
+        (StatusCode::OK, probe.entrypoints)
     }
 }

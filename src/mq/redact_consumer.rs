@@ -82,8 +82,8 @@ impl RedactConsumer {
             return Err("Empty subject".into());
         }
 
-        // Get stream with proper error propagation
-        let stream = self
+        // Get stream
+        let mut stream = self
             .jetstream
             .get_stream(&cfg.queue_stream)
             .await
@@ -91,7 +91,8 @@ impl RedactConsumer {
                 error!("Failed to get stream: {}", e);
                 e
             })?;
-        debug!("Found existing stream: {:?}", stream);
+
+        debug!("Found existing stream: {}", &cfg.queue_stream);
 
         // Generate subject and validate
 
@@ -145,9 +146,9 @@ impl RedactConsumer {
                     }
                     stream_config.subjects = subjects;
 
-                    match self.jetstream.update_stream(stream_config).await {
+                    match self.jetstream.update_stream(&stream_config).await {
                         Ok(updated) => {
-                            debug!("Stream updated: {:?}", updated);
+                            debug!("Stream updated: {:?}", stream_config);
                         }
                         Err(err) => {
                             error!("Failed to update stream: {}", err);
