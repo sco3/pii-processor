@@ -12,7 +12,7 @@ use tracing::debug;
 pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
     // Regex to find the "OPERATORS = {" and capture everything up to and including the closing "}".
     // The capturing group `([\s\S]*?\n\})` includes the outer curly braces.
-    if let Ok(re) = Regex::new(r"OPERATORS\s*=\s*(\{[\s\S]*?\n\})") {
+    if let Ok(re) = Regex::new(r"OPERATORS\s*=\s*(\{[\s\S]*?\n})") {
         // Find the match
         if let Some(captures) = re.captures(text) {
             // Extract the captured group, which is the entire dictionary/map content including its outer braces.
@@ -27,7 +27,7 @@ pub fn get_valid_redactions(text: &str) -> Option<HashSet<String>> {
 
                 // Regex to remove trailing commas before a closing brace or end of string.
                 // It captures the brace or end of string and replaces the comma and whitespace with just that.
-                if let Ok(trailing_comma_re) = Regex::new(r",\s*(\}|$)") {
+                if let Ok(trailing_comma_re) = Regex::new(r",\s*(}|$)") {
                     let clean_json_string = trailing_comma_re
                         .replace_all(&clean_json_string, "$1")
                         .to_string();
