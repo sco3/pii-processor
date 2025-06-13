@@ -172,7 +172,7 @@ pub struct ChatGptEntry {
 pub enum SessionLogEntry {
     ArchType(ArchType),
     ToolCallRefs(ToolCallRefs),
-    ChatMessage(ChatMessage),
+    ChatMessageEnum(ChatMessage),
     ChatGptEntry(ChatGptEntry),
     TimeSummaryItem(TimeSummaryItem),
 }

@@ -1,5 +1,5 @@
 use crate::data::session_log_models::SessionLog;
-use crate::data::session_log_models::SessionLogEntry::ChatMessage;
+use crate::data::session_log_models::SessionLogEntry::ChatMessageEnum;
 use crate::llm_work;
 
 use llm_work::conv_roles::{ASSISTANT, USER};
@@ -9,7 +9,7 @@ use tracing::debug;
 pub fn pii_text(session_items: &SessionLog) -> String {
     let mut chat_log = String::new();
     for msg in session_items {
-        if let ChatMessage(chat_msg) = msg {
+        if let ChatMessageEnum(chat_msg) = msg {
             debug!("Role: {}", chat_msg.role.as_str());
             let role = chat_msg.role.as_str();
             let content = chat_msg.content.replace("\n", " ");
