@@ -12,7 +12,7 @@ use crate::llm_work::prompt::read_prompt;
 use crate::logging::init_log;
 use crate::probe::http_probe::HealthProbe;
 use crate::probe::toggle::Toggle;
-use crate::redact_consumer::RedactConsumer;
+use crate::mq::redact_consumer::RedactConsumer;
 use crate::storage::get_bucket::get_bucket;
 use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3helper::S3Helper;
