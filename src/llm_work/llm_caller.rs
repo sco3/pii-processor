@@ -5,11 +5,12 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
+use moka::future::Cache;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::RequestBuilder;
 use serde_json::json;
 use serde_json::Value;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tracing::{debug, error, info, Level};
 
@@ -19,7 +20,7 @@ pub struct LLmCaller {
     pub bearer: Option<String>,
     pub client: reqwest::Client,
     pub cache_flag: bool,
-    cache: Arc<RwLock<HashMap<Vec<u8>, Value>>>,
+    cache: Cache<Vec<u8>, Value>,
 }
 
 impl LLmCaller {
@@ -30,6 +31,10 @@ impl LLmCaller {
         cache_flag: bool,
     ) -> Self {
         let bearer = Self::add_bearer(token);
+        let cache = Cache::builder()
+            .time_to_live(Duration::from_secs(3600))
+            .max_capacity(1000)
+            .build();
 
         LLmCaller {
             endpoint: endpoint.into(),
@@ -37,7 +42,7 @@ impl LLmCaller {
             bearer,
             client: reqwest::Client::new(),
             cache_flag,
-            cache: Arc::new(RwLock::new(HashMap::new())),
+            cache,
         }
     }
 
@@ -58,7 +63,7 @@ impl LLmCaller {
         })
     }
 
-    pub fn build_request(&self, body: Value) -> RequestBuilder {
+    pub fn build_request(&self, body: &Value) -> RequestBuilder {
         let mut req = self
             .client
             .post(&self.endpoint)
@@ -118,11 +123,27 @@ impl LLmCaller {
         }
     }
 
-    async fn direct_send(&self, start: Instant, body: Value) -> Option<Value> {
+    async fn direct_send(&self, start: Instant, body: &Value) -> Option<Value> {
         let req = self.build_request(body);
         let output = Self::send(req).await;
         info!("Call took: {} ms", start.elapsed().as_millis());
         output
+    }
+
+    async fn check_cache(&self, start: Instant, body: &Value) -> Option<Option<Value>> {
+        if let Ok(key) = serde_json::to_vec(&body) {
+            return Some(if let Some(value) = self.cache.get(&key).await {
+                info!("Cache hit: {} ms", start.elapsed().as_millis());
+                Some(value)
+            } else {
+                let value = self.direct_send(start, body).await;
+                if let Some(ref ref_value) = value {
+                    self.cache.insert(key, ref_value.clone()).await;
+                }
+                value
+            });
+        }
+        None
     }
 }
 #[async_trait]
@@ -140,23 +161,14 @@ impl ReDucter for LLmCaller {
             );
         }
         if self.cache_flag {
-            if let Ok(key) = serde_json::to_vec(&body) {
-                if let Some(v) = self.cache.read().await.get(&key).cloned() {
-                    info!("Cache hit: {} ms", start.elapsed().as_millis());
-                    return Some(v);
-                } else {
-                    let v = self.direct_send(start, body).await;
-                    if let Some(ref v2) = v {
-                        self.cache.write().await.insert(key, v2.clone());
-                    }
-                    return v;
-                }
+            if let Some(value) = self.check_cache(start, &body).await {
+                return value;
             }
         }
-        self.direct_send(start, body).await
+        self.direct_send(start, &body).await
     }
 }
 
 fn pretty(body: &Value) -> String {
-    serde_json::to_string_pretty(&body).unwrap_or_default()
+    serde_json::to_string_pretty(&body).unwrap_or_default() //
 }

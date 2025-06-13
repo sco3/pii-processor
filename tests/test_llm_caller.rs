@@ -74,7 +74,8 @@ async fn test_send_request_failure() {
         None,
         false,
     );
-    let req = caller.build_request(json!({"key": "value"}));
+    let body = json!({"key": "value"});
+    let req = caller.build_request(&body);
 
     let result = LLmCaller::send(req).await;
     assert!(result.is_none(), "Expected None on HTTP failure");
@@ -98,7 +99,7 @@ async fn test_send_json_parse_failure() {
         None,
         false,
     );
-    let req = caller.build_request(json!({"key": "value"}));
+    let req = caller.build_request(&json!({"key": "value"}));
 
     let result = LLmCaller::send(req).await;
     assert!(result.is_none(), "Expected None on JSON parse failure");
@@ -112,7 +113,8 @@ async fn test_no_server_failure() {
         None,
         false,
     );
-    let req = caller.build_request(json!({"key": "value"}));
+    let body = json!({"key": "value"});
+    let req = caller.build_request(&body);
 
     let result = LLmCaller::send(req).await;
     assert!(result.is_none(), "Expected None - no server");

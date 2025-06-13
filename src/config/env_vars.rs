@@ -43,7 +43,20 @@ pub struct Cfg {
     #[serde(default = "default_redact_probe_port")]
     pub redact_probe_port: u16,
     #[serde(default = "default_redact_cache_enabled")]
+    #[serde(deserialize_with = "de_bool")]
     pub redact_cache_enabled: bool,
+}
+
+fn de_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    match s.to_lowercase().as_str() {
+        "true" | "1" | "yes" | "y" => Ok(true),
+        "false" | "0" | "no" | "n" => Ok(false),
+        _ => Err(serde::de::Error::custom(format!("Invalid boolean: {}", s))),
+    }
 }
 
 fn default_redact_cache_enabled() -> bool {
