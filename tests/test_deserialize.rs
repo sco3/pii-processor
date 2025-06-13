@@ -1,4 +1,4 @@
-use ductaper::session_log_models::{SessionLog, SessionLogEntry};
+use ductaper::data::session_log_models::{SessionLog, SessionLogEntry};
 
 use std::fs;
 

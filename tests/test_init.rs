@@ -1,4 +1,5 @@
 use crate::common::init_cfg::{AGGREGATOR_SESSIONS_LOG_URL, APPLICATION, LLM_MODEL, TENANT};
+use ductaper::exit_codes::ExitCode;
 use ductaper::starter::Starter;
 use std::env;
 
@@ -14,4 +15,6 @@ async fn test_init() {
     }
 
     let _starter = Starter::new().await;
+
+    assert_eq!(0, ExitCode::Success.code());
 }

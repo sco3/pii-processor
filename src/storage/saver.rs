@@ -1,4 +1,4 @@
-use crate::session_log_models::SessionLog;
+use crate::data::session_log_models::SessionLog;
 use async_trait::async_trait;
 
 #[async_trait]

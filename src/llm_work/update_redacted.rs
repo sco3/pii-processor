@@ -1,7 +1,7 @@
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::session_log_models::SessionLog;
+use crate::data::session_log_models::SessionLog;
 
-use crate::session_log_models::SessionLogEntry::{
+use crate::data::session_log_models::SessionLogEntry::{
     ArchType, ChatGptEntry, ChatMessage, TimeSummaryItem, ToolCallRefs,
 };
 use std::collections::HashMap;

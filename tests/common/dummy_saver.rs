@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use ductaper::session_log_models::SessionLog;
+use ductaper::data::session_log_models::SessionLog;
 use ductaper::storage::saver::Saver;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU32, Ordering};

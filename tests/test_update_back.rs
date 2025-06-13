@@ -3,7 +3,7 @@ use common::dummy_caller::DummyCaller;
 use common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::logging::init_tracing;
-use ductaper::session_log_models::SessionLog;
+use ductaper::data::session_log_models::SessionLog;
 use std::collections::HashMap;
 use std::fs;
 use std::sync::Arc;

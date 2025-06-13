@@ -11,7 +11,7 @@ use ductaper::storage::s3ctx::S3Ctx;
 use ductaper::storage::s3helper::S3Helper;
 
 use ductaper::probe::toggle::Toggle;
-use ductaper::session_log_models::SessionLog;
+use ductaper::data::session_log_models::SessionLog;
 use ductaper::storage::s3_saver::S3Saver;
 use ductaper::storage::saver::Saver;
 use testcontainers::runners::AsyncRunner;
