@@ -92,12 +92,17 @@ impl WorkerPool {
         let now = OffsetDateTime::now_utc();
         let since_publish = now - stat.published;
         let took = now - stat.start;
+        let allocated = jemalloc_ctl::epoch::advance()
+            .and_then(|_| jemalloc_ctl::stats::allocated::read())
+            .unwrap();
+
         info!(
-            "Worker {} finish seq: {} took: {} us since published: {} us",
+            "Worker {} finish seq: {} took: {} us since published: {} us allocated: {}",
             worker_id,
             stat.seq,
             took.whole_microseconds(),
             since_publish.whole_microseconds(),
+            allocated,
         );
     }
 }
