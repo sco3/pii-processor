@@ -6,7 +6,7 @@ use crate::llm_work::process_result::ProcessResult;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{Level, debug, error};
+use tracing::{debug, error, Level};
 
 impl LlmLogProcessor {
     pub async fn process(&self, payload: Vec<u8>, file_name: &str) -> ProcessResult {
@@ -61,7 +61,7 @@ impl LlmLogProcessor {
         }
     }
 
-    fn extract_content(value: &Value) -> Option<&str> {
+    pub fn extract_content_old(value: &Value) -> Option<&str> {
         match value
             .get(Ai::CHOICES)
             .and_then(|v| v.get(0))
@@ -81,6 +81,17 @@ impl LlmLogProcessor {
                 None
             }
         }
+    }
+    pub fn extract_content(value: &Value) -> Option<&str> {
+        if let Some(s) = value["choices"][0]["message"]["content"].as_str() {
+            return Some(s);
+        } else {
+            error!(
+                "Missing expected JSON fields: {} in response: {}",
+                ".choices[0].message.content", value
+            );
+        }
+        None
     }
 
     /// parse llm response redactions
