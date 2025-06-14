@@ -1,3 +1,5 @@
+use crate::data::ai_tags::Ai;
+use crate::llm_work::check_or_swap::check_or_swap;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
 use crate::llm_work::pii_text::pii_text;
 use crate::llm_work::process_result::ProcessResult;
@@ -61,15 +63,21 @@ impl LlmLogProcessor {
 
     fn extract_content(value: &Value) -> Option<&str> {
         match value
-            .get("choices")
+            .get(Ai::CHOICES)
             .and_then(|v| v.get(0))
-            .and_then(|v| v.get("message"))
-            .and_then(|v| v.get("content"))
+            .and_then(|v| v.get(Ai::MESSAGE))
+            .and_then(|v| v.get(Ai::CONTENT))
             .and_then(|v| v.as_str())
         {
             Some(s) => Some(s),
             None => {
-                error!("Missing expected JSON fields in response: {:?}", value);
+                error!(
+                    "Missing expected JSON fields: .{}[0].{}.{} in response: {:?}",
+                    Ai::CHOICES,
+                    Ai::MESSAGE,
+                    Ai::CONTENT,
+                    value
+                );
                 None
             }
         }
@@ -80,9 +88,11 @@ impl LlmLogProcessor {
         let parsed: Value = serde_json::from_str(content).ok()?;
         let redactions = parsed.get("redactions")?.as_object()?;
 
-        let mut result = HashMap::new();
-        for (key, value) in redactions {
-            if let Some(replace_with) = value.as_str() {
+        let mut result: HashMap<String, String> = HashMap::new();
+        for (maybe_key, maybe_json_value) in redactions {
+            if let Some(maybe_value) = maybe_json_value.as_str() {
+                let (key, replace_with) = check_or_swap(maybe_key, maybe_value);
+
                 // sometimes LLM creates redactions not from the system prompt
                 // they should be filtered out (non valid are not inserted).
                 if let Some(vr) = &self.valid_redactions {
@@ -90,15 +100,15 @@ impl LlmLogProcessor {
                     if replace_with.starts_with("[") && replace_with.ends_with("]") {
                         // full redactions like [person]
                         if vr.contains(replace_with) {
-                            result.insert(key.clone(), replace_with.to_string());
+                            result.insert(key.to_string(), replace_with.to_string());
                         }
                     } else {
                         // partial redactions like 1234*** - no need to validate
-                        result.insert(key.clone(), replace_with.to_string());
+                        result.insert(key.to_string(), replace_with.to_string());
                     }
                 } else {
                     // valid redaction not found this is most unlikely event
-                    result.insert(key.clone(), replace_with.to_string());
+                    result.insert(key.to_string(), replace_with.to_string());
                 }
             }
         }

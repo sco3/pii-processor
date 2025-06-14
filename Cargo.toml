@@ -32,8 +32,8 @@ url = "2.5.4"
 axum = "0.8.4"
 moka = { version = "0.12.10", features = ["future"] }
 time = "0.3.41"
-jemallocator = "0.5.4"
-jemalloc-ctl = "0.5.4"
+#jemallocator = "0.5.4"
+#jemalloc-ctl = "0.5.4"
 
 
 [dev-dependencies]

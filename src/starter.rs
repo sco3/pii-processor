@@ -11,7 +11,6 @@ use crate::storage::saver_factory::get_saver;
 use crate::util::init::Init;
 use crate::util::logging::init_log;
 use crate::worker_pool::WorkerPool;
-use crate::worker_pool::event_counter::MinuteCounter;
 
 use crate::mq::upd_redact_stream::update_redact_stream;
 use async_channel::bounded;
@@ -73,12 +72,9 @@ impl Starter {
 
         let redact_consumer = RedactConsumer::new(&connector, snd).await;
 
-        let counter = MinuteCounter::new();
-
         let worker_pool = WorkerPool {
             size: cfg.redact_max_tasks,
             receiver: rcv,
-            counter,
             llm_log_processor,
             handlers: Vec::new(),
         };

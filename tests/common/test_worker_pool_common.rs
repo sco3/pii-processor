@@ -21,7 +21,6 @@ use ductaper::mq::admin::StreamAdmin;
 use ductaper::mq::publisher::Publisher;
 use ductaper::mq::redact_consumer::RedactConsumer;
 use ductaper::mq::upd_redact_stream::update_redact_stream;
-use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
     ContainerAsync, GenericImage, ImageExt,
@@ -83,7 +82,6 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     let mut pool = WorkerPool {
         size: 1,
         receiver: rx,
-        counter: MinuteCounter::new(),
         llm_log_processor: shared_processor,
         handlers: Vec::new(),
     };

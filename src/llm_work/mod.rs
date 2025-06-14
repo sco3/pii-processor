@@ -1,4 +1,5 @@
 pub mod brevity;
+pub mod check_or_swap;
 pub mod conv_roles;
 pub mod generate_chat_history_str;
 pub mod llm_caller;
