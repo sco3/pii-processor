@@ -8,18 +8,16 @@ use crate::mq::redact_consumer::RedactConsumer;
 use crate::probe::http_probe::HealthProbe;
 use crate::probe::toggle::Toggle;
 use crate::storage::saver_factory::get_saver;
-use crate::util::exit_codes::ExitCode;
 use crate::util::init::Init;
 use crate::util::logging::init_log;
-use crate::worker_pool::event_counter::MinuteCounter;
 use crate::worker_pool::WorkerPool;
+use crate::worker_pool::event_counter::MinuteCounter;
 
 use crate::mq::upd_redact_stream::update_redact_stream;
 use async_channel::bounded;
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use dotenv::dotenv;
-use std::process::exit;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::signal;
@@ -117,9 +115,9 @@ impl Init for Starter {
         Self::ctrl_c().await;
 
         info!("Stop application");
-        
+
         self.redact_consumer.stop();
-        
+
         sleep(Duration::from_millis(42)).await;
     }
 }

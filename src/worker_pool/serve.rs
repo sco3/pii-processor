@@ -31,7 +31,7 @@ impl WorkerPool {
         worker_id: usize,
         msg: &Message,
     ) {
-        let start = Self::log_start(worker_id, &msg);
+        let start = Self::log_start(worker_id, msg);
         debug!("Message: {:?} {:?}", msg.payload, msg.headers);
 
         let session_log_name: &str = match msg
@@ -59,11 +59,11 @@ impl WorkerPool {
         {
             ProcessResult::Ok => {
                 info!("PII processing finished: {}", session_log_name);
-                Self::ack(&msg).await;
+                Self::ack(msg).await;
             }
             ProcessResult::ParseError => {
                 error!("Failed to parse, acknowledge {}", session_log_name);
-                Self::ack(&msg).await;
+                Self::ack(msg).await;
             }
             ProcessResult::Error => {
                 error!("Failed to process: {}", session_log_name);
