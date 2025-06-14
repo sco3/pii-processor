@@ -5,19 +5,26 @@ use crate::worker_pool::WorkerPool;
 use async_channel::Receiver;
 use async_nats::jetstream::Message;
 use std::sync::Arc;
+use time::format_description::well_known::iso8601::FormattedComponents::DateTimeOffset;
 use time::OffsetDateTime;
 use tracing::{debug, error, info};
+
+struct Stat {
+    start: OffsetDateTime,
+    seq: u64,
+    published: OffsetDateTime,
+}
 
 impl WorkerPool {
     pub async fn serve_message(
         recv: Receiver<Message>, //
         processor: Arc<LlmLogProcessor>,
-        id: usize,
+        worker_id: usize,
     ) {
         while let Ok(msg) = recv.recv().await {
-            let info = Self::info(&msg);
-            info!("Worker {} start seq: {}", id, info.0);
+            let start = Self::log_start(worker_id, &msg);
             debug!("Message: {:?} {:?}", msg.payload, msg.headers);
+
             let session_log_name: &str = match msg
                 .headers
                 .as_ref()
@@ -46,38 +53,52 @@ impl WorkerPool {
             {
                 ProcessResult::Ok => {
                     info!("PII processing finished: {}", session_log_name);
-                    Self::ack(&msg, id, info).await;
+                    Self::ack(&msg).await;
                 }
                 ProcessResult::ParseError => {
                     error!("Failed to parse, acknowledge {}", session_log_name);
-                    Self::ack(&msg, id, info).await;
+                    Self::ack(&msg).await;
                 }
                 ProcessResult::Error => {
                     error!("Failed to process: {}", session_log_name);
                 }
             }
+            Self::log_finish(worker_id, start);
         }
     }
 
-    fn info(msg: &Message) -> (u64, OffsetDateTime) {
-        let seq = match msg.info() {
+    fn log_start(worker_id: usize, msg: &Message) -> Stat {
+        let start = OffsetDateTime::now_utc();
+        let info = match msg.info() {
             Ok(info) => (info.stream_sequence, info.published),
             Err(_) => (0, OffsetDateTime::from_unix_timestamp(0).unwrap()),
         };
-        seq
+        info!("Worker {} start seq: {}", worker_id, info.0);
+        debug!("Message: {:?} {:?}", msg.payload, msg.headers);
+
+        Stat {
+            start,
+            seq: info.0,
+            published: info.1,
+        }
     }
 
-    async fn ack(msg: &Message, id: usize, info: (u64, OffsetDateTime)) {
-        let created = info.1;
-        let took = OffsetDateTime::now_utc() - created;
-        info!(
-            "Worker {} finish seq: {} since published: {} us",
-            id,
-            info.0,
-            took.whole_microseconds()
-        );
+    async fn ack(msg: &Message) {
         if let Err(e) = msg.ack().await {
             error!("Acknowledge: {}", e)
         }
+    }
+
+    fn log_finish(worker_id: usize, stat: Stat) {
+        let now = OffsetDateTime::now_utc();
+        let since_publish = now - stat.published;
+        let took = now - stat.start;
+        info!(
+            "Worker {} finish seq: {} took: {} us since published: {} us",
+            worker_id,
+            stat.seq,
+            took.whole_microseconds(),
+            since_publish.whole_microseconds(),
+        );
     }
 }
