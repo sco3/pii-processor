@@ -29,12 +29,12 @@
   },
   {
     "role": "assistant",
-    "content": "Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.",
+    "content": "<assistant_response>Welcome to the Level Health Customer Service Support Tool. This system helps you find accurate answers from our documentation to assist customers during phone calls.\n\nResponses will be provided in three clearly marked sections:\n\n===APPROVED Q&A===\n\nAnswers from FAQs.pdf that can be directly relayed to customers\n\n===PDF KNOWLEDGEBASE===\n\nAdditional information from other documents that you should review before responding\n\n===THINKING===\n\nAnalysis and guidance  to help you understand the context and handle potential follow-up questions\n\nTo use the system:\n1. Simply paste the customer's question directly into the input box\n2. The system will search both our FAQ database and other documentation\n3. Review all sections of the response:\n   - Use the APPROVED Q&A section for direct customer responses\n   - Review the PDF KNOWLEDGEBASE section for additional context\n   - Use the THINKING section for guidance on handling the query\n4. If no approved answer exists, you will be instructed to escalate to a specialist\n\nAll responses are verbatim from documentation and must be relayed exactly as provided to maintain compliance.</assistant_response>",
     "turn": 0
   },
   {
     "role": "user",
-    "content": "I am Joulie Yen, What could you do for me?",
+    "content": "I am Joulie Yen, What could you do for me? <user_input>Yes</user_input>.",
     "turn": 1
   },
   {

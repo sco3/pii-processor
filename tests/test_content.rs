@@ -55,5 +55,3 @@ pub fn test_content_invalid() {
         assert_eq!(None, cnt);
     }
 }
-
-
