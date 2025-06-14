@@ -14,4 +14,8 @@ impl WorkerPool {
         }
         info!("Worker pool with {} workers started.", self.size)
     }
+    
+    pub async fn stop (&self) {
+        
+    }
 }

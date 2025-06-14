@@ -6,12 +6,12 @@ use crate::mq::admin::StreamAdmin;
 use crate::mq::connector::Connector;
 use crate::util::exit_codes::ExitCode;
 use async_channel::Sender;
-use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::consumer::pull::Config as PullConfig;
+use async_nats::jetstream::consumer::Consumer;
 use async_nats::jetstream::{Context, Message};
 use futures::StreamExt;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::time::sleep;
 use tracing::{debug, error, info};
@@ -27,6 +27,14 @@ pub struct RedactConsumer {
 impl RedactConsumer {
     pub fn get_run_flag(&self) -> Arc<AtomicBool> {
         Arc::clone(&self.run_flag)
+    }
+
+    pub fn stop(&self) {
+        info!("Stop consumer");
+        let flag = self.get_run_flag();
+        flag.store(false, Ordering::Relaxed);
+        self.sender.close();
+        info!("Consumer stopped");
     }
     pub async fn start(&self, cfg: &Cfg) {
         let consumer = match self.subscribe(cfg).await {

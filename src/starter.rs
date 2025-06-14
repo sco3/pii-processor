@@ -11,8 +11,8 @@ use crate::storage::saver_factory::get_saver;
 use crate::util::exit_codes::ExitCode;
 use crate::util::init::Init;
 use crate::util::logging::init_log;
-use crate::worker_pool::WorkerPool;
 use crate::worker_pool::event_counter::MinuteCounter;
+use crate::worker_pool::WorkerPool;
 
 use crate::mq::upd_redact_stream::update_redact_stream;
 use async_channel::bounded;
@@ -21,7 +21,9 @@ use async_trait::async_trait;
 use dotenv::dotenv;
 use std::process::exit;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::signal;
+use tokio::time::sleep;
 use tracing::info;
 
 pub struct Starter {
@@ -115,6 +117,9 @@ impl Init for Starter {
         Self::ctrl_c().await;
 
         info!("Stop application");
-        exit(ExitCode::Success.code());
+        
+        self.redact_consumer.stop();
+        
+        sleep(Duration::from_millis(42)).await;
     }
 }

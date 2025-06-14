@@ -21,49 +21,55 @@ impl WorkerPool {
         worker_id: usize,
     ) {
         while let Ok(msg) = recv.recv().await {
-            let start = Self::log_start(worker_id, &msg);
-            debug!("Message: {:?} {:?}", msg.payload, msg.headers);
-
-            let session_log_name: &str = match msg
-                .headers
-                .as_ref()
-                .and_then(|headers_map| headers_map.get(SESSION_LOG_HEADER))
-                .map(|header_value_string| header_value_string.as_str())
-            {
-                Some(name) if !name.is_empty() => name,
-                _ => {
-                    // None, or empty
-                    error!(
-                        concat!(
-                            "Header '{}' not found or is empty in message.", //
-                            " Skipping processing. Payload: {:?}",           //
-                        ),
-                        SESSION_LOG_HEADER, msg.payload
-                    );
-                    continue; // Skip processing without header
-                }
-            };
-            match processor
-                .process(
-                    msg.payload.to_vec(), //
-                    session_log_name,
-                )
-                .await
-            {
-                ProcessResult::Ok => {
-                    info!("PII processing finished: {}", session_log_name);
-                    Self::ack(&msg).await;
-                }
-                ProcessResult::ParseError => {
-                    error!("Failed to parse, acknowledge {}", session_log_name);
-                    Self::ack(&msg).await;
-                }
-                ProcessResult::Error => {
-                    error!("Failed to process: {}", session_log_name);
-                }
-            }
-            Self::log_finish(worker_id, start);
+            Self::process_message(&processor, worker_id, &msg).await;
         }
+        info!("Channel closed. Exit worker: {}", worker_id);
+    }
+
+    async fn process_message(
+        processor: &Arc<LlmLogProcessor>, //
+        worker_id: usize,
+        msg: &Message,
+    ) {
+        let start = Self::log_start(worker_id, &msg);
+        debug!("Message: {:?} {:?}", msg.payload, msg.headers);
+
+        let session_log_name: &str = match msg
+            .headers
+            .as_ref()
+            .and_then(|headers_map| headers_map.get(SESSION_LOG_HEADER))
+            .map(|header_value_string| header_value_string.as_str())
+        {
+            Some(name) if !name.is_empty() => name,
+            _ => {
+                // None, or empty
+                error!(
+                    concat!(
+                        "Header '{}' not found or is empty in message.", //
+                        " Skipping processing. Payload: {:?}",           //
+                    ),
+                    SESSION_LOG_HEADER, msg.payload
+                );
+                return;
+            }
+        };
+        match processor
+            .process(msg.payload.to_vec(), session_log_name)
+            .await
+        {
+            ProcessResult::Ok => {
+                info!("PII processing finished: {}", session_log_name);
+                Self::ack(&msg).await;
+            }
+            ProcessResult::ParseError => {
+                error!("Failed to parse, acknowledge {}", session_log_name);
+                Self::ack(&msg).await;
+            }
+            ProcessResult::Error => {
+                error!("Failed to process: {}", session_log_name);
+            }
+        }
+        Self::log_finish(worker_id, start);
     }
 
     fn log_start(worker_id: usize, msg: &Message) -> Stat {
