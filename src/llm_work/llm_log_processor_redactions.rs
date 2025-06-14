@@ -1,12 +1,9 @@
-use crate::data::ai_tags::Ai;
 use crate::llm_work::check_or_swap::check_or_swap;
-use crate::llm_work::get_text_from_session_log::get_text_from_session_log;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::llm_work::process_result::ProcessResult;
 use serde_json;
 use serde_json::Value;
 use std::collections::HashMap;
-use tracing::{Level, debug, error};
+use tracing::debug;
 
 impl LlmLogProcessor {
     pub fn parse_redactions(&self, content: &str) -> Option<HashMap<String, String>> {

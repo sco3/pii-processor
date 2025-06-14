@@ -4,7 +4,7 @@ pub fn check_or_swap<'a>(key: &'a str, value: &'a str) -> (&'a str, &'a str) {
     }
     if key.len() > 4
         && key.ends_with("****")
-        && key.chars().nth(0) != Some('*')
+        && !key.starts_with('*')
         && key.chars().nth(1) != Some('*')
         && key.chars().nth(2) != Some('*')
         && key.chars().nth(3) != Some('*')
