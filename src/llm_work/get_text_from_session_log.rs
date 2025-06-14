@@ -40,7 +40,11 @@ fn user_content(chat_log: &mut String, content: &String) {
             chat_log.push_str(&format!("{}: {}\n", USER, user_input));
         } else {
             // fallback if end tag is missing
-            chat_log.push_str(&format!("{}: {}\n", USER, content));
+            chat_log.push_str(&format!(
+                "{}: {}\n",
+                USER, //
+                content.replace(USER_TAG_START, ""),
+            ));
         }
     } else {
         chat_log.push_str(&format!("{}: {}\n", USER, content));
@@ -58,7 +62,11 @@ fn assistant_content(chat_log: &mut String, content: &String) {
             chat_log.push_str(&format!("{}: {}\n", ASSISTANT, response));
         } else {
             // fallback if end tag is missing
-            chat_log.push_str(&format!("{}: {}\n", ASSISTANT, content));
+            chat_log.push_str(&format!(
+                "{}: {}\n", //
+                ASSISTANT,
+                content.replace(ASSISTANT_TAG_START, ""),
+            ));
         }
     } else {
         let cleaned_content = content.trim_matches('"');
