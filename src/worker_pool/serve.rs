@@ -5,7 +5,6 @@ use crate::worker_pool::WorkerPool;
 use async_channel::Receiver;
 use async_nats::jetstream::Message;
 use std::sync::Arc;
-use time::format_description::well_known::iso8601::FormattedComponents::DateTimeOffset;
 use time::OffsetDateTime;
 use tracing::{debug, error, info};
 
