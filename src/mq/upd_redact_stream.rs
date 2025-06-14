@@ -6,7 +6,7 @@ use tracing::error;
 
 pub async fn update_redact_stream(admin: &StreamAdmin, cfg: &Cfg) {
     let subject = StreamAdmin::get_full_subject(
-        &cfg, //
+        cfg, //
         cfg.redact_subject.clone(),
     );
     if let Err(e) = admin

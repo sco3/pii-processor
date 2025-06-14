@@ -1,8 +1,8 @@
 use crate::config::env_vars::Cfg;
 use crate::mq::connector::Connector;
 
-use async_nats::jetstream::stream::Config;
 use async_nats::jetstream::Context;
+use async_nats::jetstream::stream::Config;
 use tracing::{debug, error};
 
 pub struct StreamAdmin {

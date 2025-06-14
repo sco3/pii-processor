@@ -11,8 +11,8 @@ use crate::storage::saver_factory::get_saver;
 use crate::util::exit_codes::ExitCode;
 use crate::util::init::Init;
 use crate::util::logging::init_log;
-use crate::worker_pool::event_counter::MinuteCounter;
 use crate::worker_pool::WorkerPool;
+use crate::worker_pool::event_counter::MinuteCounter;
 
 use crate::mq::upd_redact_stream::update_redact_stream;
 use async_channel::bounded;
@@ -22,7 +22,7 @@ use dotenv::dotenv;
 use std::process::exit;
 use std::sync::Arc;
 use tokio::signal;
-use tracing::{error, info};
+use tracing::info;
 
 pub struct Starter {
     pub admin: StreamAdmin,
