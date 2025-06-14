@@ -1,9 +1,11 @@
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
+use ductaper::util::logging::init_tracing;
 use serde_json::json;
 
 #[test]
 
 pub fn test_content() {
+    init_tracing();
     let v = json!({
             "choices":[
                 {"message": {"content":"-content-"}}
@@ -29,6 +31,7 @@ pub fn test_content() {
 
 #[test]
 pub fn test_content_invalid() {
+    init_tracing();
     let v = json!({
             "choices":[
                 {"message": {}}
@@ -52,3 +55,5 @@ pub fn test_content_invalid() {
         assert_eq!(None, cnt);
     }
 }
+
+

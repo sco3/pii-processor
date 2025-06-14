@@ -95,7 +95,7 @@ impl LlmLogProcessor {
     }
 
     /// parse llm response redactions
-    fn parse_redactions(&self, content: &str) -> Option<HashMap<String, String>> {
+    pub fn parse_redactions(&self, content: &str) -> Option<HashMap<String, String>> {
         let parsed: Value = serde_json::from_str(content).ok()?;
         let redactions = parsed.get("redactions")?.as_object()?;
 
@@ -126,7 +126,7 @@ impl LlmLogProcessor {
 
         Some(result)
     }
-    fn redactions(&self, value: Value) -> HashMap<String, String> {
+    pub fn redactions(&self, value: Value) -> HashMap<String, String> {
         if let Some(content) = Self::extract_content(&value) {
             debug!("Content: {:?}", content);
             if let Some(redactions) = self.parse_redactions(content) {
