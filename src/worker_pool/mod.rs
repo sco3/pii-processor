@@ -1,4 +1,3 @@
-pub mod event_counter;
 mod serve;
 mod start;
 
