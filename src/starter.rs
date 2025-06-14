@@ -103,7 +103,7 @@ impl Starter {
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
-        let probe_start = self.probe.start().await;
+        let probe_stop = self.probe.start().await.stop_tx;
 
         let cfg = self.cfg.clone();
 
@@ -116,7 +116,8 @@ impl Init for Starter {
         Self::ctrl_c().await;
 
         info!("Stop application");
-        let _ = probe_start.stop_tx.send(());
+
+        let _ = probe_stop.send(());
 
         self.redact_consumer.stop(handle).await;
         self.worker_pool.stop().await;

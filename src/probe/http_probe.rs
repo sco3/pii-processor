@@ -9,7 +9,7 @@ use std::process::exit;
 use std::sync::Arc;
 use tokio::sync::oneshot;
 use tokio::sync::oneshot::{Receiver, Sender};
-use tracing::{error, info, warn};
+use tracing::{error, info};
 
 #[derive(Clone)]
 pub struct HealthProbe {
@@ -39,9 +39,8 @@ impl HealthProbe {
     pub async fn stop(&self) {}
 
     pub async fn start(&self) -> HealthProbeStart {
-        let (port_tx, port_rx) = oneshot::channel();
         let (stop_tx, stop_rx) = oneshot::channel::<()>();
-        //let bound_port: u16 = 0;
+
         let router = Router::new()
             .route(ROOT, get(Self::root_handler))
             .route(READYZ, get(Self::ready_handler))
@@ -49,22 +48,22 @@ impl HealthProbe {
             .with_state(self.clone());
 
         let port = self.port;
-        tokio::spawn(async move {
-            let addr = format!("127.0.0.1:{}", port);
-            let listener = match tokio::net::TcpListener::bind(&addr).await {
-                Ok(l) => l,
-                Err(e) => {
-                    error!("Probe failed to start:: {}", e);
-                    exit(ExitCode::ProbeError.code());
-                }
-            };
-            if let Ok(bound) = listener.local_addr() {
-                info!("Probe listening to: {}", bound);
-                if let Err(e) = port_tx.send(bound.port()) {
-                    warn!("Cannot get port for tests: {}", e);
-                }
-            }
 
+        let addr = format!("127.0.0.1:{}", port);
+        let listener = match tokio::net::TcpListener::bind(&addr).await {
+            Ok(l) => l,
+            Err(e) => {
+                error!("Probe failed to start:: {}", e);
+                exit(ExitCode::ProbeError.code());
+            }
+        };
+
+        let port = match listener.local_addr() {
+            Ok(addr) => addr.port(),
+            Err(_) => 0,
+        };
+
+        tokio::spawn(async move {
             if let Err(e) = axum::serve(listener, router) //
                 .with_graceful_shutdown(Self::stop_signal(stop_rx))
                 .await
@@ -73,7 +72,6 @@ impl HealthProbe {
                 exit(ExitCode::ProbeError.code());
             }
         });
-        let port = port_rx.await.unwrap_or_default();
 
         HealthProbeStart { port, stop_tx }
     }
@@ -104,5 +102,6 @@ impl HealthProbe {
     }
     async fn stop_signal(stop_rx: Receiver<()>) {
         let _ = stop_rx.await;
+        info!("Stop probe");
     }
 }
