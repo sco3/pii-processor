@@ -24,7 +24,7 @@
   },
   {
     "role": "user",
-    "content": "Session Started. I am Joulie Yen. I forgot code for my credit card 1234 5678 1235 1236.",
+    "content": "Session Started. I am Joulie Yen. I forgot code for my credit card 1234 5678 1234 5678.",
     "turn": 0
   },
   {
@@ -45,7 +45,7 @@
         "index": 1,
         "function": {
           "name": "faq_expert_1",
-          "arguments": "{\"user_question\": \"What services does Level Health offer? Client is Joulie Yen. His card 1234 5678 1235 1236.\"}"
+          "arguments": "{\"user_question\": \"What services does Level Health offer? Client is Joulie Yen. His card 1234 5678 1234 5678.\"}"
         },
         "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
         "type": "function"
@@ -167,7 +167,7 @@
               "index": 1,
               "function": {
                 "name": "faq_expert_1",
-                "arguments": "{\"user_question\": \"What services does Level Health offer? Card is 1234 5678 1235 1236.\"}"
+                "arguments": "{\"user_question\": \"What services does Level Health offer? Card is 1234 5678 1234 5678.\"}"
               },
               "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
               "type": "function"

@@ -16,8 +16,44 @@ pub fn check_or_swap<'a>(key: &'a str, value: &'a str) -> (&'a str, &'a str) {
 
 #[test]
 pub fn test_swap() {
-    assert_eq!(("a", "[b]"), check_or_swap("a", "[b]"));
-    assert_eq!(("b", "[a]"), check_or_swap("[a]", "b"));
-    assert_eq!(("b", "asdf****"), check_or_swap("asdf****", "b"));
-    assert_eq!(("b", "asdf****"), check_or_swap("b", "asdf****"));
+    assert_eq!(
+        check_or_swap("a", "[b]"), //
+        ("a", "[b]"),
+    );
+    assert_eq!(
+        check_or_swap("[a]", "b"), //
+        ("b", "[a]"),
+    );
+    assert_eq!(
+        check_or_swap("asdf****", "b"), //
+        ("b", "asdf****"),
+    );
+    assert_eq!(
+        check_or_swap("b", "asdf****"), //
+        ("b", "asdf****")
+    );
+    assert_eq!(
+        check_or_swap("[PERSON]", "Joulie Yen"),
+        ("Joulie Yen", "[PERSON]"),
+    );
+    assert_eq!(
+        check_or_swap("Joulie Yen", "[PERSON]"),
+        ("Joulie Yen", "[PERSON]"),
+    );
+    assert_eq!(
+        check_or_swap("user@example.com", "user@e**********"),
+        ("user@example.com", "user@e**********"),
+    );
+    assert_eq!(
+        check_or_swap("user@e**********", "user@example.com"),
+        ("user@example.com", "user@e**********"),
+    );
+    assert_eq!(
+        check_or_swap("1234 5678 1234 5678", "1234 **** **** ****"),
+        ("1234 5678 1234 5678", "1234 **** **** ****"),
+    );
+    assert_eq!(
+        check_or_swap("1234 **** **** ****", "1234 5678 1234 5678"),
+        ("1234 5678 1234 5678", "1234 **** **** ****"),
+    );
 }
