@@ -1,7 +1,7 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use async_channel::{Receiver, Sender, bounded};
+use async_channel::{bounded, Receiver, Sender};
 use async_nats::jetstream::Message;
 use async_trait::async_trait;
 
@@ -15,15 +15,15 @@ use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    GenericImage, ImageExt,
-    core::{IntoContainerPort, WaitFor},
-    runners::AsyncRunner,
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
+    GenericImage,
+    ImageExt,
 };
 
 use ductaper::mq::admin::StreamAdmin;
-use ductaper::mq::redact_stream::update_redact_stream;
-use tokio::time::Duration as TokioDuration;
+use ductaper::mq::upd_redact_stream::update_redact_stream;
 use tokio::time::sleep;
+use tokio::time::Duration as TokioDuration;
 use tracing::{debug, info};
 
 struct DummyHandler {
@@ -93,21 +93,21 @@ async fn test_consumer() {
 
         //let dummy = Arc::new(Mutex::new(dummy_handler));
         let (msg_send, receiver) = bounded::<Message>(1);
-        let mut consumer = RedactConsumer::new(
+        let consumer = RedactConsumer::new(
             &conn, //
             msg_send,
         )
         .await;
 
         let admin = StreamAdmin::new(&conn);
-        update_redact_stream(&cfg, admin, false).await;
+        update_redact_stream(&admin, &cfg).await;
 
         if let Err(e) = consumer.subscribe(&cfg).await {
             panic!("Subscribe fail: {}", e);
         }
 
-        let run = consumer.get_run_flag_clone();
-        let subj = consumer.subject.clone().unwrap_or_default();
+        let run = consumer.get_run_flag();
+        let subj = StreamAdmin::get_full_subject(&cfg, cfg.redact_subject.clone());
         info!("Subject: {}", subj);
         let total_count = AtomicI64::new(0);
 
@@ -162,7 +162,7 @@ async fn test_consumer() {
                 }
             },
             dummy_handler.start(),
-            consumer.serve(),
+            consumer.start(&cfg),
         );
 
         info!("Count: {}", total_count.load(Ordering::Relaxed));

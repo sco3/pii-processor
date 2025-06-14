@@ -12,7 +12,7 @@
         "index": 1,
         "function": {
           "name": "faq_expert_1",
-          "arguments": "{\"user_question\": \"What services does Level Health offer?\"}"
+          "arguments": "{\"user_question\": \"What services does Level Health offer for Joulie Yen?\"}"
         },
         "id": "tooluse_7Bz6O-6lSgexvSDHEG_5Sg",
         "type": "function"

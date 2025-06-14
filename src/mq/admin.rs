@@ -1,8 +1,8 @@
 use crate::config::env_vars::Cfg;
 use crate::mq::connector::Connector;
 
-use async_nats::jetstream::Context;
 use async_nats::jetstream::stream::Config;
+use async_nats::jetstream::Context;
 use tracing::{debug, error};
 
 pub struct StreamAdmin {
@@ -27,9 +27,13 @@ impl StreamAdmin {
         stream_name: String,
         subjects: Vec<String>,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let mut subjs = Vec::new();
-        subjs.extend(subjects.iter().cloned());
-        let mut stream_config = Self::get_stream_cfg(stream_name, &subjs);
+        let mut merged_subjects = subjects.clone();
+
+        let mut stream_config = Config {
+            name: stream_name.clone(),
+            subjects: subjects.clone(), // initial value
+            ..Default::default()
+        };
 
         match self
             .jetstream
@@ -39,11 +43,12 @@ impl StreamAdmin {
             Ok(stream) => match stream.get_info().await {
                 Ok(info) => {
                     for existing_subject in info.config.subjects {
-                        if !subjects.contains(&existing_subject) {
-                            subjs.push(existing_subject);
+                        if !merged_subjects.contains(&existing_subject) {
+                            merged_subjects.push(existing_subject);
                         }
                     }
-                    stream_config.subjects = subjects;
+
+                    stream_config.subjects = merged_subjects;
 
                     match self.jetstream.update_stream(stream_config).await {
                         Ok(updated) => {
@@ -65,14 +70,6 @@ impl StreamAdmin {
                 error!("Failed to get or create stream: {}", err);
                 Err(Box::new(err))
             }
-        }
-    }
-
-    fn get_stream_cfg(stream: String, subjects: &[String]) -> Config {
-        async_nats::jetstream::stream::Config {
-            name: stream,
-            subjects: subjects.to_owned(),
-            ..Default::default()
         }
     }
 }

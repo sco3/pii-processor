@@ -3,8 +3,8 @@ use async_nats::jetstream::Message;
 use ductaper::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 
-use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
+use std::sync::Arc;
 
 use tracing::info;
 
@@ -17,14 +17,16 @@ use ductaper::mq::connector::Connector;
 use crate::common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::prompt::read_prompt;
+use ductaper::mq::admin::StreamAdmin;
 use ductaper::mq::publisher::Publisher;
 use ductaper::mq::redact_consumer::RedactConsumer;
+use ductaper::mq::upd_redact_stream::update_redact_stream;
 use ductaper::worker_pool::event_counter::MinuteCounter;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
-    ContainerAsync, GenericImage, ImageExt,
-    core::{IntoContainerPort, WaitFor},
-    runners::AsyncRunner,
+    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner, ContainerAsync,
+    GenericImage,
+    ImageExt,
 };
 
 #[allow(unused_variables)]
@@ -87,18 +89,18 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     pool.start().await;
     let cfg = get_test_cfg(port);
     let conn = Connector::new(cfg.clone()).await;
-
-    let mut consumer = RedactConsumer::new(&conn, tx).await;
-    consumer.update_stream(&cfg).await;
+    let admin = StreamAdmin::new(&conn);
+    let consumer = RedactConsumer::new(&conn, tx).await;
+    update_redact_stream(&admin, &cfg).await;
     if let Err(e) = consumer.subscribe(&cfg).await {
         panic!("Subscription: {}", e);
     }
-    let subject = consumer.subject.clone().unwrap_or_default();
+    let subject = StreamAdmin::get_full_subject(&cfg, cfg.redact_subject.clone());
     info!("Subject: {}", subject);
 
     let run_flag = consumer.run_flag.clone();
     tokio::spawn(async move {
-        consumer.serve().await;
+        consumer.start(&cfg).await;
     });
 
     let publisher = Publisher::new(&conn);
