@@ -80,11 +80,12 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     );
     let shared_processor = Arc::new(processor);
 
-    let pool = WorkerPool {
+    let mut pool = WorkerPool {
         size: 1,
         receiver: rx,
         counter: MinuteCounter::new(),
         llm_log_processor: shared_processor,
+        handlers: Vec::new(),
     };
     pool.start().await;
     let cfg = get_test_cfg(port);

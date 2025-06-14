@@ -12,12 +12,12 @@ pub async fn test_probe() {
 
     let toggle = Toggle::new("test");
     let probe = HealthProbe::new(vec![toggle.clone()], 0);
-    let bound_port = probe.start().await;
-    info!("Bound port: {}", bound_port);
+    let start = probe.start().await;
+    info!("Bound port: {}", start.port);
     sleep(Duration::from_millis(42)).await;
     let client = reqwest::Client::new();
     {
-        let url = format!("http://localhost:{}/livez", bound_port);
+        let url = format!("http://localhost:{}/livez", start.port);
         if let Ok(r) = client.get(&url).send().await {
             assert_eq!(r.status(), reqwest::StatusCode::OK);
             if let Ok(b) = r.bytes().await {
@@ -26,7 +26,7 @@ pub async fn test_probe() {
         }
     }
     {
-        let url = format!("http://localhost:{}/readyz", bound_port);
+        let url = format!("http://localhost:{}/readyz", start.port);
         if let Ok(r) = client.get(&url).send().await {
             assert_eq!(r.status(), reqwest::StatusCode::SERVICE_UNAVAILABLE);
             if let Ok(b) = r.bytes().await {
@@ -37,7 +37,7 @@ pub async fn test_probe() {
     }
     toggle.set_ready(true);
     {
-        let url = format!("http://localhost:{}/readyz", bound_port);
+        let url = format!("http://localhost:{}/readyz", start.port);
         if let Ok(r) = client.get(&url).send().await {
             assert_eq!(r.status(), reqwest::StatusCode::OK);
             if let Ok(b) = r.bytes().await {

@@ -13,6 +13,7 @@ use futures::StreamExt;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
+use tokio::task::JoinHandle;
 use tokio::time::sleep;
 use tracing::{debug, error, info};
 
@@ -29,14 +30,15 @@ impl RedactConsumer {
         Arc::clone(&self.run_flag)
     }
 
-    pub fn stop(&self) {
+    pub async fn stop(&self, handle: JoinHandle<()>) {
         info!("Stop consumer");
         let flag = self.get_run_flag();
         flag.store(false, Ordering::Relaxed);
         self.sender.close();
+        let _ = handle.await;
         info!("Consumer stopped");
     }
-    pub async fn start(&self, cfg: &Cfg) {
+    pub async fn start(&self, cfg: &Cfg) -> JoinHandle<()> {
         let consumer = match self.subscribe(cfg).await {
             Ok(c) => c,
             Err(e) => {
@@ -50,7 +52,7 @@ impl RedactConsumer {
 
         tokio::spawn(async move {
             Self::serve(run_flag, sender, &consumer).await;
-        });
+        })
     }
 
     async fn fetch(sender: &Sender<Message>, consumer: &Consumer<PullConfig>) {

@@ -23,7 +23,8 @@ impl WorkerPool {
         while let Ok(msg) = recv.recv().await {
             Self::process_message(&processor, worker_id, &msg).await;
         }
-        info!("Channel closed. Exit worker: {}", worker_id);
+
+        debug!("Channel closed. Exit worker: {}", worker_id);
     }
 
     async fn process_message(

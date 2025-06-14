@@ -19,9 +19,9 @@ use async_nats::jetstream::Message;
 use async_trait::async_trait;
 use dotenv::dotenv;
 use std::sync::Arc;
-use std::time::Duration;
+
 use tokio::signal;
-use tokio::time::sleep;
+
 use tracing::info;
 
 pub struct Starter {
@@ -80,6 +80,7 @@ impl Starter {
             receiver: rcv,
             counter,
             llm_log_processor,
+            handlers: Vec::new(),
         };
 
         Starter {
@@ -102,22 +103,22 @@ impl Starter {
 #[async_trait]
 impl Init for Starter {
     async fn start(&mut self) {
-        self.probe.start().await;
+        let probe_start = self.probe.start().await;
 
         let cfg = self.cfg.clone();
 
         update_redact_stream(&self.admin, &cfg).await;
 
-        self.redact_consumer.start(&cfg).await;
+        let handle = self.redact_consumer.start(&cfg).await;
 
         self.worker_pool.start().await;
 
         Self::ctrl_c().await;
 
         info!("Stop application");
+        let _ = probe_start.stop_tx.send(());
 
-        self.redact_consumer.stop();
-
-        sleep(Duration::from_millis(42)).await;
+        self.redact_consumer.stop(handle).await;
+        self.worker_pool.stop().await;
     }
 }

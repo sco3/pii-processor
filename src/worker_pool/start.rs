@@ -4,16 +4,22 @@ use tokio::spawn;
 use tracing::info;
 
 impl WorkerPool {
-    pub async fn start(&self) {
+    pub async fn start(&mut self) {
         for id in 0..self.size {
             let recv = self.receiver.clone();
             let processor = Arc::clone(&self.llm_log_processor);
-            spawn(async move {
+            let h = spawn(async move {
                 Self::serve_message(recv, processor, id).await;
             });
+            let _ = &self.handlers.push(h);
         }
         info!("Worker pool with {} workers started.", self.size)
     }
 
-    pub async fn stop(&self) {}
+    pub async fn stop(&mut self) {
+        for handler in &mut self.handlers {
+            let _ = handler.await;
+        }
+        info!("All workers stopped");
+    }
 }
