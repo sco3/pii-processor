@@ -5,8 +5,8 @@ use crate::llm_work;
 use llm_work::conv_roles::{ASSISTANT, USER};
 
 use tracing::debug;
-
-pub fn pii_text(session_items: &SessionLog) -> String {
+/// extracts plain text from session log sections for LLM call
+pub fn get_text_from_session_log(session_items: &SessionLog) -> String {
     let mut chat_log = String::new();
     for msg in session_items {
         if let ChatMessageEnum(chat_msg) = msg {
@@ -28,7 +28,7 @@ pub fn pii_text(session_items: &SessionLog) -> String {
     }
     chat_log
 }
-
+/// special treatmen for user input tags
 fn user_content(chat_log: &mut String, content: &String) {
     const USER_TAG_START: &str = "<user_input>";
     const USER_TAG_END: &str = "</user_input>";
@@ -46,7 +46,7 @@ fn user_content(chat_log: &mut String, content: &String) {
         chat_log.push_str(&format!("{}: {}\n", USER, content));
     }
 }
-
+/// special treatmen for text with assistant tags
 fn assistant_content(chat_log: &mut String, content: &String) {
     const ASSISTANT_TAG_START: &str = "<assistant_response>";
     const ASSISTANT_TAG_END: &str = "</assistant_response>";
