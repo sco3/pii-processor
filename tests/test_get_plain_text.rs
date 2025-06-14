@@ -9,21 +9,21 @@ pub fn test_get_plain_text() {
     let log_json = json!([
       {
         "role": "user",
-        "content": "I am Joulie Yen? I forgot my <user_input>pin</user_input>",
+        "content": "I am Joulie Yen. I forgot my <user_input>pin</user_input>",
         "turn": 1
       },
       {
         "role": "assistant",
-        "content": "I am Joulie Yen? I forgot my <assistant_response>asdf</assistant_response>",
+        "content": "I will help: <assistant_response>asdf</assistant_response>.",
         "turn": 1
       },
     ]
     );
     let s = serde_json::to_string(&log_json).unwrap();
-    println!("content: {}", s);
+    println!("content: {s}");
     let sl = serde_json::from_str::<SessionLog>(&s).unwrap();
     let txt = get_text_from_session_log(&sl);
-    println!("text: {}", txt);
+    println!("text: {txt}");
     assert_eq!(
         txt, //
         "user: pin\nassistant: asdf\n",
