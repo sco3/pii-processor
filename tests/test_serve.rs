@@ -1,5 +1,6 @@
 use axum::http::StatusCode;
 use ductaper::util::logging::init_tracing;
+use std::sync::Arc;
 use testcontainers::core::wait::HttpWaitStrategy;
 
 use tracing::info;
@@ -23,8 +24,12 @@ use testcontainers::{
     ImageExt,
 };
 
+use crate::common::dummy_caller::DummyCaller;
+use crate::common::dummy_saver::DummySaver;
+use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::mq::admin::StreamAdmin;
 use ductaper::mq::upd_redact_stream::update_redact_stream;
+use ductaper::worker_pool::WorkerPool;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
 use tracing::debug;
@@ -49,4 +54,20 @@ async fn test_serve() {
     if let Ok(port) = container.get_host_port_ipv4(4222.tcp()).await {
         info!("Container port: {port}");
     }
+
+    let proc = LlmLogProcessor::new(
+        Arc::new(DummyCaller {}),
+        "Help if you can.".to_string(),
+        "nova".to_string(),
+        Arc::new(DummySaver::new()),
+    );
+
+    let (tx, rx) = async_channel::bounded(1);
+
+    let wp = WorkerPool {
+        size: 1,
+        receiver: rx,
+        llm_log_processor: Arc::new(proc),
+        handlers: Vec::new(),
+    };
 }
