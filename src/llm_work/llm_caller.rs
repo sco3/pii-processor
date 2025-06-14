@@ -4,12 +4,13 @@ use crate::llm_work::reducter::ReDucter;
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
 use moka::future::Cache;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
+use serde_json::Value;
 use std::time::{Duration, Instant};
-use tracing::{Level, debug, error, info};
+use tokio::time::sleep;
+use tracing::{debug, error, info, Level};
 
 pub struct LLmCaller {
     pub endpoint: String,
@@ -130,7 +131,14 @@ impl LLmCaller {
     async fn check_cache(&self, start: Instant, body: &Value) -> Option<Option<Value>> {
         if let Ok(key) = serde_json::to_vec(&body) {
             return Some(if let Some(value) = self.cache.get(&key).await {
-                info!("Cache hit: {} ms", start.elapsed().as_millis());
+                let sleep_duration = Duration::from_millis(1000);
+                sleep(sleep_duration).await;
+                info!(
+                    "Cache hit: {} us sleep: {} us",
+                    start.elapsed().as_micros(),
+                    sleep_duration.as_micros()
+                );
+
                 Some(value)
             } else {
                 let value = self.direct_send(start, body).await;

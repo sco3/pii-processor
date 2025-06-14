@@ -9,7 +9,7 @@ mod new;
 mod parse;
 pub mod pii_text;
 pub mod preview;
-mod process;
+mod process_pii;
 pub mod process_result;
 pub mod prompt;
 pub mod reducter;

@@ -5,11 +5,11 @@ use tracing::info;
 
 impl WorkerPool {
     pub async fn start(&self) {
-        for _ in 0..self.size {
+        for id in 0..self.size {
             let recv = self.receiver.clone();
             let processor = Arc::clone(&self.llm_log_processor);
             spawn(async move {
-                Self::serve_messages(recv, processor).await;
+                Self::serve_message(recv, processor, id).await;
             });
         }
         info!("Worker pool with {} workers started.", self.size)
