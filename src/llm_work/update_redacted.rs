@@ -19,10 +19,9 @@ impl LlmLogProcessor {
                     for chat_msg in &mut chat_gpt.chat_gpt.request.chat_history {
                         chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
                     }
-                    if let Some(msg) = chat_gpt.chat_gpt.response.message.as_mut() {
-                        msg.content = Self::upd_field(msg.content.clone(), redacts);
-                        // for tool_call in msg.tool_calls.as_mut() {
-                        // }
+                    if let Some(chat_msg) = chat_gpt.chat_gpt.response.message.as_mut() {
+                        chat_msg.content = Self::upd_field(chat_msg.content.clone(), redacts);
+                        Self::process_tool_calls(chat_msg, redacts);
                     }
                 }
                 ArchTypeEnum(_arch_type) => {}

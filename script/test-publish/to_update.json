@@ -161,7 +161,7 @@
         "agent": "context",
         "message": {
           "role": "assistant",
-          "content": "To properly assist you, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
+          "content": "To properly assist you,Joulie Yen, I need to check our FAQ database for the most accurate and up-to-date information regarding Level Health's services and offerings. Let me do that for you now.",
           "tool_calls": [
             {
               "index": 1,
