@@ -18,6 +18,10 @@ RUN cargo build --release
 
 FROM alpine:3.22
 COPY --from=builder /app/target/release/ductaper /usr/local/bin/ductaper
-RUN mkdir -p /root/.local
-COPY data/system_prompt.txt /root/.local/system_prompt.txt  
+RUN adduser -D user
+RUN mkdir -p /home/user/.local
+COPY data/system_prompt.txt /home/user/.local/system_prompt.txt
+RUN chown -R user:user /home/user
+COPY healthcheck.sh /
+RUN chown root:user /healthcheck.sh && chmod 550 /healthcheck.sh
 CMD ["ductaper"]
