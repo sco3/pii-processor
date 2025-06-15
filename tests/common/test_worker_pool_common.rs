@@ -70,7 +70,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         false,
     ));
 
-    let system_prompt = read_prompt(&"data/system_prompt.txt".to_string());
+    let system_prompt = read_prompt("data/system_prompt.txt");
     let processor = LlmLogProcessor::new(
         caller, //
         system_prompt,
