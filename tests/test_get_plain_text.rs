@@ -55,3 +55,13 @@ pub fn test_get_plain_text_no_matching_tags() {
         "user: I am Joulie Yen. I forgot my pin.\nassistant: I will help: asdf.\n",
     )
 }
+
+#[test]
+pub fn generate_text_from_file() -> Result<(), Box<dyn std::error::Error>> {
+    let content = std::fs::read("tests/data/worker-pool-test.json")?;
+
+    let log = serde_json::from_slice::<SessionLog>(&content)?;
+    let txt = get_text_from_session_log(&log);
+    println!("Len: {}", txt.len());
+    Ok(())
+}

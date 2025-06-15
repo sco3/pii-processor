@@ -1,7 +1,9 @@
+use ductaper::config::expanduser::expand_user_path;
+use home::home_dir;
+use std::env::current_dir;
 use std::fs::{self, File};
 use std::io::Write;
-
-use ductaper::config::expanduser::expand_user_path;
+use std::path::PathBuf;
 
 #[test]
 fn test_expand_user_path() {
@@ -11,8 +13,8 @@ fn test_expand_user_path() {
     writeln!(file, "asdf").expect("Failed to write to temp file");
 
     // Step 2: Calculate ~/ path to the file
-    let current_dir = std::env::current_dir().expect("Failed to get current directory");
-    let home_dir = home::home_dir().expect("Failed to get home directory");
+    let current_dir = current_dir().expect("Failed to get current directory");
+    let home_dir = home_dir().expect("Failed to get home directory");
 
     // Ensure current_dir starts with home_dir
     assert!(
@@ -40,4 +42,5 @@ fn test_expand_user_path() {
 
     // Step 5: Clean up
     fs::remove_file(file_name).expect("Failed to delete temp file");
+    assert_eq!(expand_user_path("/tmp"), PathBuf::from("/tmp"));
 }

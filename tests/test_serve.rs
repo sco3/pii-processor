@@ -7,17 +7,6 @@ use tracing::info;
 
 mod common;
 
-use crate::common::init_cfg::get_test_cfg;
-use async_channel::{bounded, Receiver, Sender};
-use async_nats::jetstream::Message;
-use async_trait::async_trait;
-
-use ductaper::llm_work::log_handler::LogHandler;
-use ductaper::mq::connector::Connector;
-use ductaper::mq::publisher::Publisher;
-use ductaper::mq::redact_consumer::RedactConsumer;
-use std::sync::atomic::{AtomicI64, Ordering};
-use std::time::{SystemTime, UNIX_EPOCH};
 use testcontainers::{
     core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
     GenericImage,
@@ -27,8 +16,6 @@ use testcontainers::{
 use crate::common::dummy_caller::DummyCaller;
 use crate::common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::mq::admin::StreamAdmin;
-use ductaper::mq::upd_redact_stream::update_redact_stream;
 use ductaper::worker_pool::WorkerPool;
 use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
@@ -62,12 +49,14 @@ async fn test_serve() {
         Arc::new(DummySaver::new()),
     );
 
-    let (tx, rx) = async_channel::bounded(1);
+    let (_tx, rx) = async_channel::bounded(1);
 
-    let wp = WorkerPool {
+    let _wp = WorkerPool {
         size: 1,
         receiver: rx,
         llm_log_processor: Arc::new(proc),
         handlers: Vec::new(),
     };
+    debug!("ok");
+    sleep(TokioDuration::from_millis(1)).await;
 }
