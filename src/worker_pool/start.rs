@@ -4,6 +4,7 @@ use tokio::spawn;
 use tracing::info;
 
 impl WorkerPool {
+    /// starts worker pool
     pub async fn start(&mut self) {
         for id in 0..self.size {
             let recv = self.receiver.clone();
@@ -15,7 +16,7 @@ impl WorkerPool {
         }
         info!("Worker pool with {} workers started.", self.size)
     }
-
+    /// stops worker pool
     pub async fn stop(&mut self) {
         for handler in &mut self.handlers {
             let _ = handler.await;
