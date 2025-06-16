@@ -1,0 +1,17 @@
+#!/usr/bin/env -S bash
+
+set -xueo pipefail
+
+docker run \
+	-e TENANT=localhost \
+	-e APPLICATION=localhost \
+	-e AGGREGATOR_SESSIONS_LOG_URL=/tmp \
+	-e LLM_MODEL=nova \
+	-e AWS_ASDF=1 \
+	-e NATS_URL=nats://host.docker.internal:4222 \
+	-e LLM_URL=http://host.docker.internal:4000/chat/completions \
+	-e NO_COLOR=1 \
+	-v $(pwd)/tmp:/tmp:z \
+	--add-host=host.docker.internal:host-gateway \
+	-it ductaper:$(git branch --show-current)
+
