@@ -1,3 +1,5 @@
+/// Swaps key and value if key is wrapped in [] or appears to be a masked value (ends with ****).
+/// Returns (unmasked_value, identifier) tuple.
 pub fn check_or_swap<'a>(key: &'a str, value: &'a str) -> (&'a str, &'a str) {
     if key.starts_with("[") && key.ends_with("]") {
         return (value, key);
@@ -14,6 +16,7 @@ pub fn check_or_swap<'a>(key: &'a str, value: &'a str) -> (&'a str, &'a str) {
     (key, value)
 }
 
+/// Tests for check_or_swap function
 #[test]
 pub fn test_swap() {
     assert_eq!(
