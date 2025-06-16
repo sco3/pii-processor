@@ -19,7 +19,7 @@ pub async fn test_update_pii_redactions() {
     let data = fs::read_to_string("tests/data/to_update.json").unwrap();
     let mut log = serde_json::from_str::<SessionLog>(data.as_str()).unwrap();
     let proc = LlmLogProcessor::new(
-        Arc::new(DummyCaller {}), //
+        Arc::new(DummyCaller::new(None)), //
         "".to_string(),
         "".to_string(),
         Arc::new(DummySaver::new()),

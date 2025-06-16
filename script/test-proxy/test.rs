@@ -1,7 +1,5 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
-use std::fs;
-use std::time::Instant;
 
 //use tokio;
 

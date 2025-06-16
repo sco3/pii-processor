@@ -8,21 +8,21 @@ use tracing::info;
 mod common;
 
 use testcontainers::{
-    core::{IntoContainerPort, WaitFor}, runners::AsyncRunner,
-    GenericImage,
-    ImageExt,
+    GenericImage, ImageExt,
+    core::{IntoContainerPort, WaitFor},
+    runners::AsyncRunner,
 };
 
 use crate::common::dummy_caller::DummyCaller;
 use crate::common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
 use ductaper::worker_pool::WorkerPool;
-use tokio::time::sleep;
 use tokio::time::Duration as TokioDuration;
+use tokio::time::sleep;
 use tracing::debug;
 
 #[tokio::test]
-async fn test_serve() {
+async fn test_worker_pool_serve() {
     init_tracing();
 
     let container = GenericImage::new("nats", "2.11.4")
@@ -42,8 +42,10 @@ async fn test_serve() {
         info!("Container port: {port}");
     }
 
+    let resp = std::fs::read_to_string("tests/data/response.json").unwrap();
+
     let proc = LlmLogProcessor::new(
-        Arc::new(DummyCaller {}),
+        Arc::new(DummyCaller::new(Some(&resp))),
         "Help if you can.".to_string(),
         "nova".to_string(),
         Arc::new(DummySaver::new()),

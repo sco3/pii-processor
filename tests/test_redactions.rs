@@ -13,7 +13,7 @@ pub fn test_redactions() -> Result<(), Box<dyn std::error::Error>> {
     let content = LlmLogProcessor::extract_content(&v).unwrap();
 
     let proc = LlmLogProcessor::new(
-        Arc::new(DummyCaller {}), //
+        Arc::new(DummyCaller::new(None)), //
         r#" 
             OPERATORS = {
                 "DEFAULT": {"type": "replace", "new_value": "[REDACTED]"},
