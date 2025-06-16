@@ -93,6 +93,7 @@ pub struct ToolCall {
 /// Architecture type wrapper
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArchTypeItem {
+    /// architecture type mark
     #[serde(rename = "architecture_type")]
     pub architecture_type: Architecture,
 }
@@ -100,6 +101,7 @@ pub struct ArchTypeItem {
 /// Reference to tool calls
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ToolCallRef {
+    /// turn number 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub turn: Option<i32>,
     /// List of tool call references
@@ -120,10 +122,10 @@ pub struct ChatMessageItem {
     pub role: String,
     /// Message content
     pub content: String,
-
+    /// tool calls list
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_calls: Option<Vec<ToolCall>>,
-
+    /// turn number
     #[serde(skip_serializing_if = "Option::is_none")]
     pub turn: Option<i32>,
 }
@@ -152,9 +154,10 @@ pub struct Request {
 /// AI chat response
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Response {
+    /// agent name 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub agent: Option<String>,
-
+    /// chat message section
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<ChatMessageItem>,
 }
