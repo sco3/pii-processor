@@ -52,9 +52,11 @@ pub struct Parameters {
     /// Parameter type
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub ty: Option<String>,
-    /// Map of parameter properties
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<HashMap<String, Property>>,
-    /// List of required parameters
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<Vec<String>>,
 }
 
@@ -63,11 +65,14 @@ pub struct Parameters {
 pub struct Function {
     /// Function name
     pub name: String,
-    /// Function description
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    /// Function parameters
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Parameters>,
-    /// Function arguments (serialized)
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub arguments: Option<String>,
 }
 
@@ -88,14 +93,14 @@ pub struct ToolCall {
 /// Architecture type wrapper
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArchTypeItem {
-    /// Architecture type value
+    #[serde(rename = "architecture_type")]
     pub architecture_type: Architecture,
 }
 
 /// Reference to tool calls
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ToolCallRef {
-    /// Turn number (if applicable)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub turn: Option<i32>,
     /// List of tool call references
     pub tool_calls: Vec<String>,
@@ -115,9 +120,11 @@ pub struct ChatMessageItem {
     pub role: String,
     /// Message content
     pub content: String,
-    /// Tool calls associated with message
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_calls: Option<Vec<ToolCall>>,
-    /// Turn number (if applicable)
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub turn: Option<i32>,
 }
 
@@ -145,9 +152,10 @@ pub struct Request {
 /// AI chat response
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Response {
-    /// Agent identifier (if applicable)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub agent: Option<String>,
-    /// Response message
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<ChatMessageItem>,
 }
 
@@ -168,9 +176,11 @@ pub struct ChatHistoryItem {
     pub role: String,
     /// Message content (string or structured)
     pub content: serde_json::Value,
-    /// Tool calls (if any)
+    /// tool calls section
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_calls: Option<Vec<ToolCall>>,
-    /// Tool call ID (if applicable)
+    /// tool call id string
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_call_id: Option<String>,
 }
 
