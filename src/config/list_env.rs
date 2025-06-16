@@ -1,6 +1,7 @@
 use std::env;
 use tracing::info;
 
+/// Logs all environment variables, masking AWS credentials.
 pub fn list_env() {
     for (key, value) in env::vars() {
         if key.starts_with("AWS_") {
@@ -11,6 +12,7 @@ pub fn list_env() {
     }
 }
 
+/// Masks sensitive strings by showing first 4 chars followed by '****'.
 pub fn mask(value: String) -> String {
     if value.len() > 4 {
         format!("{}****", &value[..4])
