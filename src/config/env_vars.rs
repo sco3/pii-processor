@@ -42,9 +42,9 @@ pub struct Cfg {
     pub redact_max_tasks: usize,
     #[serde(default = "default_redact_probe_port")]
     pub redact_probe_port: u16,
-    #[serde(default = "default_redact_cache_enabled")]
+    #[serde(default = "default_llm_cache_enabled")]
     #[serde(deserialize_with = "de_bool")]
-    pub redact_cache_enabled: bool,
+    pub llm_cache: bool,
 }
 
 fn de_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
@@ -59,7 +59,7 @@ where
     }
 }
 
-fn default_redact_cache_enabled() -> bool {
+fn default_llm_cache_enabled() -> bool {
     false
 }
 
