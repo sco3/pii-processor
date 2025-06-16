@@ -38,5 +38,6 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         llm_url: "http://localhost:4000/chat/completions".to_string(),
         redact_probe_port: 8118,
         llm_cache: false,
+        llm_cache_sleep_millis: 0,
     }
 }

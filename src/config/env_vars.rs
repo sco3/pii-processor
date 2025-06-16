@@ -86,6 +86,15 @@ pub struct Cfg {
     #[serde(default = "default_llm_cache_enabled")]
     #[serde(deserialize_with = "de_bool")]
     pub llm_cache: bool,
+
+    /// emulate work and sleep on cached response
+    #[serde(default = "default_llm_cache_sleep_millis")]
+    pub llm_cache_sleep_millis: u32,
+}
+
+/// default value for work emulation sleep on cached response
+pub fn default_llm_cache_sleep_millis() -> u32 {
+    0
 }
 
 /// Deserialize a boolean from various string representations

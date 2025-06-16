@@ -3,13 +3,13 @@ use crate::llm_work::reducter::ReDucter;
 use async_trait::async_trait;
 use mime::APPLICATION_JSON;
 use moka::future::Cache;
-use reqwest::RequestBuilder;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::Value;
+use reqwest::RequestBuilder;
 use serde_json::json;
+use serde_json::Value;
 use std::time::{Duration, Instant};
 use tokio::time::sleep;
-use tracing::{Level, debug, error, info};
+use tracing::{debug, error, info, Level};
 
 /// Client for making LLM API calls with caching support
 pub struct LLmCaller {
@@ -25,6 +25,7 @@ pub struct LLmCaller {
     pub cache_flag: bool,
     /// Response cache storage
     cache: Cache<Vec<u8>, Value>,
+    cache_sleep_millis: Option<u32>,
 }
 
 impl LLmCaller {
@@ -34,6 +35,7 @@ impl LLmCaller {
         model: impl Into<String>,
         token: Option<String>,
         cache_flag: bool,
+        cache_sleep_millis: Option<u32>,
     ) -> Self {
         let bearer = Self::add_bearer(token);
         let cache = Cache::builder()
@@ -48,14 +50,13 @@ impl LLmCaller {
             client: reqwest::Client::new(),
             cache_flag,
             cache,
+            cache_sleep_millis,
         }
     }
 
     /// Formats bearer token with prefix
     fn add_bearer(token: Option<String>) -> Option<String> {
-        token
-            .as_ref()
-            .map(|t| format!("{} {}", Ai::BEARER, t))
+        token.as_ref().map(|t| format!("{} {}", Ai::BEARER, t))
     }
 
     /// Constructs request body JSON
@@ -139,13 +140,19 @@ impl LLmCaller {
     async fn check_cache(&self, start: Instant, body: &Value) -> Option<Option<Value>> {
         if let Ok(key) = serde_json::to_vec(&body) {
             return Some(if let Some(value) = self.cache.get(&key).await {
-                let sleep_duration = Duration::from_millis(1000);
-                sleep(sleep_duration).await;
-                info!(
-                    "Cache hit: {} us sleep: {} us",
-                    start.elapsed().as_micros(),
-                    sleep_duration.as_micros()
-                );
+                // sleep to emulate work
+                if let Some(millis) = self.cache_sleep_millis {
+                    let sleep_duration = Duration::from_millis(millis as u64);
+                    sleep(sleep_duration).await;
+                    info!(
+                        "Cache hit: {} us sleep: {} us",
+                        start.elapsed().as_micros(),
+                        sleep_duration.as_micros()
+                    );
+                } else {
+                    info!("Cache hit: {} us", start.elapsed().as_micros(),);
+                }
+
                 Some(value)
             } else {
                 let value = self.direct_send(start, body).await;

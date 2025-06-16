@@ -31,6 +31,7 @@ async fn test_llm_log_processor() {
         "nova",
         Some("sk-1234".to_string()),
         false,
+        None,
     );
     let caller = Arc::new(raw_caller);
     // prompt_location: "//tmp".to_string(),

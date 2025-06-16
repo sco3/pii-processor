@@ -39,6 +39,7 @@ async fn main() {
         "haiku",
         Some(TOKEN.to_string()),
         false,
+        Some(0),
     ));
 
     for model in models {

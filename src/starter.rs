@@ -52,6 +52,7 @@ impl Starter {
             cfg.llm_model.clone(),
             Some(cfg.llm_token.get_string()),
             cfg.llm_cache,
+            Some(cfg.llm_cache_sleep_millis),
         );
         let shared_llm_caller = Arc::new(llm_caller);
 

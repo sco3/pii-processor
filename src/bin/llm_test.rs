@@ -82,6 +82,7 @@ async fn call_with_model(model: &str, prompt: &str, msg: &str) {
         model.to_string(),
         Some(TOKEN.to_string()),
         false,
+        Some(0),
     );
     info!("Model: {} --------------------- ", model);
     response_details(caller, model, prompt, msg).await;

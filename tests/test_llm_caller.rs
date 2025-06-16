@@ -52,6 +52,7 @@ async fn test_llm_caller() {
         "nova".to_string(),
         Some("sk-1234".to_string()),
         false,
+        None,
     );
     caller.call("haiku", "Hello", "Hi").await;
     mock.assert();
@@ -73,6 +74,7 @@ async fn test_send_request_failure() {
         "gpt-test",
         None,
         false,
+        None,
     );
     let body = json!({"key": "value"});
     let req = caller.build_request(&body);
@@ -98,6 +100,7 @@ async fn test_send_json_parse_failure() {
         "gpt-test",
         None,
         false,
+        None,
     );
     let req = caller.build_request(&json!({"key": "value"}));
 
@@ -112,6 +115,7 @@ async fn test_no_server_failure() {
         "gpt-test",
         None,
         false,
+        None,
     );
     let body = json!({"key": "value"});
     let req = caller.build_request(&body);
