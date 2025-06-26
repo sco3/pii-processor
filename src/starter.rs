@@ -9,6 +9,7 @@ use crate::mq::stream_admin::StreamAdmin;
 use crate::mq::upd_redact_stream::update_redact_stream;
 use crate::probe::http_probe::HealthProbe;
 use crate::probe::toggle::Toggle;
+use crate::storage::saver::Saver;
 use crate::storage::saver_factory::get_saver;
 use crate::util::init::Init;
 use crate::util::logging::init_log;
@@ -36,6 +37,8 @@ pub struct Starter {
     pub cfg: Cfg,
     /// k8s/docker probe
     pub probe: HealthProbe,
+    /// storage saver
+    pub saver: Arc<dyn Saver>,
 }
 
 /// starter methods
@@ -72,8 +75,12 @@ impl Starter {
 
         let system_prompt = read_prompt(&cfg.system_prompt_location, true);
 
-        let processor =
-            LlmLogProcessor::new(shared_llm_caller, system_prompt, &cfg.llm_model, saver);
+        let processor = LlmLogProcessor::new(
+            shared_llm_caller,
+            system_prompt,
+            &cfg.llm_model,
+            Arc::clone(&saver), //
+        );
         let llm_log_processor = Arc::new(processor);
 
         let mut max_tasks = cfg.redact_max_tasks;
@@ -102,6 +109,7 @@ impl Starter {
             worker_pool,
             cfg,
             probe,
+            saver,
         }
     }
 
