@@ -36,6 +36,7 @@ impl WorkerPool {
                     Skipping processing. Payload: {:?}", //
                     SESSION_LOG_HEADER, msg.payload
                 );
+                Self::ack(&NatsAck::from(msg)).await;
                 return;
             }
         };
