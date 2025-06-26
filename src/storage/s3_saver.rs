@@ -12,10 +12,12 @@ use std::process::exit;
 use std::sync::Arc;
 use tracing::{debug, error, info};
 
+use tokio::sync::OnceCell;
+
 /// structure to save to s3
 pub struct S3Saver {
     /// utility class to perform s3 operations
-    pub s3helper: Option<S3Helper>,
+    pub s3helper: OnceCell<S3Helper>,
     /// bucket name
     pub bucket: Arc<str>,
     /// http probe toggler - sets ready/not ready based on s3 operation
@@ -58,22 +60,33 @@ impl S3Saver {
             Err(e) => Err(e),
         }
     }
-    /// Constructor
-    ///
-    pub async fn new(bucket: &str, cfg: &Cfg, toggle: Toggle) -> Self {
-        match S3Saver::get_s3_ctx(bucket, cfg).await {
-            Ok(s3ctx) => {
-                toggle.set_ready(true);
-                S3Saver {
-                    s3helper: Some(S3Helper::new(s3ctx)),
-                    bucket: Arc::from(bucket),
-                    toggle,
-                }
-            }
-            Err(e) => {
-                error!("S3 problem: {}", e);
-                exit(ExitCode::S3Error.code());
-            }
+
+    // / Constructor
+    // /
+    // pub async fn new(bucket: &str, cfg: &Cfg, toggle: Toggle) -> Self {
+    //     match S3Saver::get_s3_ctx(bucket, cfg).await {
+    //         Ok(s3ctx) => {
+    //             toggle.set_ready(true);
+    //             S3Saver {
+    //                 s3helper: Some(S3Helper::new(s3ctx)),
+    //                 bucket: Arc::from(bucket),
+    //                 toggle,
+    //             }
+    //         }
+    //         Err(e) => {
+    //             error!("S3 problem: {}", e);
+    //             exit(ExitCode::S3Error.code());
+    //         }
+    //     }
+    // }
+
+    /// lazy constructor
+    pub fn new_lazy(bucket: &str, toggle: Toggle) -> Self {
+        info!("S3Saver created in lazy mode for bucket: {}", bucket);
+        S3Saver {
+            s3helper: OnceCell::new(), // Starts uninitialized
+            bucket: Arc::from(bucket), // Store the bucket name
+            toggle,                    // Store the toggle
         }
     }
 }
@@ -83,7 +96,7 @@ impl Saver for S3Saver {
     /// save to s3
     async fn save(&self, log: SessionLog, file_name: &str) -> bool {
         debug!("Save to key: {} log: {:?} t", file_name, log);
-        if let Some(helper) = &self.s3helper {
+        if let Some(helper) = self.s3helper.get() {
             match serde_json::to_string_pretty(&log) {
                 Ok(data) => {
                     let out = helper
@@ -100,7 +113,23 @@ impl Saver for S3Saver {
         false
     }
     /// not implemented for now
-    async fn init(&mut self) {}
+    async fn init(&self, cfg: &Cfg) {
+        if self.s3helper.get().is_some() {
+            return;
+        }
+
+        match S3Saver::get_s3_ctx(&self.bucket, cfg).await {
+            Ok(ctx) => {
+                let _ = self.s3helper.set(S3Helper::new(ctx));
+                self.toggle.set_ready(true);
+            }
+            Err(e) => {
+                error!("S3 init failed: {e}");
+                self.toggle.set_ready(false);
+                exit(ExitCode::S3Error.code());
+            }
+        }
+    }
 
     /// returns name
     fn get_name(&self) -> String {

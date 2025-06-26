@@ -19,6 +19,7 @@ use ductaper::storage::saver::Saver;
 use ductaper::storage::saver_factory::get_saver;
 use testcontainers::runners::AsyncRunner;
 use testcontainers_modules::minio;
+use tokio::sync::OnceCell;
 use tracing::{debug, info};
 
 const MINIOADMIN: &str = "minioadmin";
@@ -142,11 +143,15 @@ async fn test_s3() {
 
         let mut cfg = get_test_cfg(0);
 
+        let cell = OnceCell::new();
+        cell.set(s3).unwrap();
+
         let saver = S3Saver {
             bucket: Arc::from(test_bucket),
-            s3helper: Some(s3),
+            s3helper: cell,
             toggle,
         };
+
         cfg.aws_s3_endpoint = endpoint;
         cfg.aws_access_key_id = Some(SecretString::new(MINIOADMIN));
         cfg.aws_secret_access_key = Some(SecretString::new(MINIOADMIN));

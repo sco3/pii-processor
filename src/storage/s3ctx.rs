@@ -4,6 +4,7 @@ use aws_sdk_s3::Client;
 use aws_sdk_s3::config::Builder as S3ConfigBuilder;
 use std::error::Error;
 /// s3 login component
+#[derive(Debug)]
 pub struct S3Ctx {
     /// s3 client
     pub s3: Client,

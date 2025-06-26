@@ -1,3 +1,4 @@
+use crate::config::env_vars::Cfg;
 use crate::data::session_log_models::SessionLog;
 use crate::storage::saver::Saver;
 use async_trait::async_trait;
@@ -56,7 +57,7 @@ impl Saver for LocalSaver {
         false
     }
     /// nothing for now in this init method
-    async fn init(&mut self) {}
+    async fn init(&self, _cfg: &Cfg) {}
     /// name getter
     fn get_name(&self) -> String {
         "local-fs".to_string()

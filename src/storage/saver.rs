@@ -1,3 +1,4 @@
+use crate::config::env_vars::Cfg;
 use crate::data::session_log_models::SessionLog;
 use async_trait::async_trait;
 
@@ -10,5 +11,5 @@ pub trait Saver: Send + Sync {
     fn get_name(&self) -> String;
 
     /// lazy init of saver
-    async fn init(&mut self);
+    async fn init(&self, cfg: &Cfg);
 }

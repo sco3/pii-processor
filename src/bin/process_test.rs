@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use ductaper::config::env_vars::Cfg;
 use ductaper::data::session_log_models::SessionLog;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
@@ -22,7 +23,7 @@ impl Saver for DummySaver {
         "DummySaver".to_string()
     }
     /// init dummy saver - nothing to do
-    async fn init(&mut self) {}
+    async fn init(&self, _cfg: &Cfg) {}
 }
 
 #[tokio::main]

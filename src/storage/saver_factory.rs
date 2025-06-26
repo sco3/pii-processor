@@ -14,11 +14,14 @@ use std::sync::Arc;
 /// extracted by the `get_bucket` function. This indicates a critical
 /// misconfiguration, and the program will exit.
 ///
-pub async fn get_saver(cfg: &Cfg, storage_toggle: Toggle) -> Arc<dyn Saver + Send + Sync> {
+pub async fn get_saver(
+    cfg: &Cfg,
+    storage_toggle: Toggle,
+) -> Arc<dyn Saver + Send + Sync + 'static> {
     if cfg.aggregator_sessions_log_url.starts_with("s3://") {
         let bucket = get_bucket(cfg.aggregator_sessions_log_url.as_str()).unwrap();
 
-        let saver = S3Saver::new(bucket.as_str(), cfg, storage_toggle).await;
+        let saver = S3Saver::new_lazy(bucket.as_str(), storage_toggle);
         Arc::new(saver)
     } else {
         let local_saver = Arc::new(

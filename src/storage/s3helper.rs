@@ -1,7 +1,10 @@
 use crate::storage::s3ctx::S3Ctx;
 use crate::storage::s3error::aws_err;
 use tracing::{debug, error, info};
+
 /// utlity for s3
+#[derive(Debug)]
+
 pub struct S3Helper {
     /// s3 context with s3 client
     s3ctx: S3Ctx,

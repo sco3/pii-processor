@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use ductaper::config::env_vars::Cfg;
 use ductaper::data::session_log_models::SessionLog;
 use ductaper::storage::saver::Saver;
 use std::sync::Arc;
@@ -25,5 +26,5 @@ impl Saver for DummySaver {
         "dummy".to_string()
     }
 
-    async fn init(&mut self) {}
+    async fn init(&self, _cfg: &Cfg) {}
 }
