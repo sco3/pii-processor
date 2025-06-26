@@ -25,7 +25,5 @@ impl Saver for DummySaver {
         "dummy".to_string()
     }
 
-    //async fn init(&mut self, _cfg: &Cfg) -> bool {
-    //     true
-    // }
+    async fn init(&mut self) {}
 }

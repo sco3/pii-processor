@@ -21,10 +21,8 @@ impl Saver for DummySaver {
     fn get_name(&self) -> String {
         "DummySaver".to_string()
     }
-    // / init dummy saver - nothing to do
-    //async fn init(&mut self, _cfg: &Cfg) -> bool {
-    //true
-    //}
+    /// init dummy saver - nothing to do
+    async fn init(&mut self) {}
 }
 
 #[tokio::main]

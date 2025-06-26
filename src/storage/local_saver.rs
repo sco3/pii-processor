@@ -55,7 +55,8 @@ impl Saver for LocalSaver {
 
         false
     }
-
+    /// nothing for now in this init method
+    async fn init(&mut self) {}
     /// name getter
     fn get_name(&self) -> String {
         "local-fs".to_string()

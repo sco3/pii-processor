@@ -8,4 +8,7 @@ pub trait Saver: Send + Sync {
     async fn save(&self, _log: SessionLog, _file_name: &str) -> bool;
     /// name getter
     fn get_name(&self) -> String;
+
+    /// lazy init of saver
+    async fn init(&mut self);
 }

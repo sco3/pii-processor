@@ -99,6 +99,8 @@ impl Saver for S3Saver {
         }
         false
     }
+    /// not implemented for now
+    async fn init(&mut self) {}
 
     /// returns name
     fn get_name(&self) -> String {
