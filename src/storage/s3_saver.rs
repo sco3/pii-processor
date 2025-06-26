@@ -112,7 +112,7 @@ impl Saver for S3Saver {
         }
         false
     }
-    /// not implemented for now
+    /// creates connectin for s3
     async fn init(&self, cfg: &Cfg) {
         if self.s3helper.get().is_some() {
             return;

@@ -38,7 +38,7 @@ pub struct Starter {
     /// k8s/docker probe
     pub probe: HealthProbe,
     /// storage saver
-    pub saver: Option<Arc<dyn Saver + Send + Sync + 'static>>,
+    pub saver: Arc<dyn Saver + Send + Sync + 'static>,
 }
 
 /// starter methods
@@ -109,7 +109,7 @@ impl Starter {
             worker_pool,
             cfg,
             probe,
-            saver: Some(saver),
+            saver: saver,
         }
     }
 
@@ -126,9 +126,8 @@ impl Starter {
 impl Init for Starter {
     /// starts the services
     async fn start(&mut self) {
-        if let Some(saver) = &self.saver {
-            saver.init(&self.cfg).await;
-        }
+        self.saver.init(&self.cfg).await;
+
         let _ = self.probe.start().await;
 
         update_redact_stream(&self.admin, &self.cfg).await;
