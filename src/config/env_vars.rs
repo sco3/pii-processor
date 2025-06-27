@@ -80,6 +80,21 @@ pub struct Cfg {
     /// Optional AWS session token
     pub aws_access_token: Option<SecretString>,
 
+    /// pass aws key as header: "x-portkey-aws-access-key-id"
+    pub portkey_aws_access_key_id_header: Option<String>,
+
+    /// pass aws region as header: "x-portkey-aws-region"
+    pub portkey_aws_region_header: Option<String>,
+
+    /// pass aws access key as header: "x-portkey-aws-secret-access-key"
+    pub portkey_aws_secret_access_key_header: Option<String>,
+
+    /// Optional AWS session token as header: "x-portkey-aws-session-token"
+    pub portkey_aws_access_token_header: Option<SecretString>,
+
+    /// Optional portkey provider: "x-portkey-provider: bedrock"
+    pub portkey_provider_header: Option<String>,
+
     /// URL for aggregator sessions log
     pub aggregator_sessions_log_url: String,
 

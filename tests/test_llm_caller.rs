@@ -1,3 +1,4 @@
+use crate::common::init_cfg::get_test_cfg;
 use ductaper::llm_work::llm_caller::LLmCaller;
 use ductaper::llm_work::reducter::ReDucter;
 use ductaper::util::logging::init_tracing;
@@ -11,6 +12,7 @@ mod common;
 #[tokio::test]
 async fn test_llm_caller() {
     init_tracing();
+    let cfg = get_test_cfg(0);
     let server = MockServer::start();
 
     let expected_body = json!(
@@ -54,6 +56,7 @@ async fn test_llm_caller() {
         Some(&"sk-1234".to_string()),
         true,
         0,
+        &cfg,
     );
     let mut stat = Stat::default();
     caller.call("haiku", "Hello", "Hi", &mut stat).await;
@@ -71,13 +74,14 @@ async fn test_send_request_failure() {
         when.method(POST);
         then.status(500).body("Internal Server Error");
     });
-
+    let cfg = get_test_cfg(0);
     let caller = LLmCaller::new(
         server.url("/fail").as_str(), //
         "gpt-test",
         None,
         false,
         1,
+        &cfg,
     );
     let body = json!({"key": "value"});
     let req = caller.build_request(&body);
@@ -99,13 +103,14 @@ async fn test_send_json_parse_failure() {
             .header("Content-Type", "application/json")
             .body("not-json");
     });
-
+    let cfg = get_test_cfg(0);
     let caller = LLmCaller::new(
         server.url("/bad-json").as_str(), //
         "gpt-test",
         None,
         false,
         0,
+        &cfg,
     );
     let req = caller.build_request(&json!({"key": "value"}));
 
@@ -116,12 +121,14 @@ async fn test_send_json_parse_failure() {
 
 #[tokio::test]
 async fn test_no_server_failure() {
+    let cfg = get_test_cfg(0);
     let caller = LLmCaller::new(
         "http://127.0.0.1:1", //
         "gpt-test",
         None,
         false,
         0,
+        &cfg,
     );
     let body = json!({"key": "value"});
     let req = caller.build_request(&body);

@@ -41,5 +41,10 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         redact_probe_port: 8118,
         llm_cache: false,
         llm_cache_sleep_millis: 0,
+        portkey_aws_access_key_id_header: None,
+        portkey_aws_region_header: None,
+        portkey_aws_secret_access_key_header: None,
+        portkey_aws_access_token_header: None,
+        portkey_provider_header: None,
     }
 }

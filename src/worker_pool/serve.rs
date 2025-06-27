@@ -158,10 +158,10 @@ impl WorkerPool {
             - stat.extract_us
             - stat.ack_micros;
         info!(
-            "Total: {took} us since_published: {} us parse: {} us  extract: {} us req_build: {} \
-            us rest_call: {} us cache_hit: {} us inc_cache_get: {} us \
-            resp_parse: {} update: {} us {}_save: {} us ack: {} us \
-            ???: {} us extra: {:?} us",
+            "Total: {took} μs since_published: {} μs parse: {} μs  extract: {} μs req_build: {} \
+            μs rest_call: {} μs cache_hit: {} μs inc_cache_get: {} μs \
+            resp_parse: {} μs update: {} μs {}_save: {} μs ack: {} μs \
+            Δ: {} μs extra: {:?}",
             since_publish.whole_microseconds(),
             stat.parse_us,
             stat.extract_us,

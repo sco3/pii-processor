@@ -1,5 +1,6 @@
 mod common;
 
+use crate::common::init_cfg::get_test_cfg;
 use async_trait::async_trait;
 use common::dummy_saver::DummySaver;
 use ductaper::llm_work::llm_caller::LLmCaller;
@@ -32,6 +33,7 @@ impl ReDucter for _DummyLlmCaller {
 
 #[tokio::test]
 async fn test_llm_log_processor() {
+    let cfg = get_test_cfg(0);
     //let caller = Arc::new(Mutex::new(DummyLlmCaller {}));
     let raw_caller = LLmCaller::new(
         "http://0.0.0.0:4000/chat/completions",
@@ -39,6 +41,7 @@ async fn test_llm_log_processor() {
         Some(&"sk-1234".to_string()),
         false,
         0,
+        &cfg,
     );
     let caller = Arc::new(raw_caller);
     // prompt_location: "//tmp".to_string(),

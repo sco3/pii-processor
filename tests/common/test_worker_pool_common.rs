@@ -38,6 +38,7 @@ pub struct TestPoolResult {
 #[allow(dead_code)]
 pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
     init_tracing();
+    let cfg = get_test_cfg(0);
 
     let container = GenericImage::new("nats", "2.11.4")
         .with_exposed_port(4222.tcp())
@@ -69,6 +70,7 @@ pub async fn test_pool(payload: Vec<u8>) -> TestPoolResult {
         Some(&"sk-1234".to_string()),
         false,
         0,
+        &cfg,
     ));
 
     let system_prompt = read_prompt("data/system_prompt.txt", false);

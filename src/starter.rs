@@ -70,6 +70,7 @@ impl Starter {
             Some(&cfg.llm_token.get_string()),
             cfg.llm_cache,
             cfg.llm_cache_sleep_millis,
+            &cfg,
         );
         let shared_llm_caller = Arc::new(llm_caller);
 

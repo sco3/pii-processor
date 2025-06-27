@@ -1,3 +1,5 @@
+use dotenv::dotenv;
+use ductaper::config::env_vars::Cfg;
 use ductaper::data::session_log_models::SessionLog;
 use ductaper::llm_work::get_text_from_session_log::get_text_from_session_log;
 use ductaper::llm_work::llm_caller::LLmCaller;
@@ -17,6 +19,9 @@ const TOKEN: &str = "sk-1234";
 #[tokio::main]
 async fn main() {
     init_tracing();
+    dotenv().ok();
+
+    let cfg = Cfg::from_env();
 
     let models = vec!["haiku"];
 
@@ -28,7 +33,7 @@ async fn main() {
     let session_log = read("tests/data/worker-pool-test.json").unwrap();
 
     if var("ASDF").unwrap_or_default() == "ASDF" {
-        simple_tests(&models, &system_prompt).await;
+        simple_tests(&cfg, &models, &system_prompt).await;
     }
 
     let session_log: SessionLog = serde_json::from_slice(session_log.as_ref()) //
@@ -40,6 +45,7 @@ async fn main() {
     let text2 = "[]";
     for model in &models {
         call_with_model(
+            &cfg,
             model, //
             system_prompt.as_str(),
             text2,
@@ -48,13 +54,14 @@ async fn main() {
     }
 }
 
-async fn simple_tests(models: &Vec<&str>, system_prompt: &str) {
+async fn simple_tests(cfg: &Cfg, models: &Vec<&str>, system_prompt: &str) {
     for model in models {
-        call_with_model(model, "Hello", "Hi").await;
+        call_with_model(cfg, model, "Hello", "Hi").await;
     }
 
     for model in models {
         call_with_model(
+            cfg,
             model, //
             r"
         You are a PII redactor that only returns redacted text
@@ -67,6 +74,7 @@ async fn simple_tests(models: &Vec<&str>, system_prompt: &str) {
 
     for model in models {
         call_with_model(
+            cfg,
             model, //
             system_prompt,
             "Hello I am Jack Daniels.",
@@ -75,7 +83,7 @@ async fn simple_tests(models: &Vec<&str>, system_prompt: &str) {
     }
 }
 
-async fn call_with_model(model: &str, prompt: &str, msg: &str) {
+async fn call_with_model(cfg: &Cfg, model: &str, prompt: &str, msg: &str) {
     let start = Instant::now();
     let url = URL;
     let caller = LLmCaller::new(
@@ -84,6 +92,7 @@ async fn call_with_model(model: &str, prompt: &str, msg: &str) {
         Some(&TOKEN.to_string()),
         false,
         0,
+        cfg,
     );
     info!("Model: {} --------------------- ", model);
     response_details(caller, model, prompt, msg).await;

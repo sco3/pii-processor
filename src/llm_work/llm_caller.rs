@@ -1,3 +1,4 @@
+use crate::config::env_vars::Cfg;
 use crate::data::ai_tags::Ai;
 use mime::APPLICATION_JSON;
 use moka::sync::Cache;
@@ -22,7 +23,10 @@ pub struct LLmCaller {
     pub cache_flag: bool,
     /// Response cache storage
     pub(crate) cache: Cache<Arc<str>, Value>,
+    /// emulate work with cache
     pub(crate) cache_sleep_millis: u64,
+    /// configuration
+    pub cfg: Cfg,
 }
 
 impl LLmCaller {

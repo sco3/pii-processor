@@ -1,3 +1,4 @@
+use crate::config::env_vars::Cfg;
 use crate::llm_work::llm_caller::LLmCaller;
 use moka::sync::Cache;
 use std::time::Duration;
@@ -11,6 +12,7 @@ impl LLmCaller {
         token: Option<&String>,
         cache_flag: bool,
         cache_sleep_millis: u64,
+        cfg: &Cfg,
     ) -> Self {
         let bearer = Self::add_bearer(token);
         let cache = Cache::builder()
@@ -26,6 +28,7 @@ impl LLmCaller {
             cache_flag,
             cache,
             cache_sleep_millis,
+            cfg: cfg.clone(),
         }
     }
 }
