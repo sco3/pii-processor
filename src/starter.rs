@@ -109,7 +109,7 @@ impl Starter {
             worker_pool,
             cfg,
             probe,
-            saver: saver,
+            saver,
         }
     }
 
@@ -128,7 +128,7 @@ impl Init for Starter {
     async fn start(&mut self) {
         self.saver.init(&self.cfg).await;
 
-        let _ = self.probe.start().await;
+        self.probe.start().await;
 
         update_redact_stream(&self.admin, &self.cfg).await;
 
