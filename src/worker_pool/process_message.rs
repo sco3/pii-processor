@@ -6,18 +6,18 @@ use crate::worker_pool::WorkerPool;
 use crate::worker_pool::serve::Stat;
 use async_nats::jetstream::Message;
 use std::sync::Arc;
-use time::OffsetDateTime;
+use std::time::Instant;
+
 use tracing::{debug, error, instrument};
 
 impl WorkerPool {
     /// Processes a single NATS message using the LLM log processor.
-    #[instrument(name = "", level = "info", skip(stat, msg, processor, published))]
+    #[instrument(name = "", level = "info", skip(stat, msg, processor))]
     pub async fn process_message(
         processor: &Arc<LlmLogProcessor>, //
         worker_id: usize,
         msg: &Message,
         seq: u64,
-        published: OffsetDateTime,
         stat: &mut Stat,
     ) {
         debug!("Message: {seq:?} {:?} {:?}", msg.payload, msg.headers);
@@ -40,25 +40,22 @@ impl WorkerPool {
                 return;
             }
         };
-
-        match processor
-            .process(msg.payload.to_vec(), session_log_name, stat)
-            .await
-        {
-            ProcessResult::Ok(metrics) => {
-                debug!("PII processing finished: {session_log_name} {metrics}",);
-                stat.storage = metrics.save_kind;
-                stat.storage_micros = metrics.save_micros;
+        let payload = msg.payload.to_vec();
+        match processor.process(payload, session_log_name, stat).await {
+            ProcessResult::Ok => {
+                debug!("PII processing finished: {session_log_name}");
+                let start_ack = Instant::now();
                 Self::ack(&NatsAck::from(msg)).await;
+                stat.ack_micros = start_ack.elapsed().as_micros();
             }
-            ProcessResult::ParseError(_) => {
+            ProcessResult::ParseError => {
                 error!("Failed to parse, acknowledge {}", session_log_name);
                 Self::ack(&NatsAck::from(msg)).await;
             }
-            ProcessResult::Error(_) => {
+            ProcessResult::Error => {
                 error!("Failed to process: {}", session_log_name);
             }
         }
-        Self::log_finish(stat, published);
+        Self::log_finish(stat);
     }
 }

@@ -55,15 +55,15 @@ impl LLmCaller {
 
         debug!("Reported {DUR_HDR}: {litellm_took} {OHEAD_HDR}: {litellm_ov}");
 
+        let mut headers = None;
+        if tracing::enabled!(Level::DEBUG) {
+            headers = Some(resp.headers().clone());
+        }
+        let start_parse_resp = Instant::now();
         match resp.json::<Value>().await {
             Ok(body) => {
-                if tracing::enabled!(Level::DEBUG) {
-                    if let Ok(pretty_body) = serde_json::to_string_pretty(&body) {
-                        debug!("Response:\n{}", pretty_body);
-                    } else {
-                        debug!("Pretty print failed. Original Response: {}", body);
-                    }
-                }
+                debug!("{body}\t\t\t{headers:?}",);
+                stat.parse_resp_us = start_parse_resp.elapsed().as_micros();
                 Some(body)
             }
             Err(e) => {
@@ -90,7 +90,10 @@ impl LLmCaller {
     ) -> Option<Value> {
         // in cortex llm is called three times, let's do the same.
         for attempt in 0..3 {
+            let start_build = Instant::now();
             let req = self.build_request(body);
+            stat.build_us = start_build.elapsed().as_micros();
+
             let start_send = Instant::now();
             if let Some(v) = Self::send(req, message, stat).await {
                 stat.build_and_call = start_send.elapsed().as_micros();

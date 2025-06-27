@@ -1,6 +1,6 @@
 use crate::llm_work::get_text_from_session_log::get_text_from_session_log;
 use crate::llm_work::llm_log_processor::LlmLogProcessor;
-use crate::llm_work::process_result::{Metrics, ProcessResult};
+use crate::llm_work::process_result::ProcessResult;
 use crate::worker_pool::serve::Stat;
 use serde_json;
 use serde_json::Value;
@@ -17,12 +17,16 @@ impl LlmLogProcessor {
     ) -> ProcessResult {
         Self::debug("Payload", &payload);
 
+        let start_parse = Instant::now();
         let Some(mut log) = Self::parse(&payload) else {
             Self::error("Parse error", &payload);
-            return ProcessResult::ParseError(None);
+            return ProcessResult::ParseError;
         };
+        stat.parse_us = start_parse.elapsed().as_micros();
 
+        let start_extract = Instant::now();
         let redaction_text = get_text_from_session_log(&log);
+        stat.extract_us = start_extract.elapsed().as_micros();
         debug!("history: {}", redaction_text);
 
         let response = self
@@ -39,20 +43,19 @@ impl LlmLogProcessor {
             //replace redacted strings
             let redacts = self.redactions(&r);
             if !redacts.is_empty() {
+                let start_upd = Instant::now();
                 self.update_log(&mut log, &redacts);
+                stat.upd_us = start_upd.elapsed().as_micros();
             }
             debug!("Save result to {}", file_name);
             let start_save = Instant::now();
             self.saver.save(log, file_name).await;
-            return ProcessResult::Ok(
-                Metrics {
-                    save_micros: start_save.elapsed().as_micros(),
-                    save_kind: self.saver.get_name(),
-                }, //
-            );
+            stat.storage_micros = start_save.elapsed().as_micros();
+            stat.storage = self.saver.get_name();
+            return ProcessResult::Ok;
         }
         error!("LLM failure");
-        ProcessResult::Error(None)
+        ProcessResult::Error
     }
     /// log in debug mode
     fn debug(label: &str, payload: &Vec<u8>) {

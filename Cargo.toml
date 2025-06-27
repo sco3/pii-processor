@@ -51,3 +51,9 @@ name = "ductaper"
 path = "src/main.rs"
 
 
+#[profile.release]
+#debug = true          # <--- IMPORTANT: This includes debug symbols
+#opt-level = 3         # Standard release optimization level
+#lto = "fat"           # Link Time Optimization can help improve analysis
+#codegen-units = 1     # Can sometimes improve optimization/analysis for a single binary
+

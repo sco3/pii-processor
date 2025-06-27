@@ -109,7 +109,7 @@ impl Starter {
             worker_pool,
             cfg,
             probe,
-            saver: saver,
+            saver,
         }
     }
 

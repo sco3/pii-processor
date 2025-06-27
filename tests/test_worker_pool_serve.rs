@@ -5,7 +5,6 @@ use ductaper::util::logging::init_tracing;
 use std::sync::Arc;
 use std::time::Duration;
 
-use time::OffsetDateTime;
 use tracing::info;
 
 mod common;
@@ -98,7 +97,7 @@ async fn test_worker_pool_serve() {
 #[tokio::test]
 async fn test_worker_pool_log_finish() {
     init_tracing();
-    let ts = OffsetDateTime::now_utc();
+
     let stat = Stat::new();
-    WorkerPool::log_finish(&stat, ts);
+    WorkerPool::log_finish(&stat);
 }
