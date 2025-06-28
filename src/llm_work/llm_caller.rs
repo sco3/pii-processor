@@ -61,7 +61,7 @@ impl LLmCaller {
 
         if let (Some(h), Some(v)) = (
             &self.cfg.portkey_aws_region_header, //
-            &self.cfg.aws_region,
+            &self.cfg.aws_region_llm,
         ) {
             req = req.header(h, v);
         }

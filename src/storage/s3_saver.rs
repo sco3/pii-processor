@@ -29,7 +29,8 @@ impl S3Saver {
     /// # Errors
     /// returned when s3 context creation failed
     pub async fn get_s3_ctx(bucket: &str, cfg: &Cfg) -> Result<S3Ctx, Box<dyn Error>> {
-        info!("S3 init: {bucket}");
+        let region = cfg.aws_region_s3.clone();
+        info!("S3 init: {bucket} {region}");
 
         let access_key: Option<String> = cfg //
             .aws_access_key_id
@@ -48,7 +49,7 @@ impl S3Saver {
 
         match S3Ctx::new(
             bucket.to_string(),
-            cfg.aws_region_s3.clone(),
+            region,
             access_key,
             secret_key,
             access_token,

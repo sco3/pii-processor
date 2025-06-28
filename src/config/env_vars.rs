@@ -124,5 +124,5 @@ pub struct Cfg {
     #[serde(default = "default_llm_cache_sleep_millis")]
     pub llm_cache_sleep_millis: u64,
     /// LLM region
-    pub aws_region: Option<String>,
+    pub aws_region_llm: Option<String>,
 }
