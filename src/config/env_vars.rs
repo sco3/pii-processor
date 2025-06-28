@@ -90,10 +90,12 @@ pub struct Cfg {
     pub portkey_aws_secret_access_key_header: Option<String>,
 
     /// Optional AWS session token as header: "x-portkey-aws-session-token"
-    pub portkey_aws_access_token_header: Option<SecretString>,
+    pub portkey_aws_access_token_header: Option<String>,
 
-    /// Optional portkey provider: "x-portkey-provider: bedrock"
+    /// Optional portkey provider: "x-portkey-provider"
     pub portkey_provider_header: Option<String>,
+    /// Optional portkey provider: "bedrock"
+    pub portkey_provider_value: Option<String>,
 
     /// URL for aggregator sessions log
     pub aggregator_sessions_log_url: String,
@@ -121,4 +123,6 @@ pub struct Cfg {
     /// emulate work and sleep on cached response
     #[serde(default = "default_llm_cache_sleep_millis")]
     pub llm_cache_sleep_millis: u64,
+    /// LLM region
+    pub aws_region: Option<String>,
 }

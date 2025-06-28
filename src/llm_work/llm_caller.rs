@@ -58,6 +58,41 @@ impl LLmCaller {
         if let Some(ref bearer) = self.bearer {
             req = req.header(AUTHORIZATION, bearer);
         }
+
+        if let (Some(h), Some(v)) = (
+            &self.cfg.portkey_aws_region_header, //
+            &self.cfg.aws_region,
+        ) {
+            req = req.header(h, v);
+        }
+
+        if let (Some(h), Some(v)) = (
+            &self.cfg.portkey_provider_header, //
+            &self.cfg.portkey_provider_value,
+        ) {
+            req = req.header(h, v);
+        }
+
+        if let (Some(h), Some(v)) = (
+            &self.cfg.portkey_aws_secret_access_key_header, //
+            &self.cfg.aws_secret_access_key,
+        ) {
+            req = req.header(h, v.get_string());
+        }
+
+        if let (Some(h), Some(v)) = (
+            &self.cfg.portkey_aws_access_token_header, //
+            &self.cfg.aws_access_token,
+        ) {
+            req = req.header(h, v.get_string());
+        }
+        if let (Some(h), Some(v)) = (
+            &self.cfg.portkey_aws_access_key_id_header, //
+            &self.cfg.aws_access_key_id,
+        ) {
+            req = req.header(h, v.get_string());
+        }
+
         req
     }
 

@@ -29,6 +29,7 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         tenant: "tenant".to_string(),
         application: "application".to_string(),
         aws_region_s3: "eu-west-1".to_string(),
+        aws_region: Some("us-east-1".to_string()),
         aws_s3_endpoint: None,
         aws_access_key_id: None,
         aws_secret_access_key: None,
@@ -46,5 +47,6 @@ pub fn get_test_cfg(nats_port: u16) -> Cfg {
         portkey_aws_secret_access_key_header: None,
         portkey_aws_access_token_header: None,
         portkey_provider_header: None,
+        portkey_provider_value: Some("bedrock".to_string()),
     }
 }

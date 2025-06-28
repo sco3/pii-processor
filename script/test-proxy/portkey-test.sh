@@ -1,3 +1,5 @@
+#!/usr/bin/env -S bash
+
 curl -v -s -X POST \
       http://localhost:8787/v1/chat/completions \
       -H 'x-portkey-config: {"cache":{"mode":"simple"}}' \
