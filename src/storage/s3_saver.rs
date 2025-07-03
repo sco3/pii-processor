@@ -30,7 +30,7 @@ impl S3Saver {
     /// returned when s3 context creation failed
     pub async fn get_s3_ctx(bucket: &str, cfg: &Cfg) -> Result<S3Ctx, Box<dyn Error>> {
         let region = cfg.aws_region_s3.clone();
-        info!("S3 init: {bucket} {region}");
+        info!("S3 init bucket: {bucket} region: {region}");
 
         let access_key: Option<String> = cfg //
             .aws_access_key_id
@@ -113,6 +113,11 @@ impl Saver for S3Saver {
         }
         false
     }
+    /// returns name
+    fn get_name(&self) -> String {
+        "s3".to_string()
+    }
+
     /// creates connectin for s3
     async fn init(&self, cfg: &Cfg) {
         if self.s3helper.get().is_some() {
@@ -130,10 +135,5 @@ impl Saver for S3Saver {
                 exit(ExitCode::S3Error.code());
             }
         }
-    }
-
-    /// returns name
-    fn get_name(&self) -> String {
-        "s3".to_string()
     }
 }
