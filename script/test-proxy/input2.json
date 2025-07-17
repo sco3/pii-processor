@@ -1,0 +1,14 @@
+{
+  "model": "nova",
+  "messages": [
+    {
+      "content": "Redact PII from given content sample.",
+      "role": "system"
+    },
+    {
+      "content": "Hello, I am Jarvis.",
+      "role": "user"
+    }
+  ],
+  "temperature": 0
+}

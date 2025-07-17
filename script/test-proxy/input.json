@@ -1,0 +1,14 @@
+{
+  "model": "haiku",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Redact PII from given content sample."
+    },
+    {
+      "role": "user",
+      "content": "Hello, I am Jarvis."
+    }
+  ],
+  "temperature": 0
+}
