@@ -1,0 +1,47 @@
+model_list:
+  #
+  - model_name: bedrock/eu.amazon.nova-lite-v1:0
+    litellm_params:
+      model: bedrock/eu.amazon.nova-lite-v1:0
+      aws_region_name: os.environ/AWS_REGION
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      #
+  - model_name: bedrock/eu.anthropic.claude-sonnet-4-20250514-v1:0
+    litellm_params:
+      model: bedrock/eu.anthropic.claude-sonnet-4-20250514-v1:0
+      aws_region_name: os.environ/AWS_REGION
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      #
+  - model_name: bedrock/amazon.nova-lite-v1:0
+    litellm_params:
+      model: bedrock/amazon.nova-lite-v1:0
+      aws_region_name: os.environ/AWS_REGION
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      #
+  - model_name: bedrock/amazon.nova-pro-v1:0
+    litellm_params:
+      model: bedrock/amazon.nova-pro-v1:0
+      aws_region_name: os.environ/AWS_REGION
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      #
+  - model_name: bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0
+    litellm_params:
+      model: bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0
+      aws_region_name: os.environ/AWS_REGION
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+#
+router_settings:
+  redis_host: redis
+  redis_port: 6379
+#
+litellm_settings:
+  json_logs: true
+  drop_params: true
+  num_retries: 5
+  retry_after: 5
+  timeout: 120

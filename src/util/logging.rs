@@ -93,10 +93,6 @@ pub fn init_log(level_str: Option<&str>) {
         if let Err(e) = tracing::subscriber::set_global_default(subscriber) {
             println!("Sorry. Tracing already initialized: {e}");
         }
-        info!(
-            "Logging level: {} from configuration: {:?}).",
-            level, level_str
-        );
     });
 }
 /// test logging init
