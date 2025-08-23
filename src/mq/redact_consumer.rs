@@ -29,7 +29,14 @@ impl RedactConsumer {
     /// run flag getter
     /// fetches the message from nats
     async fn fetch(sender: &Sender<Message>, consumer: &Consumer<PullConfig>) {
-        match consumer.fetch().max_messages(1).messages().await {
+        debug!("Fetch start");
+        match consumer //
+            .fetch()
+            .max_messages(1)
+            .expires(Duration::from_secs(1))
+            .messages()
+            .await
+        {
             Ok(mut messages) => {
                 while let Some(Ok(message)) = messages.next().await {
                     debug!("Got message: {:?}", preview_bytes(&message.payload),);
@@ -42,6 +49,7 @@ impl RedactConsumer {
                 error!("Failed to fetch messages: {}", e);
             }
         }
+        debug!("Fetch finish");
     }
     /// method to serve (consume and dispatch messages)
     pub async fn serve(
