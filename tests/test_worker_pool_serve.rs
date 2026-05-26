@@ -1,6 +1,6 @@
 use async_nats::HeaderMap;
 
-use ductaper::util::logging::init_tracing;
+use redact::util::logging::init_tracing;
 
 use std::sync::Arc;
 use std::time::Duration;
@@ -15,18 +15,18 @@ use testcontainers::core::IntoContainerPort;
 use crate::common::dummy_caller::DummyCaller;
 use crate::common::dummy_saver::DummySaver;
 use crate::common::init_cfg::get_test_cfg;
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::mq::connector::Connector;
-use ductaper::mq::publisher::Publisher;
-use ductaper::mq::redact_consumer::RedactConsumer;
-use ductaper::mq::session_log_header::SESSION_LOG_HEADER;
-use ductaper::mq::stream_admin::StreamAdmin;
-use ductaper::mq::upd_redact_stream::update_redact_stream;
-use ductaper::worker_pool::WorkerPool;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::mq::connector::Connector;
+use redact::mq::publisher::Publisher;
+use redact::mq::redact_consumer::RedactConsumer;
+use redact::mq::session_log_header::SESSION_LOG_HEADER;
+use redact::mq::stream_admin::StreamAdmin;
+use redact::mq::upd_redact_stream::update_redact_stream;
+use redact::worker_pool::WorkerPool;
 
 use crate::common::nats_container::get_nats_container;
 
-use ductaper::worker_pool::serve::Stat;
+use redact::worker_pool::serve::Stat;
 use tokio::time::Duration as TokioDuration;
 use tokio::time::sleep;
 use tracing::debug;

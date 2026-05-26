@@ -1,9 +1,9 @@
 mod common;
 use common::dummy_caller::DummyCaller;
 use common::dummy_saver::DummySaver;
-use ductaper::data::session_log_models::SessionLog;
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::util::logging::init_tracing;
+use redact::data::session_log_models::SessionLog;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::util::logging::init_tracing;
 use std::collections::HashMap;
 use std::fs;
 use std::sync::Arc;

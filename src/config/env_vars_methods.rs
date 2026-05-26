@@ -19,11 +19,11 @@ impl Cfg {
     ///
     /// Logs all configuration values at INFO level, with sensitive fields redacted
     pub fn pretty(&self) {
-        if let Ok(value) = serde_json::to_value(self) {
-            if let Some(obj) = value.as_object() {
-                for (key, val) in obj {
-                    info!("{} : {}", key.to_uppercase(), val);
-                }
+        if let Ok(value) = serde_json::to_value(self)
+            && let Some(obj) = value.as_object()
+        {
+            for (key, val) in obj {
+                info!("{} : {}", key.to_uppercase(), val);
             }
         }
     }

@@ -1,10 +1,10 @@
 use async_trait::async_trait;
-use ductaper::mq::ack::Ack;
-//use ductaper::util::logging::init_tracing;
-use ductaper::worker_pool::WorkerPool;
+use redact::mq::ack::Ack;
+
+use redact::worker_pool::WorkerPool;
 use std::error::Error;
 use std::io;
-//use tokio;
+
 use tracing::{error, info};
 use tracing_test::traced_test;
 

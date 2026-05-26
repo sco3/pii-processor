@@ -1,5 +1,5 @@
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::util::logging::init_tracing;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::util::logging::init_tracing;
 
 #[test]
 pub fn test_parse() {

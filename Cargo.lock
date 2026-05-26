@@ -1370,42 +1370,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
-name = "ductaper"
-version = "0.1.0"
-dependencies = [
- "async-channel 2.3.1",
- "async-nats",
- "async-trait",
- "aws-config",
- "aws-credential-types",
- "aws-sdk-s3",
- "axum",
- "bytes",
- "color-backtrace",
- "dotenv",
- "envy",
- "futures",
- "home",
- "httpmock",
- "mime",
- "moka",
- "num_cpus",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "serial_test",
- "testcontainers",
- "testcontainers-modules",
- "time",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "tracing-test",
- "url",
-]
-
-[[package]]
 name = "dunce"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2402,6 +2366,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
+name = "jemalloc-sys"
+version = "0.5.4+5.3.0-patched"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ac6c1946e1cea1788cbfde01c993b52a10e2da07f4bac608228d1bed20bfebf2"
+dependencies = [
+ "cc",
+ "libc",
+]
+
+[[package]]
+name = "jemallocator"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a0de374a9f8e63150e6f5e8a60cc14c668226d7a347d8aee1a45766e3c4dd3bc"
+dependencies = [
+ "jemalloc-sys",
+ "libc",
+]
+
+[[package]]
 name = "jobserver"
 version = "0.1.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3153,6 +3137,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99d9a13982dcf210057a8a78572b2217b667c3beacbf3a0d8b454f6f82837d38"
 dependencies = [
  "getrandom 0.3.3",
+]
+
+[[package]]
+name = "redact"
+version = "0.1.0"
+dependencies = [
+ "async-channel 2.3.1",
+ "async-nats",
+ "async-trait",
+ "aws-config",
+ "aws-credential-types",
+ "aws-sdk-s3",
+ "axum",
+ "bytes",
+ "color-backtrace",
+ "dotenv",
+ "envy",
+ "futures",
+ "home",
+ "httpmock",
+ "jemallocator",
+ "mime",
+ "moka",
+ "num_cpus",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serial_test",
+ "testcontainers",
+ "testcontainers-modules",
+ "time",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "tracing-test",
+ "url",
 ]
 
 [[package]]

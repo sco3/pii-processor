@@ -1,11 +1,11 @@
 mod common;
 
 use crate::common::init_cfg::get_test_cfg;
-use ductaper::probe::toggle::Toggle;
-use ductaper::storage::local_saver::LocalSaver;
-use ductaper::storage::saver::Saver;
-use ductaper::storage::saver_factory::get_saver;
-use ductaper::util::logging::init_tracing;
+use redact::probe::toggle::Toggle;
+use redact::storage::local_saver::LocalSaver;
+use redact::storage::saver::Saver;
+use redact::storage::saver_factory::get_saver;
+use redact::util::logging::init_tracing;
 
 #[tokio::test]
 pub async fn test_local_saver() {

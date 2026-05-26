@@ -1,5 +1,5 @@
-use ductaper::starter::Starter;
-use ductaper::util::init::Init;
+use redact::starter::Starter;
+use redact::util::init::Init;
 
 use jemallocator::Jemalloc;
 

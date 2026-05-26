@@ -2,4 +2,4 @@
 
 set -xueo pipefail
 
-docker build . -t ductaper:$(git branch --show-current)
+docker build . -t redact:$(git branch --show-current)

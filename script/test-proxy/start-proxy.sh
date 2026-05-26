@@ -2,7 +2,7 @@
 
 set -xueo pipefail
 
-env=~/.local/.env-ductaper
+env=~/.local/.env-redact
 
 docker rm -f litellm
 

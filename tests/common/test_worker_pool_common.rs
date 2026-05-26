@@ -1,26 +1,26 @@
 use async_channel::bounded;
 use async_nats::jetstream::Message;
-use ductaper::worker_pool::WorkerPool;
+use redact::worker_pool::WorkerPool;
 use reqwest::StatusCode;
 
 use std::sync::Arc;
 
 use tracing::info;
 
-use ductaper::util::logging::init_tracing;
+use redact::util::logging::init_tracing;
 
 use crate::common::init_cfg::get_test_cfg;
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::mq::connector::Connector;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::mq::connector::Connector;
 
 use crate::common::dummy_saver::DummySaver;
-use ductaper::llm_work::llm_caller::LLmCaller;
-use ductaper::llm_work::prompt::read_prompt;
-use ductaper::mq::publisher::Publisher;
-use ductaper::mq::redact_consumer::RedactConsumer;
-use ductaper::mq::redact_consumer_start::ConsumerStop;
-use ductaper::mq::stream_admin::StreamAdmin;
-use ductaper::mq::upd_redact_stream::update_redact_stream;
+use redact::llm_work::llm_caller::LLmCaller;
+use redact::llm_work::prompt::read_prompt;
+use redact::mq::publisher::Publisher;
+use redact::mq::redact_consumer::RedactConsumer;
+use redact::mq::redact_consumer_start::ConsumerStop;
+use redact::mq::stream_admin::StreamAdmin;
+use redact::mq::upd_redact_stream::update_redact_stream;
 use testcontainers::core::wait::HttpWaitStrategy;
 use testcontainers::{
     ContainerAsync, GenericImage, ImageExt,

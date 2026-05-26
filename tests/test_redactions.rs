@@ -1,6 +1,6 @@
 use crate::common::dummy_saver::DummySaver;
 use common::dummy_caller::DummyCaller;
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
 use serde_json::Value;
 use std::fs::read_to_string;
 use std::sync::Arc;

@@ -1,5 +1,5 @@
-use ductaper::llm_work::masks::get_valid_redactions;
-use ductaper::util::logging::init_tracing;
+use redact::llm_work::masks::get_valid_redactions;
+use redact::util::logging::init_tracing;
 use std::fs;
 use tracing::info;
 

@@ -2,21 +2,20 @@
 
 set -xueo pipefail
 
-docker rm -f ductaper
+docker rm -f redact
 
 docker run \
-	-e TENANT=localhost \
-	-e APPLICATION=customer_support \
-	-e AGGREGATOR_SESSIONS_LOG_URL=/tmp \
-	-e AWS_REGION_S3=eu-west-1 \
-	-e NATS_URL=nats://host.docker.internal:4222 \
-	-e LLM_MODEL=haiku \
-	-e LLM_URL=http://host.docker.internal:4000/chat/completions \
-	-e LLM_CACHE=n \
-	-e NO_COLOR=1 \
-	-e REDACT_MAX_TASKS=64 \
-	-v $(pwd)/tmp:/tmp:z \
-	--add-host=host.docker.internal:host-gateway \
-	--name ductaper \
-	-it ductaper:$(git branch --show-current)
-
+  -e TENANT=localhost \
+  -e APPLICATION=customer_support \
+  -e AGGREGATOR_SESSIONS_LOG_URL=/tmp \
+  -e AWS_REGION_S3=eu-west-1 \
+  -e NATS_URL=nats://host.docker.internal:4222 \
+  -e LLM_MODEL=haiku \
+  -e LLM_URL=http://host.docker.internal:4000/chat/completions \
+  -e LLM_CACHE=n \
+  -e NO_COLOR=1 \
+  -e REDACT_MAX_TASKS=64 \
+  -v $(pwd)/tmp:/tmp:z \
+  --add-host=host.docker.internal:host-gateway \
+  --name redact \
+  -it redact:$(git branch --show-current)
