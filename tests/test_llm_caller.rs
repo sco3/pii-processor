@@ -1,9 +1,9 @@
+use httpmock::Method::POST;
+use httpmock::MockServer;
 use redact::llm_work::llm_caller::LLmCaller;
 use redact::llm_work::reducter::ReDucter;
 use redact::util::logging::init_tracing;
 use redact::worker_pool::serve::Stat;
-use httpmock::Method::POST;
-use httpmock::MockServer;
 use serde_json::json;
 
 mod common;

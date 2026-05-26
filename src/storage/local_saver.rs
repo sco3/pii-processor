@@ -29,11 +29,11 @@ impl Saver for LocalSaver {
             self.dir, file_name, log
         );
         let dir = Path::new(self.dir.as_str());
-        if !dir.exists() {
-            if let Err(e) = fs::create_dir_all(dir) {
-                error!("Cannot create dir: {e}");
-                return false;
-            }
+        if !dir.exists()
+            && let Err(e) = fs::create_dir_all(dir)
+        {
+            error!("Cannot create dir: {e}");
+            return false;
         }
         let mut full_path = String::new();
         full_path.push_str(&self.dir);

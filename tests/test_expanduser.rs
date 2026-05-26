@@ -1,5 +1,5 @@
-use redact::config::expanduser::expand_user_path;
 use home::home_dir;
+use redact::config::expanduser::expand_user_path;
 use std::env::current_dir;
 use std::fs::{self, File};
 use std::io::Write;

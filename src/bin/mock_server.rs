@@ -1,7 +1,7 @@
-use axum::Router;
 use axum::body::Body;
-use axum::http::{Response, header};
+use axum::http::{header, Response};
 use axum::routing::{get, post};
+use axum::Router;
 use redact::util::exit_codes::ExitCode;
 use std::env::args;
 use std::process::exit;
@@ -9,11 +9,12 @@ use std::process::exit;
 #[tokio::main]
 pub async fn main() {
     let mut path = "script/test-publish/response.json".to_string();
-    if args().len() > 1 {
-        if let Some(p) = args().nth(1) {
-            path = p;
-        }
+    if args().len() > 1
+        && let Some(p) = args().nth(1)
+    {
+        path = p;
     }
+
     let content = std::fs::read_to_string(&path).unwrap_or("none".to_string());
     println!("Response from {path} {content}");
     let router = Router::new() //
