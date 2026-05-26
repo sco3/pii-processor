@@ -1,5 +1,5 @@
-use ductaper::llm_work::prompt::read_prompt;
-use ductaper::util::logging::init_tracing;
+use redact::llm_work::prompt::read_prompt;
+use redact::util::logging::init_tracing;
 
 #[test]
 #[should_panic]

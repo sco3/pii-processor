@@ -1,6 +1,6 @@
-use ductaper::probe::http_probe::HealthProbe;
-use ductaper::probe::toggle::Toggle;
-use ductaper::util::logging::init_tracing;
+use redact::probe::http_probe::HealthProbe;
+use redact::probe::toggle::Toggle;
+use redact::util::logging::init_tracing;
 
 use std::time::Duration;
 use tokio::time::sleep;

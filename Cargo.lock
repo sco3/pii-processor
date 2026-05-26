@@ -1370,43 +1370,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
-name = "ductaper"
-version = "0.1.0"
-dependencies = [
- "async-channel 2.3.1",
- "async-nats",
- "async-trait",
- "aws-config",
- "aws-credential-types",
- "aws-sdk-s3",
- "axum",
- "bytes",
- "color-backtrace",
- "dotenv",
- "envy",
- "futures",
- "home",
- "httpmock",
- "jemallocator",
- "mime",
- "moka",
- "num_cpus",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "serial_test",
- "testcontainers",
- "testcontainers-modules",
- "time",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "tracing-test",
- "url",
-]
-
-[[package]]
 name = "dunce"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3174,6 +3137,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99d9a13982dcf210057a8a78572b2217b667c3beacbf3a0d8b454f6f82837d38"
 dependencies = [
  "getrandom 0.3.3",
+]
+
+[[package]]
+name = "redact"
+version = "0.1.0"
+dependencies = [
+ "async-channel 2.3.1",
+ "async-nats",
+ "async-trait",
+ "aws-config",
+ "aws-credential-types",
+ "aws-sdk-s3",
+ "axum",
+ "bytes",
+ "color-backtrace",
+ "dotenv",
+ "envy",
+ "futures",
+ "home",
+ "httpmock",
+ "jemallocator",
+ "mime",
+ "moka",
+ "num_cpus",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serial_test",
+ "testcontainers",
+ "testcontainers-modules",
+ "time",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "tracing-test",
+ "url",
 ]
 
 [[package]]

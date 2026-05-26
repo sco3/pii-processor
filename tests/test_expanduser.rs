@@ -1,4 +1,4 @@
-use ductaper::config::expanduser::expand_user_path;
+use redact::config::expanduser::expand_user_path;
 use home::home_dir;
 use std::env::current_dir;
 use std::fs::{self, File};

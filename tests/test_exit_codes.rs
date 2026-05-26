@@ -1,4 +1,4 @@
-use ductaper::util::exit_codes::ExitCode;
+use redact::util::exit_codes::ExitCode;
 
 #[test]
 pub fn test_exit_codes() {

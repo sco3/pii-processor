@@ -1,6 +1,6 @@
-use ductaper::data::session_log_models::SessionLog;
-use ductaper::llm_work::get_text_from_session_log::get_text_from_session_log;
-use ductaper::util::logging::init_tracing;
+use redact::data::session_log_models::SessionLog;
+use redact::llm_work::get_text_from_session_log::get_text_from_session_log;
+use redact::util::logging::init_tracing;
 use serde_json::json;
 
 #[test]

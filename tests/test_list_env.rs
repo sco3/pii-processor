@@ -1,4 +1,4 @@
-use ductaper::config::list_env::list_env;
+use redact::config::list_env::list_env;
 use std::env;
 
 #[test]

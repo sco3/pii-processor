@@ -1,6 +1,6 @@
 use async_trait::async_trait;
-use ductaper::llm_work::reducter::ReDucter;
-use ductaper::worker_pool::serve::Stat;
+use redact::llm_work::reducter::ReDucter;
+use redact::worker_pool::serve::Stat;
 use serde_json::{Value, json};
 use tracing::debug;
 

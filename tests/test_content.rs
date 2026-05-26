@@ -1,5 +1,5 @@
-use ductaper::llm_work::llm_log_processor::LlmLogProcessor;
-use ductaper::util::logging::init_tracing;
+use redact::llm_work::llm_log_processor::LlmLogProcessor;
+use redact::util::logging::init_tracing;
 use serde_json::json;
 
 #[test]

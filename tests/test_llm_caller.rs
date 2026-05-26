@@ -1,7 +1,7 @@
-use ductaper::llm_work::llm_caller::LLmCaller;
-use ductaper::llm_work::reducter::ReDucter;
-use ductaper::util::logging::init_tracing;
-use ductaper::worker_pool::serve::Stat;
+use redact::llm_work::llm_caller::LLmCaller;
+use redact::llm_work::reducter::ReDucter;
+use redact::util::logging::init_tracing;
+use redact::worker_pool::serve::Stat;
 use httpmock::Method::POST;
 use httpmock::MockServer;
 use serde_json::json;
