@@ -78,9 +78,7 @@ Do not redact standard measurement units, scales, or scientific terminology incl
 - Common household measurements
 
 You should also not redact timestamps or language names such as "English"
-
-If PII redaction is not categorized, redact such text as "[EXTRA_REDACTED]".
-
+If PII redaction is not categorized, apply the "DEFAULT" operator and redact such text as "[REDACTED]"
 Your response must be a valid JSON object, according to the following schema:
 {
     "redactions": REDACTIONS_MAP
